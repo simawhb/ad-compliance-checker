@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>驷马工具集 · 玻璃风格</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:#0a0a0c;color:rgba(191,219,254,.85);min-height:100vh;
+  display:flex;flex-direction:column;font-size:16px;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+::selection{background:rgba(0,122,255,.3);color:#fff}
+
+/* ===== 背景图层 ===== */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(191,219,254,.025) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 18% 15%,rgba(0,122,255,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 500px 500px at 78% 12%,rgba(88,86,214,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 350px 350px at 85% 55%,rgba(255,45,85,.05) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 300px at 12% 65%,rgba(90,200,250,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 450px 250px at 50% 92%,rgba(255,149,0,.04) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:atmo 25s cubic-bezier(.45,.05,.2,1) infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-2.5%,2%) scale(1.02)}
+  50%{transform:translate(2%,-1.5%) scale(1.01)}
+  75%{transform:translate(-1%,2.5%) scale(1.03)}
+  100%{transform:translate(1.5%,-2%) scale(1.02)}
+}
+
+/* ===== 玻璃通用 ===== */
+.glass{
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.02) 100%);
+  backdrop-filter:blur(30px) saturate(1.2);
+  -webkit-backdrop-filter:blur(30px) saturate(1.2);
+  border:.5px solid rgba(191,219,254,.08);
+  border-top-color:rgba(191,219,254,.14);
+  border-bottom-color:rgba(191,219,254,.03);
+  box-shadow:0 4px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(191,219,254,.06)
+}
+
+/* ===== Header ===== */
+.header{
+  position:sticky;top:0;z-index:100;margin-bottom:0
+}
+.header-inner{
+  max-width:980px;margin:0 auto;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:52px
+}
+.header-l{display:flex;align-items:center;gap:10px}
+.header-logo{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,#0066d9,#007AFF);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:13px;font-weight:700;
+  box-shadow:0 2px 8px rgba(0,122,255,.25)
+}
+.header-title{
+  font-size:15px;font-weight:600;color:rgba(191,219,254,.9);
+  letter-spacing:.2px
+}
+.header-title span{color:#007AFF}
+.header-r{display:flex;align-items:center;gap:6px}
+.header-r a{
+  font-size:13px;color:rgba(191,219,254,.5);text-decoration:none;
+  padding:6px 12px;border-radius:7px;transition:all .2s;
+  font-weight:500
+}
+.header-r a:hover{color:rgba(191,219,254,.92);background:rgba(191,219,254,.06)}
+
+/* ===== Hero ===== */
+.hero{
+  position:relative;z-index:1;padding:64px 20px 48px;text-align:center;
+  overflow:hidden
+}
+.hero-hl{
+  position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:400px;height:200px;
+  background:radial-gradient(ellipse,rgba(0,122,255,.1) 0%,rgba(88,86,214,.04) 40%,transparent 70%);
+  pointer-events:none
+}
+.hero h1{
+  font-size:32px;font-weight:700;color:rgba(191,219,254,.92);
+  margin-bottom:10px;letter-spacing:-.3px;position:relative
+}
+.hero h1 em{font-style:normal;color:#007AFF}
+.hero p{
+  font-size:15px;color:rgba(191,219,254,.45);max-width:420px;
+  margin:0 auto;line-height:1.6;position:relative
+}
+.hero .status-badge{
+  display:inline-flex;align-items:center;gap:6px;margin-top:20px;
+  padding:5px 14px;border-radius:100px;font-size:12px;font-weight:500;
+  background:rgba(52,199,89,.1);border:.5px solid rgba(52,199,89,.2);
+  color:#30d158;position:relative
+}
+.hero .status-badge .dot{
+  width:5px;height:5px;border-radius:50%;background:#30d158;
+  animation:pulse 2s ease-in-out infinite
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero .accent-line{
+  width:60px;height:2px;margin:20px auto 0;
+  background:linear-gradient(90deg,transparent,#007AFF,transparent);
+  border-radius:2px;opacity:.3
+}
+
+/* ===== 主内容 ===== */
+.main{flex:1;max-width:980px;margin:0 auto;padding:0 20px 48px;width:100%;position:relative;z-index:1}
+
+.sec{margin-bottom:36px}
+.sec-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  padding:0 2px
+}
+.sec-header .label{
+  font-size:12px;font-weight:600;color:rgba(191,219,254,.5);
+  letter-spacing:.6px;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px
+}
+.sec-header .label::before{
+  content:'';width:6px;height:6px;border-radius:2px;
+  background:linear-gradient(135deg,#007AFF,#5AC8FA);
+  flex-shrink:0
+}
+.sec-header .hr{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(191,219,254,.08),rgba(191,219,254,.02),transparent)
+}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+
+/* ===== 玻璃卡片 ===== */
+/* 卡片主题色 */
+.grid .card:nth-child(1){
+  --accent:#007AFF;--accent-bg:rgba(0,122,255,.12);
+  background-image:radial-gradient(ellipse 100px 80px at 85% 15%,var(--accent-bg) 0%,transparent 70%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(2){
+  --accent:#5856D6;--accent-bg:rgba(88,86,214,.12);
+  background-image:radial-gradient(ellipse 80px 100px at 15% 50%,var(--accent-bg) 0%,transparent 60%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(3){
+  --accent:#5AC8FA;--accent-bg:rgba(90,200,250,.12);
+  background-image:radial-gradient(ellipse 90px 70px at 20% 80%,var(--accent-bg) 0%,transparent 65%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(4){
+  --accent:#34C759;--accent-bg:rgba(52,199,89,.12);
+  background-image:radial-gradient(ellipse 120px 60px at 50% 0%,var(--accent-bg) 0%,transparent 70%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(5){
+  --accent:#FF9500;--accent-bg:rgba(255,149,0,.12);
+  background-image:radial-gradient(ellipse 110px 90px at 80% 70%,var(--accent-bg) 0%,transparent 65%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(6){
+  --accent:#8E8E93;--accent-bg:rgba(142,142,147,.1);
+  background-image:radial-gradient(ellipse 80px 80px at 50% 50%,var(--accent-bg) 0%,transparent 70%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+.grid .card:nth-child(7){
+  --accent:#FF2D55;--accent-bg:rgba(255,45,85,.12);
+  background-image:radial-gradient(ellipse 110px 80px at 30% 20%,var(--accent-bg) 0%,transparent 65%),
+    linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%)
+}
+
+.card{
+  border-radius:16px;padding:24px;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  transition:all .4s cubic-bezier(.25,.1,.25,1)
+}
+/* 顶部彩色装饰条 */
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),transparent 70%);
+  opacity:.4;transition:opacity .4s;border-radius:16px 16px 0 0
+}
+.card:hover::before{opacity:1}
+/* 卡片底部彩色辉光 */
+.card::after{
+  content:'';position:absolute;bottom:-1px;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity .5s;border-radius:0 0 16px 16px
+}
+.card:hover::after{opacity:.25}
+.card .card-top{
+  display:flex;align-items:flex-start;gap:14px;margin-bottom:10px;
+  position:relative;z-index:1
+}
+
+/* ===== 玻璃图标盒子 ===== */
+.card .icon-box{
+  width:48px;height:48px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--accent-bg) 0%,rgba(191,219,254,.03) 100%);
+  backdrop-filter:blur(12px);
+  border:.5px solid rgba(191,219,254,.1);
+  border-top-color:rgba(191,219,254,.16);
+  box-shadow:inset 0 1px 0 rgba(191,219,254,.1), 0 2px 8px rgba(0,0,0,.2),
+    0 0 30px var(--accent-bg)
+}
+/* 图标底部彩色辉光 */
+.card .icon-box::before{
+  content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
+  width:32px;height:12px;border-radius:50%;
+  background:var(--accent);opacity:.12;z-index:0;filter:blur(6px)
+}
+/* 图标右上角彩色点缀 */
+.card .icon-box::after{
+  content:'';position:absolute;top:-3px;right:-3px;width:10px;height:10px;
+  border-radius:50%;background:var(--accent);opacity:.15;z-index:0
+}
+.card .icon-box svg{
+  width:28px;height:28px;display:block;position:relative;z-index:1
+}
+
+.card h3{
+  font-size:15px;font-weight:600;color:rgba(191,219,254,.9);
+  margin-bottom:4px;display:flex;align-items:center;gap:8px
+}
+.card h3 .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:18px;padding:0 5px;
+  font-size:10px;font-weight:600;color:var(--accent);
+  background:var(--accent-bg);border-radius:4px;
+  font-family:-apple-system,monospace;letter-spacing:.2px
+}
+.card p{
+  font-size:13.5px;color:rgba(191,219,254,.48);line-height:1.65;
+  flex:1;position:relative;z-index:1
+}
+.card .meta{
+  display:flex;align-items:center;gap:8px;margin-top:10px;
+  position:relative;z-index:1
+}
+.card .tag{
+  display:inline-block;font-size:11.5px;padding:3px 11px;
+  border-radius:100px;font-weight:500;letter-spacing:.15px;
+  background:rgba(0,122,255,.1);border:.5px solid rgba(0,122,255,.18);
+  color:#409cff
+}
+.tag-ent{background:rgba(88,86,214,.1);border-color:rgba(88,86,214,.18);color:#7d7aff}
+.tag-edu{background:rgba(90,200,250,.1);border-color:rgba(90,200,250,.18);color:#5ac8fa}
+.tag-sys{background:rgba(52,199,89,.1);border-color:rgba(52,199,89,.18);color:#30d158}
+.tag-foo{background:rgba(255,149,0,.1);border-color:rgba(255,149,0,.18);color:#ff9500}
+.tag-law{background:rgba(255,45,85,.1);border-color:rgba(255,45,85,.18);color:#ff6482}
+.tag-cmn{background:rgba(191,219,254,.05);border-color:rgba(191,219,254,.08);color:rgba(191,219,254,.4)}
+.card .arrow{
+  font-size:13px;color:rgba(191,219,254,.25);margin-left:auto;
+  transition:all .3s cubic-bezier(.25,.1,.25,1);
+  position:relative;z-index:1
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 48px rgba(0,0,0,.45), 0 0 60px var(--accent-bg), inset 0 1px 0 rgba(191,219,254,.06)
+}
+.card:hover .arrow{color:var(--accent);transform:translateX(6px)}
+.card-disabled{opacity:.3;cursor:default;pointer-events:none}
+
+/* ===== 活动状态（玻璃风格） ===== */
+.activity-bar{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.activity-item{
+  display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:12px;
+  font-size:13px;color:rgba(191,219,254,.45);flex:1;min-width:120px;transition:all .25s;
+  background:linear-gradient(180deg,rgba(191,219,254,.045) 0%,rgba(191,219,254,.012) 100%);
+  backdrop-filter:blur(16px);
+  border:.5px solid rgba(191,219,254,.05);
+  border-top-color:rgba(191,219,254,.1);
+  box-shadow:0 2px 12px rgba(0,0,0,.2), inset 0 1px 0 rgba(191,219,254,.04)
+}
+.activity-item:hover{
+  border-color:rgba(191,219,254,.09);
+  background:linear-gradient(180deg,rgba(191,219,254,.06) 0%,rgba(191,219,254,.018) 100%)
+}
+.activity-item .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#30d158;box-shadow:0 0 6px rgba(48,209,88,.25)}
+.activity-item .name{color:rgba(191,219,254,.7);font-weight:500}
+.activity-item .sts{color:#30d158;font-size:12px;margin-left:auto;font-weight:500}
+
+/* ===== 更新列表（玻璃风格） ===== */
+.update-list{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.update-item{
+  display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:12px;
+  font-size:13px;color:rgba(191,219,254,.45);transition:all .2s;
+  background:linear-gradient(180deg,rgba(191,219,254,.04) 0%,rgba(191,219,254,.01) 100%);
+  backdrop-filter:blur(16px);
+  border:.5px solid rgba(191,219,254,.05);
+  border-top-color:rgba(191,219,254,.09);
+  box-shadow:0 2px 12px rgba(0,0,0,.2), inset 0 1px 0 rgba(191,219,254,.03)
+}
+.update-item:hover{
+  background:linear-gradient(180deg,rgba(191,219,254,.055) 0%,rgba(191,219,254,.015) 100%)
+}
+.update-item .dot{
+  width:5px;height:5px;border-radius:50%;
+  background:#007AFF;flex-shrink:0;
+  box-shadow:0 0 5px rgba(0,122,255,.3)
+}
+.update-item .what{color:rgba(191,219,254,.7);font-weight:500}
+.update-item .when{color:rgba(191,219,254,.25);margin-left:auto;font-size:12px}
+
+/* ===== 联系 ===== */
+.contact-box{
+  text-align:center;padding:24px 20px;border-radius:16px;margin-top:6px;font-size:14px;
+  background:linear-gradient(180deg,rgba(191,219,254,.04) 0%,rgba(191,219,254,.01) 100%);
+  backdrop-filter:blur(20px);
+  border:.5px solid rgba(191,219,254,.06);
+  border-top-color:rgba(191,219,254,.1);
+  box-shadow:0 4px 20px rgba(0,0,0,.2), inset 0 1px 0 rgba(191,219,254,.04)
+}
+.contact-box .title{
+  font-size:11px;font-weight:600;color:rgba(191,219,254,.25);
+  margin-bottom:6px;letter-spacing:.6px;text-transform:uppercase
+}
+.contact-box a{
+  color:#007AFF;text-decoration:none;font-weight:500;transition:color .15s
+}
+.contact-box a:hover{color:#409cff}
+
+.notice{
+  margin-top:14px;padding:12px 18px;border-radius:12px;
+  font-size:12.5px;color:rgba(191,219,254,.3);line-height:1.8;text-align:center;
+  background:rgba(191,219,254,.015);border:.5px solid rgba(191,219,254,.04)
+}
+
+/* ===== Footer ===== */
+.footer{
+  text-align:center;padding:24px 20px 28px;font-size:12px;
+  background:linear-gradient(180deg,rgba(191,219,254,.03) 0%,transparent 100%);
+  backdrop-filter:blur(20px);
+  border-top:.5px solid rgba(191,219,254,.04);
+  position:relative;z-index:1
+}
+.footer .name{color:rgba(191,219,254,.35);margin-bottom:10px;font-weight:500}
+.footer .beian-row{display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap}
+.footer .beian-row a{
+  color:rgba(191,219,254,.2);text-decoration:none;transition:color .15s;
+  display:inline-flex;align-items:center;gap:4px
+}
+.footer .beian-row a:hover{color:rgba(191,219,254,.4)}
+.footer .beian-row .sep{color:rgba(191,219,254,.1);margin:0 6px}
+.beian-icon{width:14px;height:14px;flex-shrink:0;opacity:.4}
+
+/* ===== Responsive ===== */
+@media(max-width:640px){
+  .header-inner{padding:0 14px}
+  .hero{padding:44px 14px 32px}
+  .hero h1{font-size:26px}
+  .main{padding:0 14px 32px}
+  .grid{grid-template-columns:1fr}
+  .card{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="header glass">
+  <div class="header-inner">
+    <div class="header-l">
+      <div class="header-logo">驷</div>
+      <div class="header-title">驷马<span>工具集</span></div>
+    </div>
+    <div class="header-r">
+      <a href="mailto:14712502@qq.com">联系</a>
+      <a href="https://github.com/simawhb/ad-compliance-checker" target="_blank">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-hl"></div>
+  <h1>随手可用的<em>在线工具</em></h1>
+  <p>自用效率工具汇总，随用随取</p>
+  <div class="status-badge">
+    <span class="dot"></span>
+    所有服务运行正常
+  </div>
+  <div class="accent-line"></div>
+</div>
+
+<div class="main">
+
+  <div class="sec">
+    <div class="sec-header">
+      <span class="label">工具列表</span>
+      <span class="hr"></span>
+    </div>
+    <div class="grid">
+
+      <!-- 01 广告审查 -->
+      <a class="card" href="https://checker.4ma.wang">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 3l10 4v8c0 5.5-4.3 10.8-10 12-5.7-1.2-10-6.5-10-12V7l10-4z" fill="#409cff" opacity="0.08"/>
+              <path d="M16 5l8 3.2v5.6c0 4.4-3.4 8.6-8 9.6-4.6-1-8-5.2-8-9.6V8.2l8-3.2z" fill="#e0f2fe"/>
+              <path d="M16 6.5l6.5 2.6v4.5c0 3.5-2.7 7-6.5 7.8-3.8-.8-6.5-4.3-6.5-7.8V9.1l6.5-2.6z" fill="#bae6fd"/>
+              <path d="M12 16.5l3 3 6-7" stroke="#0369a1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <circle cx="14" cy="8" r="1.2" fill="#fff" opacity="0.4"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">01</span>广告宣传审查助手</h3>
+          </div>
+        </div>
+        <p>AI 智能广告文案合规检测。上传文案或图片，自动识别违禁词与绝对化用语，精准定位违反《广告法》具体条款并给出修改建议，免费使用。</p>
+        <div class="meta">
+          <span class="tag">AI 检测</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 02 企业定制 -->
+      <a class="card" href="/ad-check/">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="5" y="10" width="22" height="18" rx="3" fill="#7d7aff" opacity="0.08"/>
+              <rect x="7" y="13" width="18" height="15" rx="2" fill="#e0e7ff"/>
+              <rect x="9" y="15" width="6" height="5" rx="1" fill="#c7d2fe"/>
+              <rect x="17" y="15" width="6" height="5" rx="1" fill="#c7d2fe"/>
+              <rect x="9" y="22" width="6" height="5" rx="1" fill="#c7d2fe"/>
+              <rect x="17" y="22" width="6" height="5" rx="1" fill="#c7d2fe"/>
+              <path d="M3 14l13-8 13 8" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <circle cx="27" cy="10" r="4" fill="#a5b4fc" opacity="0.2"/>
+              <circle cx="27" cy="10" r="2" fill="#818cf8" opacity="0.5"/>
+              <circle cx="27" cy="10" r="0.8" fill="#e0e7ff"/>
+              <rect x="10" y="16" width="2" height="1.2" rx="0.4" fill="#fff" opacity="0.15"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">02</span>广告宣传审查助手<br>（企业定制版）</h3>
+          </div>
+        </div>
+        <p>针对企业所在行业特点定制合规规则库，支持私有化敏感词与品牌词管理，密码保护，专属定制服务。</p>
+        <div class="meta">
+          <span class="tag tag-ent">企业定制</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 03 高考志愿 -->
+      <a class="card" href="https://gaokao.4ma.wang">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <ellipse cx="16" cy="13" rx="12" ry="7" fill="#5ac8fa" opacity="0.06"/>
+              <path d="M16 5l-12 6 12 6 12-6-12-6z" fill="#e0f2fe"/>
+              <path d="M16 5l-12 6" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+              <path d="M16 5l12 6" stroke="#38bdf8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+              <path d="M16 7.5l-9 4.5 9 4.5 9-4.5-9-4.5z" fill="#bae6fd"/>
+              <circle cx="16" cy="12" r="1.5" fill="#007AFF"/>
+              <line x1="16" y1="13.5" x2="16" y2="16" stroke="#007AFF" stroke-width="1" stroke-linecap="round"/>
+              <rect x="9" y="17" width="14" height="7" rx="1.5" fill="#bae6fd"/>
+              <rect x="9" y="17" width="14" height="2.5" rx="1" fill="#e0f2fe"/>
+              <line x1="12" y1="21" x2="20" y2="21" stroke="#38bdf8" stroke-width="0.5" opacity="0.3"/>
+              <line x1="12" y1="23" x2="18" y2="23" stroke="#38bdf8" stroke-width="0.5" opacity="0.3"/>
+              <path d="M13 8l3-1.5" stroke="#fff" stroke-width="0.8" opacity="0.6"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">03</span>高考志愿助手</h3>
+          </div>
+        </div>
+        <p>基于分数位次与历年录取数据的 AI 智能分析，提供冲稳保梯度推荐与个性化志愿方案，让高考志愿填报更科学。</p>
+        <div class="meta">
+          <span class="tag tag-edu">高考志愿</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 04 C盘清理 -->
+      <a class="card" href="/c-clean/">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="12" fill="#30d158" opacity="0.04"/>
+              <ellipse cx="16" cy="17" rx="10" ry="8" fill="#f0fdf4"/>
+              <ellipse cx="16" cy="17" rx="7.5" ry="5.5" fill="#dcfce7"/>
+              <ellipse cx="16" cy="17" rx="5" ry="3.5" fill="none" stroke="#86efac" stroke-width="0.8"/>
+              <ellipse cx="16" cy="17" rx="3.5" ry="2.5" fill="none" stroke="#86efac" stroke-width="0.6"/>
+              <circle cx="16" cy="17" r="2" fill="#30d158"/>
+              <circle cx="16" cy="17" r="1" fill="#22c55e"/>
+              <path d="M23 9.5l1 1.5 1.5 0.5-1.5 1-1 1.5-1-1.5-1.5-1 1.5-0.5z" fill="#30d158" opacity="0.7"/>
+              <path d="M9 10l0.5 1 1 0.5-1 0.5-0.5 1-0.5-1-1-0.5 1-0.5z" fill="#86efac" opacity="0.5"/>
+              <ellipse cx="12.5" cy="13" rx="3" ry="1.5" fill="#fff" opacity="0.25"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">04</span>C盘清理助手</h3>
+          </div>
+        </div>
+        <p>C 盘空间可视化深度扫描，智能分类展示缓存、临时文件、大文件，一键清理安全无忧，让电脑运行如新。</p>
+        <div class="meta">
+          <span class="tag tag-sys">磁盘清理</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 05 驷马粮选 -->
+      <a class="card" href="/liangxuan/">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <ellipse cx="16" cy="18" rx="11" ry="7" fill="#409cff" opacity="0.04"/>
+              <path d="M7 14l1 8c0 2.5 3 4.5 8 4.5s8-2 8-4.5l1-8H7z" fill="#eff6ff"/>
+              <path d="M8 14l1 7c0 1.8 3 3.2 7 3.2s7-1.4 7-3.2l1-7H8z" fill="#bfdbfe"/>
+              <ellipse cx="16" cy="14" rx="8" ry="2.5" fill="#dbeafe"/>
+              <circle cx="13" cy="17" r="1.2" fill="#007AFF" opacity="0.55"/>
+              <circle cx="17" cy="18.5" r="1" fill="#007AFF" opacity="0.45"/>
+              <circle cx="19.5" cy="16" r="0.8" fill="#007AFF" opacity="0.35"/>
+              <circle cx="14" cy="19.5" r="0.7" fill="#007AFF" opacity="0.3"/>
+              <circle cx="25" cy="9" r="4" fill="#bfdbfe" opacity="0.15"/>
+              <circle cx="25" cy="9" r="1.5" fill="#007AFF" opacity="0.4"/>
+              <circle cx="23.2" cy="7.5" r="0.7" fill="#007AFF" opacity="0.25"/>
+              <circle cx="26.8" cy="7.5" r="0.7" fill="#007AFF" opacity="0.25"/>
+              <circle cx="23.2" cy="10.5" r="0.7" fill="#007AFF" opacity="0.25"/>
+              <circle cx="26.8" cy="10.5" r="0.7" fill="#007AFF" opacity="0.25"/>
+              <ellipse cx="13" cy="15.5" rx="2.5" ry="1" fill="#fff" opacity="0.35"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">05</span>驷马粮选</h3>
+          </div>
+        </div>
+        <p>AI 智能解读猫粮配料表与营养成分，39 款猫粮数据库横向对比，避雷专区收录 10 条召回记录，科学选粮不踩坑。</p>
+        <div class="meta">
+          <span class="tag tag-foo">优选平台</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 06 驷马用工宝 -->
+      <a class="card" href="/laobao/">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 4l-3 6-7 1 5 5-1 7 6-4 6 4-1-7 5-5-7-1-3-6z" fill="#ff6482" opacity="0.06"/>
+              <rect x="12" y="6" width="8" height="5" rx="1.5" fill="#fce7f3"/>
+              <rect x="13.5" y="12" width="5" height="7" rx="1" fill="#fbcfe8"/>
+              <path d="M16 12v7" stroke="#ff2d55" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="16" cy="10" r="1.8" fill="#ff2d55"/>
+              <path d="M10 26c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5" stroke="#ff6482" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <rect x="8" y="20" width="16" height="2" rx="1" fill="#ff2d55" opacity="0.08"/>
+              <line x1="13" y1="23" x2="19" y2="23" stroke="#ff2d55" stroke-width="0.5" opacity="0.2"/>
+              <ellipse cx="11" cy="15.5" rx="2" ry="1.5" fill="#fff" opacity="0.15"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">06</span>驷马用工宝</h3>
+          </div>
+        </div>
+        <p>劳动法智能问答，兼顾用人单位与劳动者双视角。覆盖劳动仲裁、工伤赔偿、辞退补偿、社保公积金等常见问题，AI 深度推理分析。</p>
+        <div class="meta">
+          <span class="tag tag-law">AI 劳动法</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 07 更多工具 -->
+      <a class="card card-disabled" href="#">
+        <div class="card-top">
+          <div class="icon-box">
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="12" fill="rgba(191,219,254,.04)"/>
+              <circle cx="16" cy="16" r="10" fill="none" stroke="rgba(191,219,254,.12)" stroke-width="5" stroke-dasharray="4.5 3.5"/>
+              <circle cx="16" cy="16" r="8" fill="rgba(191,219,254,.06)"/>
+              <circle cx="16" cy="16" r="5.5" fill="none" stroke="rgba(191,219,254,.1)" stroke-width="1.5"/>
+              <circle cx="16" cy="16" r="2.5" fill="rgba(191,219,254,.08)"/>
+              <circle cx="16" cy="16" r="1.2" fill="rgba(191,219,254,.15)"/>
+              <circle cx="22" cy="9" r="2.5" fill="rgba(191,219,254,.06)"/>
+              <circle cx="22" cy="9" r="1" fill="rgba(191,219,254,.08)"/>
+              <ellipse cx="12" cy="11" rx="3.5" ry="2" fill="#fff" opacity="0.1"/>
+            </svg>
+          </div>
+          <div>
+            <h3><span class="num">07</span>更多工具开发中</h3>
+          </div>
+        </div>
+        <p>更多实用小工具持续开发中，敬请期待。</p>
+        <div class="meta">
+          <span class="tag tag-cmn">即将上线</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- 服务状态 -->
+  <div class="sec">
+    <div class="sec-header">
+      <span class="label">服务状态</span>
+      <span class="hr"></span>
+    </div>
+    <div class="activity-bar">
+      <div class="activity-item"><span class="dot dot-green"></span><span class="name">广告审查</span><span class="sts">正常</span></div>
+      <div class="activity-item"><span class="dot dot-green"></span><span class="name">高考志愿</span><span class="sts">正常</span></div>
+      <div class="activity-item"><span class="dot dot-green"></span><span class="name">驷马粮选</span><span class="sts">正常</span></div>
+      <div class="activity-item"><span class="dot dot-green"></span><span class="name">用工宝</span><span class="sts">正常</span></div>
+      <div class="activity-item"><span class="dot dot-green"></span><span class="name">C盘清理</span><span class="sts">正常</span></div>
+    </div>
+  </div>
+
+  <!-- 最近更新 -->
+  <div class="sec">
+    <div class="sec-header">
+      <span class="label">最近更新</span>
+      <span class="hr"></span>
+    </div>
+    <div class="update-list">
+      <div class="update-item"><span class="dot"></span><span class="what">驷马用工宝</span><span>新工具上线 — 劳动法 AI 问答</span><span class="when">今天</span></div>
+      <div class="update-item"><span class="dot"></span><span class="what">门户首页</span><span>工具卡片新增立体插图图标</span><span class="when">今天</span></div>
+      <div class="update-item"><span class="dot"></span><span class="what">广告审查助手</span><span>DeepSeek V4 Pro 接入</span><span class="when">今天</span></div>
+    </div>
+  </div>
+
+  <!-- 联系 -->
+  <div class="contact-box">
+    <div class="title">联系方式</div>
+    商务合作或工具定制需求，请发送邮件至 <a href="mailto:14712502@qq.com">14712502@qq.com</a>
+  </div>
+
+  <div class="notice">
+    <strong>网站声明：</strong>本网站为个人非经营性网站，仅用于个人工具分享与技术交流。
+    本站不提供任何在线支付、商品交易或会员付费服务，不涉及任何商业经营活动。
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="name">4ma.WANG · 驷马工具集</div>
+  <div class="beian-row">
+    <a href="https://beian.miit.gov.cn" target="_blank" rel="noreferrer">陕ICP备2026017204号-1</a>
+    <span class="sep">|</span>
+    <a href="https://beian.mps.gov.cn/#/query/webSearch?code=61019002004048" target="_blank" rel="noreferrer">
+      <svg class="beian-icon" viewBox="0 0 20 20" fill="none">
+        <path d="M10 1.5L3 4.5V9.5C3 14.3 6.1 18.7 10 20C13.9 18.7 17 14.3 17 9.5V4.5L10 1.5Z" fill="rgba(191,219,254,.2)"/>
+        <path d="M8 10.5L6.5 9L5.5 10L8 12.5L14.5 6L13.5 5L8 10.5Z" fill="rgba(191,219,254,.04)"/>
+      </svg>
+      陕公网安备61019002004048号
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

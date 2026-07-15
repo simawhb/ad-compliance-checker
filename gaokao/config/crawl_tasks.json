@@ -1,0 +1,64 @@
+{
+  "tasks": [
+    {
+      "task_name": "moe_schools",
+      "description": "教育部全国高校名单",
+      "target_url": "http://www.moe.gov.cn/jyb_xxgk/s5743/s5744/",
+      "data_type": "schools",
+      "crawl_strategy": "scrapy",
+      "frequency": "yearly",
+      "enabled": true,
+      "spider": "schools/moe_schools_spider.py",
+      "script": null,
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "next_run_at": null
+    },
+    {
+      "task_name": "moe_majors",
+      "description": "教育部专业目录",
+      "target_url": "https://gaokao.chsi.com.cn/zyk/",
+      "data_type": "majors",
+      "crawl_strategy": "scrapy",
+      "frequency": "yearly",
+      "enabled": true,
+      "spider": "majors/moe_majors_spider.py",
+      "script": null,
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "next_run_at": null
+    },
+    {
+      "task_name": "site_check",
+      "description": "网站巡检",
+      "target_url": null,
+      "data_type": "meta",
+      "crawl_strategy": "script",
+      "frequency": "daily",
+      "enabled": true,
+      "spider": null,
+      "script": "src/scripts/daily_run.py --check-only",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "next_run_at": null
+    },
+    {
+      "task_name": "test_task",
+      "description": "测试任务",
+      "target_url": "https://example.com",
+      "data_type": "schools",
+      "crawl_strategy": "api",
+      "frequency": "weekly",
+      "enabled": true,
+      "spider": null,
+      "script": null,
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "next_run_at": null
+    }
+  ]
+}

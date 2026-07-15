@@ -1,0 +1,15 @@
+[Unit]
+Description=驷马粮选 — 猫粮比较与推荐工具
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/simaliangxuan
+EnvironmentFile=/opt/simaliangxuan/.env
+ExecStart=/opt/simaliangxuan/venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8002
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

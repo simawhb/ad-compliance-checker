@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>驷马粮选 · 设计稿 V3</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0ece6;color:#1c130e;padding:40px 20px}
+.preview-note{text-align:center;font-size:13px;color:#a09080;margin-bottom:30px}
+
+/* 手机壳 */
+.phone-wrap{max-width:400px;margin:0 auto;border-radius:28px;overflow:hidden;box-shadow:0 8px 50px rgba(60,30,10,.18);border:1px solid #d8cdc0}
+
+/* ===== 头部 ===== */
+.header{
+  background:linear-gradient(160deg,#631e0e 0%,#8a3420 40%,#a84b2a 100%);
+  padding:20px 20px 18px;
+  position:relative
+}
+/* 顶部金色装饰条 — 像猫粮袋封口 */
+.header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  background:linear-gradient(90deg,#d4a840,#e8c658,#d4a840)
+}
+/* 底部浅色过渡 */
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:12px;
+  background:linear-gradient(0deg,rgba(250,246,240,.08) 0%,transparent 100%)
+}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:4px}
+.header-top h1{
+  font-size:24px;font-weight:900;color:#fdf6ee;
+  letter-spacing:1.2px;text-shadow:0 2px 6px rgba(0,0,0,.2);
+  position:relative
+}
+/* 标题下的小装饰线 */
+.header-top h1::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:28px;height:2.5px;
+  background:#e8c658;border-radius:2px
+}
+.header-top .mail{font-size:10.5px;color:rgba(255,251,245,.5);text-decoration:none;letter-spacing:.2px}
+
+/* 搜索 */
+.search-bar{display:flex;gap:8px;margin-top:4px}
+.search-bar input{
+  flex:1;padding:11px 16px;border:none;border-radius:10px;font-size:13px;outline:none;
+  background:rgba(255,255,255,.13);color:#fdf6ee;backdrop-filter:blur(4px);
+  transition:all .15s
+}
+.search-bar input::placeholder{color:rgba(255,251,245,.45)}
+.search-bar input:focus{background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 1px rgba(232,198,88,.3)}
+.search-bar .btn{
+  padding:11px 20px;border:none;border-radius:10px;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .12s;letter-spacing:.5px
+}
+.search-bar .btn-primary{
+  background:linear-gradient(135deg,#e8c658,#d4a840);color:#4a1608;
+  box-shadow:0 2px 10px rgba(212,168,64,.3);font-weight:800
+}
+.search-bar .btn-primary:hover{background:linear-gradient(135deg,#f0d26a,#dcb04c);transform:translateY(-1px)}
+
+/* 筛选标签 — 金边 */
+.filter-row{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.filter-row span{
+  padding:5px 16px;border-radius:100px;font-size:11px;cursor:pointer;font-weight:500;
+  background:rgba(255,255,255,.08);color:rgba(255,251,245,.8);
+  border:1px solid rgba(255,255,255,.1);transition:all .12s
+}
+.filter-row span.active{
+  background:rgba(232,198,88,.2);color:#fdf6ee;font-weight:700;
+  border-color:#e8c658;box-shadow:0 0 12px rgba(232,198,88,.15)
+}
+.filter-row span:hover{background:rgba(255,255,255,.16)}
+
+
+/* ===== 分类导航 ===== */
+.nav{
+  background:#fdf8f2;padding:10px 16px;display:flex;gap:2px;
+  border-bottom:1px solid #e6dbce
+}
+.nav a{
+  padding:6px 16px;border-radius:6px;font-size:12px;font-weight:500;
+  text-decoration:none;color:#7a6a58;transition:all .1s
+}
+.nav a.active{background:#631e0e;color:#fdf6ee;font-weight:600}
+.nav a:hover:not(.active){background:#eee4d8}
+
+
+/* ===== 内容区 ===== */
+.content{background:#faf6f0;padding:18px 16px;min-height:300px}
+
+/* 统计条 — 参考营养标签风格 */
+.stats-bar{display:flex;gap:10px;margin-bottom:18px}
+.stat-box{
+  flex:1;background:#fff;border:1px solid #e8ddd0;border-radius:12px;
+  padding:14px 6px;text-align:center;position:relative;overflow:hidden
+}
+/* 顶部小色条 */
+.stat-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#631e0e,#e8c658)
+}
+.stat-box .num{font-size:24px;font-weight:900;color:#631e0e}
+.stat-box .label{font-size:11px;color:#9a8a7a;margin-top:2px;font-weight:500}
+
+/* 功能入口 */
+.entrance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.entrance-card{
+  background:#fff;border:1.5px solid #e8ddd0;border-radius:12px;
+  padding:16px 14px;text-decoration:none;color:inherit;
+  transition:all .15s;position:relative
+}
+.entrance-card:hover{
+  border-color:#c4a080;box-shadow:0 3px 12px rgba(99,30,14,.08);
+  transform:translateY(-1px)
+}
+.entrance-card .title{font-size:14px;font-weight:700;color:#2d1a10;margin-bottom:4px}
+.entrance-card .desc{font-size:11px;color:#9a8a7a;line-height:1.6}
+.entrance-card .count{
+  font-size:11px;color:#8a3420;font-weight:600;margin-top:8px;
+  display:inline-flex;align-items:center;gap:3px
+}
+
+/* 标签带底色 */
+.tag-pill{
+  display:inline-block;font-size:9.5px;padding:2px 10px;border-radius:100px;
+  font-weight:700;margin-left:4px;vertical-align:middle;letter-spacing:.2px
+}
+.tag-hot{background:#fee7e7;color:#b91c1c}
+.tag-new{background:#e0edff;color:#1e40af}
+.tag-rec{
+  background:linear-gradient(135deg,#fef3c7,#fde68a);color:#78350f
+}
+.tag-warn{background:#fff3e0;color:#9a3412}
+
+/* ===== 产品列表 ===== */
+.section-header{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:10px
+}
+.section-header .left{
+  font-size:14px;font-weight:700;color:#2d1a10;position:relative;padding-left:12px
+}
+.section-header .left::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:14px;background:#631e0e;border-radius:2px
+}
+.section-header .right{font-size:11px;color:#8a3420;cursor:pointer;font-weight:600}
+
+.product-list{display:flex;flex-direction:column;gap:9px}
+.product-item{
+  background:#fff;border:1px solid #e8ddd0;border-radius:12px;
+  padding:14px 16px;display:flex;justify-content:space-between;align-items:center;
+  transition:all .12s
+}
+.product-item:hover{border-color:#c4a080;box-shadow:0 2px 8px rgba(99,30,14,.04)}
+.product-item .left{}
+.product-item .left .brand{font-size:11px;color:#9a8a7a;margin-bottom:2px}
+.product-item .left .name{font-size:14px;font-weight:700;color:#2d1a10}
+.product-item .right{text-align:right}
+.product-item .right .price{font-size:17px;font-weight:800;color:#631e0e}
+.product-item .right .tag{font-size:11px;color:#9a8a7a;margin-top:2px}
+
+/* 产品品质标签 */
+.product-badge{
+  display:inline-block;font-size:9.5px;padding:2px 10px;border-radius:4px;
+  font-weight:700;margin-top:5px;letter-spacing:.3px
+}
+.pb-platinum{background:linear-gradient(135deg,#631e0e,#8a3420);color:#fdf6ee}
+.pb-gold{background:linear-gradient(135deg,#e8c658,#d4a840);color:#4a1608}
+.pb-silver{background:#f0e6da;color:#5a3d2a}
+
+
+/* ===== 底部导航 ===== */
+.bottom-nav{
+  background:#fdf8f2;border-top:1px solid #e6dbce;
+  display:flex;padding:6px 0 8px
+}
+.bottom-nav a{
+  flex:1;text-align:center;padding:8px 0 6px;font-size:11px;
+  text-decoration:none;color:#9a8a7a;font-weight:500;position:relative;
+  transition:all .1s
+}
+.bottom-nav a.active{color:#631e0e;font-weight:700}
+.bottom-nav a.active::after{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:20px;height:2.5px;background:#631e0e;border-radius:2px
+}
+
+</style>
+</head>
+<body>
+
+<div class="preview-note">↓ 驷马粮选 · V3 优化版（暖色猫粮包装风）</div>
+
+<div class="phone-wrap">
+
+  <!-- ===== 头部 ===== -->
+  <div class="header">
+    <div class="header-top">
+      <h1>驷马粮选</h1>
+      <a href="mailto:14712502@qq.com" class="mail">14712502@qq.com</a>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="搜索品牌、产品名称...">
+      <button class="btn btn-primary">搜索</button>
+    </div>
+    <div class="filter-row">
+      <span class="active">全阶段</span>
+      <span>幼猫</span>
+      <span>成猫</span>
+      <span>老年猫</span>
+      <span>国产</span>
+      <span>进口</span>
+    </div>
+  </div>
+
+  <!-- ===== 分类导航 ===== -->
+  <div class="nav">
+    <a href="#" class="active">推荐</a>
+    <a href="#">干粮</a>
+    <a href="#">湿粮</a>
+    <a href="#">冻干</a>
+    <a href="#">零食</a>
+  </div>
+
+  <!-- ===== 内容 ===== -->
+  <div class="content">
+
+    <!-- 统计 -->
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="num">35</div>
+        <div class="label">猫粮数据</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">12</div>
+        <div class="label">品牌收录</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">6</div>
+        <div class="label">召回记录</div>
+      </div>
+    </div>
+
+    <!-- 功能入口 -->
+    <div class="entrance-grid">
+      <a class="entrance-card" href="#">
+        <div class="title">猫粮库</div>
+        <div class="desc">35 款猫粮数据，多维度筛选 <span class="tag-pill tag-new">更新</span></div>
+        <div class="count">查看全部 →</div>
+      </a>
+      <a class="entrance-card" href="#">
+        <div class="title">智能推荐</div>
+        <div class="desc">按年龄、预算、需求精准匹配</div>
+        <div class="count">开始匹配 →</div>
+      </a>
+      <a class="entrance-card" href="#">
+        <div class="title">对比工具</div>
+        <div class="desc">2-4 款营养成分一键对比</div>
+        <div class="count">开始对比 →</div>
+      </a>
+      <a class="entrance-card" href="#">
+        <div class="title">喂食量计算</div>
+        <div class="desc">根据体重和年龄推荐喂食量</div>
+        <div class="count">开始计算 →</div>
+      </a>
+      <a class="entrance-card" href="#">
+        <div class="title">换粮过渡</div>
+        <div class="desc">7日换粮过渡方案生成</div>
+        <div class="count">生成方案 →</div>
+      </a>
+      <a class="entrance-card" href="#">
+        <div class="title">避雷专区</div>
+        <div class="desc">召回记录与翻车通报 <span class="tag-pill tag-hot">3条</span></div>
+        <div class="count">查看记录 →</div>
+      </a>
+    </div>
+
+    <!-- 推荐产品 -->
+    <div class="section-header">
+      <div class="left">精选推荐</div>
+      <div class="right">选择对比</div>
+    </div>
+    <div class="product-list">
+      <div class="product-item">
+        <div class="left">
+          <div class="brand">ACANA 爱肯拿</div>
+          <div class="name">农场盛宴鸡肉配方</div>
+          <span class="product-badge pb-platinum">优选推荐</span>
+        </div>
+        <div class="right">
+          <div class="price">¥69</div>
+          <div class="tag">粗蛋白 35% · /kg</div>
+        </div>
+      </div>
+      <div class="product-item">
+        <div class="left">
+          <div class="brand">Orijen 原始猎食渴望</div>
+          <div class="name">六种鱼配方</div>
+          <span class="product-badge pb-platinum">优选推荐</span>
+        </div>
+        <div class="right">
+          <div class="price">¥85</div>
+          <div class="tag">粗蛋白 42% · /kg</div>
+        </div>
+      </div>
+      <div class="product-item">
+        <div class="left">
+          <div class="brand">Myfoodie 麦富迪</div>
+          <div class="name">冻干双拼成猫粮</div>
+          <span class="product-badge pb-gold">热销爆款</span>
+        </div>
+        <div class="right">
+          <div class="price">¥38</div>
+          <div class="tag">粗蛋白 32% · /kg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 底部导航 ===== -->
+  <div class="bottom-nav">
+    <a href="#" class="active">首页</a>
+    <a href="#">猫粮库</a>
+    <a href="#">推荐</a>
+    <a href="#">工具</a>
+    <a href="#">避雷</a>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:20px;font-size:12px;color:#a09080">
+  V3 优化 · 暖色包装风 · 标签全带底色
+</div>
+
+</body>
+</html>

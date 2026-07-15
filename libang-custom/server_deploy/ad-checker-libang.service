@@ -1,0 +1,15 @@
+[Unit]
+Description=广告审查助手 · 力邦营养企业定制版
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ad-checker-libang
+EnvironmentFile=/opt/ad-checker-libang/.env
+ExecStart=/opt/ad-checker-libang/venv/bin/python /opt/ad-checker-libang/start_server_prod.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+{"city": "西安", "keyword": "Java开发", "count": 22, "salary_min": 12.9, "salary_max": 19.7}
+{"city": "西安", "keyword": "Python开发", "count": 24, "salary_min": 12.6, "salary_max": 21.1}
+{"city": "西安", "keyword": "会计", "count": 80, "salary_min": 14.2, "salary_max": 24.2}
+{"city": "西安", "keyword": "法务", "count": 29, "salary_min": 13.0, "salary_max": 17.0}
+{"city": "西安", "keyword": "护士", "count": 43, "salary_min": 10.0, "salary_max": 15.0}
+{"city": "成都", "keyword": "Java开发", "count": 22, "salary_min": 12.9, "salary_max": 19.7}
+{"city": "成都", "keyword": "Python开发", "count": 25, "salary_min": 12.4, "salary_max": 20.7}
+{"city": "成都", "keyword": "会计", "count": 74, "salary_min": 15.6, "salary_max": 26.4}
+{"city": "成都", "keyword": "法务", "count": 29, "salary_min": 13.0, "salary_max": 17.0}
+{"city": "成都", "keyword": "护士", "count": 43, "salary_min": 10.0, "salary_max": 15.0}
+{"city": "郑州", "keyword": "Java开发", "count": 22, "salary_min": 12.9, "salary_max": 19.7}
+{"city": "郑州", "keyword": "Python开发", "count": 24, "salary_min": 12.4, "salary_max": 20.7}
+{"city": "郑州", "keyword": "会计", "count": 73, "salary_min": 15.5, "salary_max": 25.5}
+{"city": "郑州", "keyword": "法务", "count": 29, "salary_min": 18.0, "salary_max": 25.0}
+{"city": "郑州", "keyword": "护士", "count": 44, "salary_min": 10.0, "salary_max": 15.0}

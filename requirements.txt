@@ -1,0 +1,30 @@
+# FastAPI 框架
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# 页面抓取
+playwright>=1.40.0
+
+# OCR 引擎
+paddlepaddle-gpu==2.6.0
+paddleocr>=2.7.0
+easyocr>=1.7.0              # fallback OCR
+
+# 图片处理
+Pillow>=10.0.0
+opencv-python>=4.8.0
+
+# LLM 调用
+httpx>=0.25.0
+
+# PDF 报告生成
+reportlab>=4.0.0
+python-docx>=1.0.0
+
+# 邮件发送
+aiofiles>=23.2.0
+
+# 工具
+python-multipart>=0.0.6     # 文件上传
+aiofiles>=23.2.0

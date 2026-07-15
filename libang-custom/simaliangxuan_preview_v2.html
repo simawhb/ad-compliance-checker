@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>驷马粮选 · 设计预览 V3</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:#e8ddd0;color:#2d1a10;padding:40px 20px
+}
+.preview-note{text-align:center;font-size:13px;color:#a09080;margin-bottom:30px}
+.phone-wrap{max-width:400px;margin:0 auto;border-radius:28px;overflow:hidden;box-shadow:0 8px 50px rgba(60,30,10,.18);border:1px solid #d8cdc0;background:#f5ede4}
+
+/* 顶栏 */
+.top-bar{
+  background:#f0e6db;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #e0d3c4
+}
+.top-bar .back{color:#7a6652;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .12s}
+.top-bar .back:hover{background:#e0d3c4}
+.top-bar .title{font-size:16px;font-weight:700;color:#2d1a10}
+.top-bar .spacer{width:32px}
+
+/* Hero */
+.hero{
+  background:linear-gradient(160deg,#631e0e 0%,#8a3420 40%,#a84b2a 100%);
+  padding:28px 20px 24px;position:relative;overflow:hidden
+}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#e8c658,#f5e6b8,#e8c658)}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(250,246,240,.06) 0%,transparent 100%)}
+.hero .deco{position:absolute;right:10px;top:20px;width:80px;height:80px;border-radius:50%;border:1px solid rgba(255,255,255,.06)}
+.hero .deco2{position:absolute;right:-20px;bottom:-20px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,.04)}
+.hero h1{font-size:26px;font-weight:900;color:#fdf6ee;letter-spacing:.5px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hero p{font-size:13px;color:rgba(255,251,245,.7);margin-top:4px;position:relative;z-index:1}
+.hero .search-box{display:flex;gap:8px;margin-top:16px;position:relative;z-index:1}
+.hero .search-box input{
+  flex:1;padding:10px 14px;border:none;border-radius:10px;font-size:13px;outline:none;
+  background:rgba(255,255,255,.15);color:#fdf6ee;backdrop-filter:blur(4px)
+}
+.hero .search-box input::placeholder{color:rgba(255,251,245,.45)}
+.hero .search-box input:focus{background:rgba(255,255,255,.22)}
+.hero .search-box .btn{
+  padding:10px 18px;border:none;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+  background:linear-gradient(135deg,#e8c658,#d4a840);color:#4a1608;
+  box-shadow:0 2px 10px rgba(212,168,64,.25);transition:all .12s;display:flex;align-items:center;gap:5px
+}
+.hero .search-box .btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(212,168,64,.35)}
+
+/* 分类导航 */
+.category-nav{
+  background:#f0e6db;padding:10px 16px;display:flex;gap:6px;overflow-x:auto;
+  border-bottom:1px solid #e0d3c4;-webkit-overflow-scrolling:touch;scrollbar-width:none
+}
+.category-nav::-webkit-scrollbar{display:none}
+.cat-item{
+  padding:6px 18px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
+  color:#7a6652;background:#e8dbce;transition:all .15s;border:1px solid transparent
+}
+.cat-item.active{background:#631e0e;color:#fdf6ee;border-color:#631e0e;box-shadow:0 2px 8px rgba(99,30,14,.15)}
+.cat-item:hover:not(.active){background:#ddd0c0;color:#4a3018}
+
+/* 统计条 */
+.stats{display:flex;gap:8px;padding:16px}
+.stat-card{
+  flex:1;background:#f8f0e8;border-radius:12px;padding:14px 8px;text-align:center;
+  border:1px solid #e0d3c4;position:relative;overflow:hidden
+}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#631e0e,#e8c658)}
+.stat-card .num{font-size:26px;font-weight:900;color:#631e0e;line-height:1}
+.stat-card .num .unit{font-size:14px;font-weight:600;color:#a08070}
+.stat-card .label{font-size:10.5px;color:#9a8a7a;margin-top:4px;font-weight:500}
+.stat-card.ai-stat{background:linear-gradient(135deg,#631e0e,#8a3420);border-color:#631e0e}
+.stat-card.ai-stat::before{background:linear-gradient(90deg,#e8c658,#f5e6b8)}
+.stat-card.ai-stat .num{color:#fdf6ee}
+.stat-card.ai-stat .label{color:rgba(255,251,245,.7)}
+
+/* 功能入口 */
+.entrances{padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.entrance-card{
+  background:#faf4ee;border:1px solid #e0d3c4;border-radius:14px;
+  padding:18px 14px 16px;text-decoration:none;color:inherit;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden
+}
+.entrance-card:hover{border-color:#c4a080;transform:translateY(-2px);box-shadow:0 6px 20px rgba(99,30,14,.08)}
+.entrance-card .icon-box{
+  width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+  position:relative;overflow:hidden
+}
+.entrance-card .icon-box svg{width:30px;height:30px;display:block;position:relative;z-index:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.08))}
+.entrance-card .icon-box::after{
+  content:'';position:absolute;top:-6px;right:-6px;width:18px;height:18px;
+  border-radius:50%;background:rgba(255,255,255,.3);z-index:0
+}
+.entrance-card .icon-box::before{
+  content:'';position:absolute;bottom:-4px;left:-4px;width:12px;height:12px;
+  border-radius:50%;background:rgba(0,0,0,.04);z-index:0
+}
+.ec-green{background:linear-gradient(145deg,#d8ead8,#bcd5c4)}
+.ec-amber{background:linear-gradient(145deg,#f0e4c8,#dcccac)}
+.ec-blue{background:linear-gradient(145deg,#d8e4f0,#bccddc)}
+.ec-red{background:linear-gradient(145deg,#f0dcdc,#dcc0c0)}
+.ec-purple{background:linear-gradient(145deg,#e8dff0,#d4c4e0)}
+.ec-orange{background:linear-gradient(145deg,#f2e0d0,#dcc4b4)}
+.entrance-card .title{font-size:13px;font-weight:700;color:#2d1a10;margin-bottom:3px}
+.entrance-card .desc{font-size:11px;color:#9a8a7a;line-height:1.5}
+.entrance-card .desc .tag-pill{display:inline-block;font-size:9px;padding:1px 8px;border-radius:100px;font-weight:700;margin-left:4px;vertical-align:middle;background:#e0edff;color:#1e40af}
+
+/* 推荐猫粮 */
+.section-header{
+  display:flex;justify-content:space-between;align-items:center;padding:0 16px;margin-bottom:10px
+}
+.section-header .left{font-size:14px;font-weight:700;color:#2d1a10;display:flex;align-items:center;gap:8px}
+.section-header .left .badge{
+  display:inline-block;font-size:9px;padding:2px 8px;border-radius:100px;
+  background:linear-gradient(135deg,#fef3c7,#fde68a);color:#78350f;font-weight:700
+}
+.section-header .right{font-size:11px;color:#8a3420;cursor:pointer;font-weight:600}
+
+.product-list{padding:0 16px 20px;display:flex;flex-direction:column;gap:8px}
+.product-card{
+  background:#faf4ee;border:1px solid #e0d3c4;border-radius:12px;
+  padding:14px 16px;display:flex;justify-content:space-between;align-items:center;transition:all .12s;cursor:pointer
+}
+.product-card:hover{border-color:#c4a080;box-shadow:0 2px 10px rgba(99,30,14,.06)}
+.product-card .left .brand{font-size:10.5px;color:#9a8a7a;font-weight:500;margin-bottom:2px}
+.product-card .left .name{font-size:14px;font-weight:700;color:#2d1a10;margin-bottom:4px}
+.product-card .left .tags{display:flex;gap:4px;flex-wrap:wrap}
+.product-card .left .tags span{display:inline-block;font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600}
+.tag-pick{background:#631e0e;color:#fdf6ee}
+.tag-hotp{background:#fef3c7;color:#78350f}
+.tag-newp{background:#e0edff;color:#1e40af}
+.product-card .right{text-align:right}
+.product-card .right .price{font-size:17px;font-weight:800;color:#631e0e}
+.product-card .right .price .unit{font-size:11px;font-weight:500;color:#a08070}
+.product-card .right .protein{font-size:11px;color:#9a8a7a;margin-top:2px}
+
+/* 底部导航 */
+.bottom-nav{
+  background:#f0e6db;border-top:1px solid #e0d3c4;display:flex;padding:6px 0 10px
+}
+.bottom-nav a{
+  flex:1;text-align:center;padding:5px 0;font-size:10px;text-decoration:none;
+  color:#9a8a7a;font-weight:500;position:relative;transition:all .1s
+}
+.bottom-nav a svg{width:22px;height:22px;display:block;margin:0 auto 1px}
+.bottom-nav a.active{color:#631e0e;font-weight:700}
+.bottom-nav a.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:2.5px;background:#631e0e;border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="preview-note">↓ 驷马粮选 · 立体插图图标版</div>
+
+<div class="phone-wrap">
+
+  <!-- 顶栏 -->
+  <div class="top-bar">
+    <div class="back">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7a6652" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </div>
+    <div class="title">驷马粮选</div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="deco"></div>
+    <div class="deco2"></div>
+    <h1>猫粮优选</h1>
+    <p>为你的猫咪找到最合适的那一款</p>
+    <div class="search-box">
+      <input type="text" placeholder="搜索品牌、产品名称...">
+      <div class="btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a1608" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        搜索
+      </div>
+    </div>
+  </div>
+
+  <!-- 分类导航 -->
+  <div class="category-nav">
+    <span class="cat-item active">推荐</span>
+    <span class="cat-item">干粮</span>
+    <span class="cat-item">湿粮</span>
+    <span class="cat-item">冻干</span>
+    <span class="cat-item">零食</span>
+  </div>
+
+  <!-- 统计 -->
+  <div class="stats">
+    <div class="stat-card"><div class="num">35<span class="unit">+</span></div><div class="label">收录猫粮</div></div>
+    <div class="stat-card"><div class="num">12<span class="unit">个</span></div><div class="label">品牌收录</div></div>
+    <div class="stat-card"><div class="num">6<span class="unit">项</span></div><div class="label">实用功能</div></div>
+    <div class="stat-card ai-stat"><div class="num">AI</div><div class="label">智能解读</div></div>
+  </div>
+
+  <!-- 功能入口（立体渐变插图图标） -->
+  <div class="entrances">
+
+    <!-- 猫粮库：立体书本 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-green">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="book-spine" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5a8f6a"/>
+              <stop offset="100%" stop-color="#3d6b4a"/>
+            </linearGradient>
+            <linearGradient id="book-cover" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4a7c59"/>
+              <stop offset="100%" stop-color="#2d5a3a"/>
+            </linearGradient>
+            <linearGradient id="book-page" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fdf6ee"/>
+              <stop offset="100%" stop-color="#f0e6db"/>
+            </linearGradient>
+          </defs>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="28" rx="12" ry="1.5" fill="#2d5a3a" opacity="0.08"/>
+          <!-- 书脊（立体左侧边） -->
+          <path d="M4 12v13c0 1.1.9 2 2 2h1V10H6c-1.1 0-2 .9-2 2z" fill="url(#book-spine)"/>
+          <!-- 封面 -->
+          <rect x="7" y="9" width="18" height="18" rx="1.5" fill="url(#book-cover)"/>
+          <!-- 封面高光 -->
+          <rect x="7" y="9" width="18" height="4" rx="1.5" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 封面文字 -->
+          <text x="16" y="23" font-size="8" text-anchor="middle" fill="#fdf6ee" font-weight="800" opacity="0.9">粮</text>
+          <!-- 封面小装饰圆 -->
+          <circle cx="16" cy="15" r="2.5" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 书签 -->
+          <path d="M23 8v5l-1.5-1-1.5 1V8z" fill="#e8c658"/>
+          <path d="M23 8v5l-1.5-1-1.5 1V8z" fill="#d4a840" opacity="0.3" transform="translate(0.5,0)"/>
+          <!-- 内页（底部露出） -->
+          <rect x="7" y="25" width="18" height="2.5" rx="0.5" fill="url(#book-page)" opacity="0.6"/>
+          <!-- 书签绳 -->
+          <line x1="23" y1="13" x2="23" y2="27" stroke="#e8c658" stroke-width="0.5" opacity="0.3"/>
+          <!-- 高光点 -->
+          <circle cx="10" cy="12" r="1" fill="#fdf6ee" opacity="0.15"/>
+        </svg>
+      </div>
+      <div class="title">猫粮库</div>
+      <div class="desc">35 款猫粮数据 <span class="tag-pill">更新</span></div>
+    </div>
+
+    <!-- 智能推荐：立体勋章 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-amber">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <radialGradient id="star-glow" cx="0.5" cy="0.4" r="0.6">
+              <stop offset="0%" stop-color="#f0d060"/>
+              <stop offset="100%" stop-color="#a67c2e"/>
+            </radialGradient>
+            <radialGradient id="star-core" cx="0.4" cy="0.35" r="0.55">
+              <stop offset="0%" stop-color="#f5e080"/>
+              <stop offset="100%" stop-color="#c4a040"/>
+            </radialGradient>
+          </defs>
+          <!-- 光晕 -->
+          <circle cx="18" cy="17" r="13" fill="#e8c658" opacity="0.08"/>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="28" rx="8" ry="1.5" fill="#a67c2e" opacity="0.1"/>
+          <!-- 外层星星（光晕立体） -->
+          <path d="M18 3l4 8.2 9 1.3-6.5 6.4 1.5 9L18 23.5l-8 4.4 1.5-9L5 12.5l9-1.3z" fill="url(#star-glow)" opacity="0.3"/>
+          <!-- 中层星星 -->
+          <path d="M18 5l3.5 7.2 7.8 1.1-5.6 5.5 1.3 7.8L18 21.5l-7 3.6 1.3-7.8-5.6-5.5 7.8-1.1z" fill="url(#star-glow)"/>
+          <!-- 内层星星 -->
+          <path d="M18 7.5l2.8 5.6 6 .9-4.3 4.2 1 6.1L18 20.5l-5.3 2.8 1-6.1-4.3-4.2 6-.9z" fill="url(#star-core)"/>
+          <!-- 中心亮点 -->
+          <circle cx="17" cy="16" r="1.5" fill="#fdf6ee" opacity="0.5"/>
+          <circle cx="16.5" cy="15" r="0.6" fill="#fdf6ee" opacity="0.4"/>
+          <!-- 光点 -->
+          <circle cx="26" cy="10" r="1.2" fill="#e8c658" opacity="0.6"/>
+          <circle cx="10" cy="25" r="1" fill="#e8c658" opacity="0.45"/>
+          <circle cx="28" cy="23" r="0.8" fill="#e8c658" opacity="0.35"/>
+          <circle cx="8" cy="11" r="0.7" fill="#e8c658" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="title">智能推荐</div>
+      <div class="desc">按需精准匹配</div>
+    </div>
+
+    <!-- 实用工具：立体量杯 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-blue">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="cup-body" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5a8fc0"/>
+              <stop offset="100%" stop-color="#3a6ea5"/>
+            </linearGradient>
+            <linearGradient id="cup-liquid" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fdf6ee"/>
+              <stop offset="100%" stop-color="#e8dbc8"/>
+            </linearGradient>
+          </defs>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="28.5" rx="10" ry="1.5" fill="#3a6ea5" opacity="0.08"/>
+          <!-- 量杯主体 -->
+          <path d="M9 7h18v19a4 4 0 0 1-4 4h-10a4 4 0 0 1-4-4V7z" fill="url(#cup-body)"/>
+          <!-- 杯壁高光 -->
+          <path d="M10 8h16v18a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3V8z" fill="#fdf6ee" opacity="0.06"/>
+          <!-- 液体 -->
+          <path d="M11 20h14v5a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2v-5z" fill="url(#cup-liquid)" opacity="0.35"/>
+          <!-- 液面高光 -->
+          <line x1="11" y1="20" x2="25" y2="20" stroke="#fdf6ee" stroke-width="0.8" opacity="0.2"/>
+          <!-- 刻度线 -->
+          <line x1="9" y1="12" x2="13.5" y2="12" stroke="#fdf6ee" stroke-width="0.8" opacity="0.4" stroke-linecap="round"/>
+          <line x1="9" y1="15.5" x2="14.5" y2="15.5" stroke="#fdf6ee" stroke-width="0.8" opacity="0.4" stroke-linecap="round"/>
+          <line x1="9" y1="19" x2="13.5" y2="19" stroke="#fdf6ee" stroke-width="0.8" opacity="0.4" stroke-linecap="round"/>
+          <!-- 刻度数字 -->
+          <text x="15.5" y="13" font-size="3.5" fill="#fdf6ee" opacity="0.45">50</text>
+          <text x="15.5" y="16.5" font-size="3.5" fill="#fdf6ee" opacity="0.45">100</text>
+          <text x="15.5" y="20" font-size="3.5" fill="#fdf6ee" opacity="0.45">150</text>
+          <!-- 杯嘴 -->
+          <path d="M16 7v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V7" fill="#3a6ea5"/>
+          <!-- 杯嘴高光 -->
+          <path d="M16 7v-2.5a.5.5 0 0 1 .5-.5h1.5V7" fill="#fdf6ee" opacity="0.15"/>
+          <!-- 小气泡 -->
+          <circle cx="14" cy="22" r="0.6" fill="#fdf6ee" opacity="0.12"/>
+          <circle cx="19" cy="23" r="0.4" fill="#fdf6ee" opacity="0.1"/>
+        </svg>
+      </div>
+      <div class="title">实用工具</div>
+      <div class="desc">喂食量／换粮计算</div>
+    </div>
+
+    <!-- 避雷专区：立体盾牌 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-red">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="shield-body" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#d06060"/>
+              <stop offset="100%" stop-color="#b04040"/>
+            </linearGradient>
+            <linearGradient id="shield-inner" x1="0.3" y1="0.2" x2="0.7" y2="0.8">
+              <stop offset="0%" stop-color="#d87878"/>
+              <stop offset="100%" stop-color="#a83838"/>
+            </linearGradient>
+          </defs>
+          <!-- 光晕 -->
+          <circle cx="18" cy="17" r="12" fill="#b04a4a" opacity="0.06"/>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="28" rx="7" ry="1.2" fill="#b04a4a" opacity="0.08"/>
+          <!-- 盾牌外层 -->
+          <path d="M18 3l10 4v8c0 6-4.7 11.8-10 13-5.3-1.2-10-7-10-13V7l10-4z" fill="url(#shield-body)"/>
+          <!-- 盾牌高光边 -->
+          <path d="M18 4.5l8.5 3.4v7.1c0 5-3.9 9.8-8.5 11-4.6-1.2-8.5-6-8.5-11V7.9l8.5-3.4z" fill="url(#shield-inner)"/>
+          <!-- 盾牌顶部高光 -->
+          <path d="M14 7l4-1.5 4 1.5" stroke="#fdf6ee" stroke-width="0.5" opacity="0.2" stroke-linecap="round"/>
+          <!-- 对勾 -->
+          <path d="M12.5 17l4 4 7.5-8" stroke="#fdf6ee" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- 对勾阴影（立体） -->
+          <path d="M12.5 17.5l4 4 7.5-8" stroke="#8a2828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.15" transform="translate(0.5,0.5)"/>
+          <!-- 装饰铆钉 -->
+          <circle cx="13" cy="9.5" r="0.8" fill="#fdf6ee" opacity="0.15"/>
+          <circle cx="23" cy="9.5" r="0.8" fill="#fdf6ee" opacity="0.15"/>
+        </svg>
+      </div>
+      <div class="title">避雷专区</div>
+      <div class="desc">召回 & 翻车记录</div>
+    </div>
+
+    <!-- 拍照识粮：立体相机 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-purple">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="cam-body" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7a5c9a"/>
+              <stop offset="100%" stop-color="#5a3e78"/>
+            </linearGradient>
+            <radialGradient id="cam-lens" cx="0.4" cy="0.35" r="0.6">
+              <stop offset="0%" stop-color="#8a6aaa"/>
+              <stop offset="50%" stop-color="#5a3e78"/>
+              <stop offset="100%" stop-color="#3a2858"/>
+            </radialGradient>
+          </defs>
+          <!-- 光晕 -->
+          <rect x="3" y="8" width="30" height="20" rx="6" fill="#6b4f8a" opacity="0.06"/>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="29" rx="11" ry="1.2" fill="#6b4f8a" opacity="0.08"/>
+          <!-- 相机机身 -->
+          <rect x="4" y="11" width="28" height="16" rx="4" fill="url(#cam-body)"/>
+          <!-- 机身顶部高光 -->
+          <rect x="4" y="11" width="28" height="3" rx="2" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 顶部凸起 -->
+          <path d="M14 11l2-3h6l2 3" fill="url(#cam-body)"/>
+          <path d="M14 11l2-3h3" fill="#fdf6ee" opacity="0.05"/>
+          <!-- 闪光灯 -->
+          <rect x="24" y="12" width="5" height="2.5" rx="0.8" fill="#fdf6ee" opacity="0.8"/>
+          <rect x="24" y="12" width="5" height="1" rx="0.4" fill="#fdf6ee" opacity="0.9"/>
+          <!-- 镜头外圈 -->
+          <circle cx="18" cy="19" r="7" fill="#fdf6ee" opacity="0.12"/>
+          <circle cx="18" cy="19" r="6" fill="#fdf6ee" opacity="0.18"/>
+          <!-- 镜头内圈 -->
+          <circle cx="18" cy="19" r="4.5" fill="url(#cam-lens)"/>
+          <!-- 镜头反射 -->
+          <ellipse cx="16.5" cy="17.5" rx="2.5" ry="1.2" fill="#fdf6ee" opacity="0.08" transform="rotate(-25 16.5 17.5)"/>
+          <circle cx="16" cy="17" r="0.8" fill="#fdf6ee" opacity="0.15"/>
+          <circle cx="20" cy="21" r="0.4" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 取景器 -->
+          <rect x="8" y="8" width="6" height="3" rx="1.2" fill="url(#cam-body)"/>
+          <rect x="8" y="8" width="6" height="1.5" rx="0.6" fill="#fdf6ee" opacity="0.06"/>
+        </svg>
+      </div>
+      <div class="title">拍照识粮</div>
+      <div class="desc">拍照解读配料表</div>
+    </div>
+
+    <!-- 猫粮对比：立体柱状图 -->
+    <div class="entrance-card">
+      <div class="icon-box ec-orange">
+        <svg viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="bar-1" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#b86a2a"/>
+              <stop offset="100%" stop-color="#d48a4a"/>
+            </linearGradient>
+            <linearGradient id="bar-2" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#a05520"/>
+              <stop offset="100%" stop-color="#c07840"/>
+            </linearGradient>
+            <linearGradient id="bar-3" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#8a4010"/>
+              <stop offset="100%" stop-color="#a86830"/>
+            </linearGradient>
+          </defs>
+          <!-- 阴影 -->
+          <ellipse cx="18" cy="28" rx="12" ry="1.2" fill="#b86a2a" opacity="0.06"/>
+          <!-- 背景网格 -->
+          <line x1="6" y1="26" x2="30" y2="26" stroke="#b86a2a" stroke-width="0.4" opacity="0.12"/>
+          <line x1="6" y1="21" x2="30" y2="21" stroke="#b86a2a" stroke-width="0.3" opacity="0.08"/>
+          <line x1="6" y1="16" x2="30" y2="16" stroke="#b86a2a" stroke-width="0.3" opacity="0.08"/>
+          <!-- Y轴 -->
+          <line x1="7" y1="7" x2="7" y2="26" stroke="#b86a2a" stroke-width="0.5" opacity="0.15"/>
+          <!-- 柱子1（矮） -->
+          <rect x="9" y="18" width="5" height="8" rx="1" fill="url(#bar-1)"/>
+          <rect x="9" y="18" width="5" height="2" rx="0.5" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 柱子2（中） -->
+          <rect x="16" y="13" width="5" height="13" rx="1" fill="url(#bar-2)"/>
+          <rect x="16" y="13" width="5" height="2" rx="0.5" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 柱子3（高） -->
+          <rect x="23" y="8" width="5" height="18" rx="1" fill="url(#bar-3)"/>
+          <rect x="23" y="8" width="5" height="2" rx="0.5" fill="#fdf6ee" opacity="0.08"/>
+          <!-- 柱子顶部光点 -->
+          <circle cx="11.5" cy="18" r="1.2" fill="#d48a4a" opacity="0.6"/>
+          <circle cx="18.5" cy="13" r="1.2" fill="#c07840" opacity="0.6"/>
+          <circle cx="25.5" cy="8" r="1.2" fill="#a86830" opacity="0.6"/>
+          <!-- 趋势上升线 -->
+          <path d="M9 20l3.5 1 3-4 3 2 3.5-5" stroke="#4a7c59" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <polygon points="24,12 21,10.5 22.5,14" fill="#4a7c59"/>
+        </svg>
+      </div>
+      <div class="title">猫粮对比</div>
+      <div class="desc">2-4 款营养成分对比</div>
+    </div>
+
+  </div>
+
+  <!-- 推荐猫粮 -->
+  <div class="section-header">
+    <div class="left">精选推荐 <span class="badge">HOT</span></div>
+    <div class="right">查看全部 →</div>
+  </div>
+  <div class="product-list">
+    <div class="product-card">
+      <div class="left">
+        <div class="brand">ACANA 爱肯拿</div>
+        <div class="name">农场盛宴鸡肉配方</div>
+        <div class="tags"><span class="tag-pick">优选</span><span class="tag-hotp">高蛋白</span></div>
+      </div>
+      <div class="right">
+        <div class="price">¥69 <span class="unit">/kg</span></div>
+        <div class="protein">粗蛋白 35%</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="left">
+        <div class="brand">Orijen 原始猎食渴望</div>
+        <div class="name">六种鱼配方</div>
+        <div class="tags"><span class="tag-pick">优选</span><span class="tag-newp">无谷</span></div>
+      </div>
+      <div class="right">
+        <div class="price">¥85 <span class="unit">/kg</span></div>
+        <div class="protein">粗蛋白 42%</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="left">
+        <div class="brand">Myfoodie 麦富迪</div>
+        <div class="name">冻干双拼成猫粮</div>
+        <div class="tags"><span class="tag-hotp">热销爆款</span></div>
+      </div>
+      <div class="right">
+        <div class="price">¥38 <span class="unit">/kg</span></div>
+        <div class="protein">粗蛋白 32%</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:0 16px 12px;font-size:10.5px;color:#a09080">参考价格，以实际购买为准</div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <a href="#" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      首页
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+      猫粮库
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V7a4 4 0 0 0-4-4z"/><path d="M8 9h8"/></svg>
+      推荐
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      工具
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h0"/></svg>
+      避雷
+    </a>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:20px;font-size:12px;color:#a09080">设计预览 · 立体插图图标版</div>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高考志愿助手 · 驷马工具集</title>
+<meta name="description" content="高考志愿填报辅助工具 — 院校查询、分数线对比、志愿推荐，助力考生科学填报。">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:#0a0a0c;color:rgba(191,219,254,.85);min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  display:flex;flex-direction:column;align-items:center;padding:0
+}
+::selection{background:rgba(0,122,255,.3);color:#fff}
+
+/* ===== 背景图层 ===== */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(191,219,254,.025) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 18% 15%,rgba(0,122,255,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 500px 500px at 78% 12%,rgba(88,86,214,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 350px 350px at 85% 55%,rgba(255,45,85,.05) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 300px at 12% 65%,rgba(90,200,250,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 450px 250px at 50% 92%,rgba(0,122,255,.04) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:atmo 25s cubic-bezier(.45,.05,.2,1) infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-2.5%,2%) scale(1.02)}
+  50%{transform:translate(2%,-1.5%) scale(1.01)}
+  75%{transform:translate(-1%,2.5%) scale(1.03)}
+  100%{transform:translate(1.5%,-2%) scale(1.02)}
+}
+
+/* ===== 玻璃卡片 ===== */
+.glass-card{
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  transition:all .35s cubic-bezier(.25,.1,.25,1);
+  border-radius:16px;padding:28px
+}
+.glass-card:hover{border-color:rgba(191,219,254,.12);box-shadow:0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(191,219,254,.06);transform:translateY(-2px)}
+
+.container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1;width:100%}
+
+/* ===== Header ===== */
+.header{
+  width:100%;padding:40px 0 20px;position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1100px;width:100%;padding:0 24px
+}
+.header-l{display:flex;align-items:center;gap:10px}
+.header-logo{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,rgba(0,122,255,.15),rgba(88,86,214,.08));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:18px;
+  border:.5px solid rgba(0,122,255,.15);border-top-color:rgba(0,122,255,.25);
+  color:#409cff
+}
+.header-title{font-size:20px;font-weight:700;color:rgba(191,219,254,.92)}
+.header-r{display:flex;gap:8px}
+.header-r a{
+  color:rgba(191,219,254,.6);text-decoration:none;font-size:14px;
+  padding:8px 18px;border-radius:100px;
+  background:rgba(191,219,254,.04);
+  border:.5px solid rgba(191,219,254,.1);
+  transition:all .2s
+}
+.header-r a:hover{background:rgba(191,219,254,.08);color:rgba(191,219,254,.85)}
+
+/* ===== Hero ===== */
+.hero{padding:60px 0 40px;text-align:center;position:relative;z-index:1}
+.hero-hl{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:500px;height:200px;
+  background:radial-gradient(ellipse,rgba(0,122,255,.1) 0%,rgba(88,86,214,.04) 40%,transparent 70%);
+  pointer-events:none
+}
+.hero h1{font-size:42px;font-weight:700;margin-bottom:12px;color:rgba(191,219,254,.92)}
+.hero h1 span{
+  background:linear-gradient(135deg,#409cff,#5856D6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero p{font-size:18px;color:rgba(191,219,254,.45);max-width:600px;margin:0 auto 36px;line-height:1.8}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:14px 32px;border-radius:12px;font-size:16px;font-weight:600;text-decoration:none;
+  transition:all .25s;cursor:pointer;border:none;display:inline-block;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.btn-primary{
+  background:linear-gradient(135deg,rgba(0,122,255,.2),rgba(0,122,255,.08));
+  color:#409cff;
+  border:.5px solid rgba(0,122,255,.25);border-top-color:rgba(0,122,255,.35);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.1)
+}
+.btn-primary:hover{background:linear-gradient(135deg,rgba(0,122,255,.28),rgba(0,122,255,.12));transform:translateY(-2px)}
+
+/* ===== 区域标题 ===== */
+.sec-title{
+  font-size:28px;font-weight:700;text-align:center;margin-bottom:40px;
+  color:rgba(191,219,254,.9)
+}
+.sec-title::after{
+  content:'';display:block;width:40px;height:3px;
+  background:linear-gradient(90deg,#007AFF,transparent);
+  margin:12px auto 0;border-radius:2px;opacity:.5
+}
+
+/* ===== Features ===== */
+.features{padding:40px 0}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{padding:32px 24px;text-align:center}
+.feature-card .icon{font-size:32px;margin-bottom:16px;display:block;opacity:.8}
+.feature-card h3{font-size:18px;margin-bottom:10px;color:rgba(191,219,254,.9)}
+.feature-card p{color:rgba(191,219,254,.45);font-size:14px;line-height:1.8}
+
+/* ===== Steps ===== */
+.steps{padding:40px 0}
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{text-align:center;padding:32px 24px}
+.step .num{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#007AFF,#5856D6);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:20px;margin-bottom:16px;
+  box-shadow:0 4px 16px rgba(0,122,255,.25)
+}
+.step h3{font-size:18px;margin-bottom:8px;color:rgba(191,219,254,.9)}
+.step p{color:rgba(191,219,254,.45);font-size:14px;line-height:1.8}
+
+/* ===== Preview ===== */
+.preview{padding:40px 0}
+.preview-card{text-align:center;padding:48px 32px;overflow:hidden;position:relative}
+.preview-card .screen{
+  height:300px;display:flex;align-items:center;justify-content:center;
+  font-size:72px;
+  background:linear-gradient(135deg,rgba(0,122,255,.06),rgba(88,86,214,.04));
+  border-radius:12px;margin-bottom:20px;
+  border:.5px solid rgba(191,219,254,.06)
+}
+.preview-card h3{font-size:20px;margin-bottom:8px;color:rgba(191,219,254,.9)}
+.preview-card p{color:rgba(191,219,254,.45);font-size:15px;max-width:500px;margin:0 auto;line-height:1.8}
+
+/* ===== Notice ===== */
+.notice{padding:20 0 40px}
+.notice-card{padding:24px 32px;text-align:center;max-width:600px;margin:0 auto}
+.notice-card p{color:rgba(191,219,254,.45);font-size:14px;line-height:1.8}
+
+/* ===== Footer ===== */
+.footer{
+  text-align:center;padding:32px 0;font-size:13px;
+  border-top:.5px solid rgba(191,219,254,.04);margin-top:20px;
+  width:100%;position:relative;z-index:1
+}
+.footer p{color:rgba(191,219,254,.25)}
+.footer a{color:#007AFF;text-decoration:none;transition:color .15s}
+.footer a:hover{color:#409cff}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .hero h1{font-size:28px}
+  .hero p{font-size:16px}
+  .feature-grid,.step-grid{grid-template-columns:1fr}
+  .sec-title{font-size:24px}
+  .glass-card{padding:20px}
+  .header-inner{padding:0 16px}
+  .header-r a{font-size:12px;padding:6px 12px}
+}
+@media(max-width:480px){
+  .hero{padding:40px 0 24px}
+  .hero h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="header-inner">
+<div class="header-l">
+<div class="header-logo">考</div>
+<div class="header-title">高考志愿助手</div>
+</div>
+<div class="header-r">
+<a href="https://4ma.wang/">驷马工具集</a>
+</div>
+</div>
+</div>
+
+<div class="hero">
+<div class="hero-hl"></div>
+<div class="container">
+<h1>高考志愿<span> 科学填报</span></h1>
+<p>基于历年招生数据与录取趋势分析，为考生提供院校查询、专业对比、志愿推荐一站式服务，助力每一位考生做出更优选择。</p>
+<div class="hero-btns">
+<a class="btn btn-primary" href="https://gaokao.4ma.wang">开始使用</a>
+</div>
+</div>
+</div>
+
+<div class="features">
+<div class="container">
+<h2 class="sec-title">核心功能</h2>
+<div class="feature-grid">
+<div class="feature-card glass-card"><span class="icon">🏫</span><h3>院校查询</h3><p>覆盖全国高等院校基本信息、办学层次、所在地等，支持按分数、地域、类型等多维度筛选。</p></div>
+<div class="feature-card glass-card"><span class="icon">📊</span><h3>分数线对比</h3><p>历年录取分数线趋势对比，一目了然看清院校录取走势，辅助科学决策。</p></div>
+<div class="feature-card glass-card"><span class="icon">🎯</span><h3>志愿推荐</h3><p>基于分数、位次、兴趣偏好等多维度信息，智能推荐适合的院校和专业组合。</p></div>
+</div>
+</div>
+</div>
+
+<div class="steps">
+<div class="container">
+<h2 class="sec-title">使用流程</h2>
+<div class="step-grid">
+<div class="step glass-card"><div class="num">1</div><h3>输入成绩</h3><p>输入高考分数或位次，选择所在省份与文理科/选科。</p></div>
+<div class="step glass-card"><div class="num">2</div><h3>筛选偏好</h3><p>按地域、院校层次、专业方向等偏好设定筛选条件。</p></div>
+<div class="step glass-card"><div class="num">3</div><h3>获取推荐</h3><p>查看志愿推荐方案，结合自身情况做出最优选择。</p></div>
+</div>
+</div>
+</div>
+
+<div class="preview">
+<div class="container">
+<div class="preview-card glass-card">
+<div class="screen">📚</div>
+<h3>数据驱动，理性选择</h3>
+<p>整合多年高考录取数据，通过科学的分析模型，为志愿填报提供可靠的数据参考。</p>
+</div>
+</div>
+</div>
+
+<div class="notice">
+<div class="container">
+<div class="notice-card glass-card">
+<p>本工具为辅助参考工具，所有数据仅供参考。志愿填报应以官方发布的招生政策和录取数据为准，建议考生结合自身情况综合决策。</p>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<div class="container">
+<p>驷马工具集 · 高考志愿助手 &copy; 2026 | <a href="https://4ma.wang/">返回首页</a></p>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>力邦营养定制版 · 管理后台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC",sans-serif;background:#f5f6fa;padding:24px;color:#0d0d0d}
+h1{font-size:22px;font-weight:700;margin-bottom:20px}
+h1 small{font-size:13px;font-weight:400;color:#6b7280;margin-left:8px}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #e8ecf0}
+.card h3{font-size:14px;font-weight:600;margin-bottom:12px;color:#6b7280}
+.stats{display:flex;gap:20px;flex-wrap:wrap}
+.stat{padding:16px 24px;background:#f9fafb;border-radius:10px;text-align:center;min-width:120px}
+.stat .num{font-size:28px;font-weight:800;color:#2563eb}
+.stat .lbl{font-size:12px;color:#6b7280;margin-top:4px}
+</style>
+</head>
+<body>
+<h1>力邦营养定制版 · 管理后台 <small>企业内用版</small></h1>
+<div class="card"><h3>运行状态</h3>
+<div class="stats">
+<div class="stat"><div class="num" id="sHealth">-</div><div class="lbl">服务状态</div></div>
+<div class="stat"><div class="num" id="sUsers">-</div><div class="lbl">用户数</div></div>
+<div class="stat"><div class="num" id="sChecks">-</div><div class="lbl">检测总次数</div></div>
+</div>
+</div>
+<div class="card"><h3>说明</h3>
+<p style="font-size:14px;color:#6b7280;line-height:1.7">
+本系统为力邦营养企业内用版，无配额限制，所有用户自动享有无限检测额度。
+<br><br>
+如需部署/配置帮助或定制知识库，请联系北京华象（西安）律师事务所 王洪兵（邮箱：14712502@qq.com）。
+</p>
+</div>
+<script>
+async function loadStats(){
+  try{
+    var r=await fetch(location.origin+'/api/health');
+    var d=await r.json();
+    document.getElementById('sHealth').textContent=d.status==='ok'?'运行中':'异常';
+    document.getElementById('sHealth').style.color=d.status==='ok'?'#22c55e':'#ef4444';
+  }catch(e){document.getElementById('sHealth').textContent='无法连接'}
+  try{
+    var r=await fetch(location.origin+'/api/admin/stats',{headers:{'X-Admin-Key':(document.cookie.match(/admin_ok=1/)||[''])[0]?prompt('管理员密码'):''}});
+    var d=await r.json();
+    if(d.ok&&d.data){
+      document.getElementById('sUsers').textContent=d.data.total_users||0;
+      document.getElementById('sChecks').textContent=d.data.total_checks||0;
+    }
+  }catch(e){}
+}
+loadStats();
+</script>
+</body>
+</html>

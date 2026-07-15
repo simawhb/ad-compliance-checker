@@ -1,0 +1,66 @@
+# 驷马合规 · 广告审查助手 — 力邦营养企业定制版
+# 部署指引（给另一台电脑的AI看）
+
+## 一、项目文件
+项目压缩包：`ad-checker-libang.zip`
+
+## 二、部署步骤
+
+### 1. 解压
+解压到目标目录，比如 `D:\WorkBuddy\legal-ai\ad-checker-libang\`
+
+### 2. 安装依赖
+```cmd
+cd /d D:\WorkBuddy\legal-ai\ad-checker-libang
+pip install fastapi uvicorn pydantic fpdf2 openpyxl --break-system-packages
+pip install easyocr Pillow numpy --break-system-packages
+```
+
+### 3. 共享知识库
+本项目的知识库指向 `D:\WorkBuddy\legal-ai\ad-compliance-checker\knowledge\forbidden_words.json`
+
+如果另一台电脑没有原版项目，需要：
+a) 创建 `D:\WorkBuddy\legal-ai\ad-compliance-checker\knowledge\` 目录
+b) 从本项目的 `backend/detector.py` 第5行可以看到 KB_PATH，把这一行改成指向本地副本
+   或者直接把 `forbidden_words.json`（从原版项目复制）放到本项目的 `knowledge\` 目录下，
+   然后把 `detector.py` 中的 KB_PATH 改为：
+   ```python
+   KB_PATH = os.path.join(os.path.dirname(__file__), "..", "knowledge", "forbidden_words.json")
+   ```
+
+### 4. 启动服务
+```cmd
+cd /d D:\WorkBuddy\legal-ai\ad-checker-libang
+python start_server.py
+```
+
+### 5. 访问
+- 检测工具：`http://127.0.0.1:8000/`
+- 桌面版：`http://127.0.0.1:8000/pc/`
+- 批量图片审查：`http://127.0.0.1:8000/batch/`
+
+## 三、项目结构
+```
+ad-checker-libang/
+├── index.html               # 品牌落地页（首页）
+├── start_server.py          # 启动入口
+├── start_libang.bat         # Windows一键启动脚本
+├── requirements.txt         # Python依赖
+├── backend/
+│   ├── main.py              # API主程序（含批量OCR+Excel导出）
+│   ├── user.py              # 企业版用户管理（无配额限制）
+│   ├── detector.py          # 规则检测引擎
+│   ├── llm.py               # AI深度分析（需配API Key）
+│   ├── pdf_report.py        # PDF报告导出
+│   └── admin/               # 管理后台
+├── frontend/index.html      # 桌面版应用
+├── h5/index.html            # 移动版应用
+└── batch/index.html         # 批量图片审查页面
+```
+
+## 四、关键信息
+- **品牌**：驷马合规（力邦营养·企业定制版）
+- **行业**：默认普通食品，支持特殊医学用途配方食品 + 通用行业
+- **配额**：企业内用版，无限制
+- **定制方**：北京华象（西安）律师事务所 王洪兵
+- **联系邮箱**：14712502@qq.com

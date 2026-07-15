@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4ma.WANG · 工具集 — 本地预览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1a1d29;min-height:100vh}
+.hero{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);color:#fff;padding:50px 24px 40px;text-align:center}
+.hero .avatar{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.15);display:inline-flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;margin-bottom:14px;border:2px solid rgba(255,255,255,.2)}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
+.hero p{font-size:14px;opacity:.75;max-width:400px;margin:0 auto;line-height:1.7}
+.hero .domain{display:inline-block;background:rgba(255,255,255,.12);padding:3px 12px;border-radius:100px;font-size:12px;font-weight:600;margin-bottom:12px;border:1px solid rgba(255,255,255,.15)}
+.hero .badge{display:inline-block;background:rgba(255,255,255,.1);padding:3px 10px;border-radius:100px;font-size:11px;margin-top:8px}
+.hero .badge.green{background:rgba(34,197,94,.2);color:#86efac}
+.container{max-width:1000px;margin:0 auto;padding:30px 20px}
+.section-title{font-size:16px;font-weight:700;margin-bottom:16px;color:#374151}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;text-align:left;font:inherit;width:100%;color:inherit}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.08);border-color:#2563eb}
+.card h3{font-size:15px;font-weight:700;margin-bottom:3px}
+.card p{font-size:12px;color:#6b7280;line-height:1.6;flex:1}
+.card .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:100px;margin-top:10px;font-weight:500;width:fit-content}
+.tag-green{background:#ecfdf5;color:#059669}
+.tag-blue{background:#eff6ff;color:#2563eb}
+.tag-orange{background:#fff7ed;color:#ea580c}
+.tag-purple{background:#f5f3ff;color:#7c3aed}
+.tag-gray{background:#f3f4f6;color:#6b7280}
+.tag-red{background:#fef2f2;color:#dc2626}
+.contact-box{text-align:center;margin:16px 0;padding:18px 16px;background:#fff;border:1px solid #e4e7ec;border-radius:10px;font-size:12px;color:#6b7280;line-height:1.9}
+.contact-box .title{font-size:13px;font-weight:600;color:#374151;margin-bottom:6px}
+.notice{margin:14px 0;padding:14px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:11px;color:#92400e;line-height:1.8;text-align:center}
+.status{text-align:center;margin:24px 0;padding:16px;background:#fff;border:1px solid #e4e7ec;border-radius:10px}
+.status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.status .s-text{font-size:12px;color:#6b7280}
+.footer{text-align:center;color:#9ca3af;font-size:11px;padding:24px 20px;border-top:1px solid #e4e7ec}
+
+/* Sub-pages */
+.sub-page{display:none}
+.sub-page.active{display:block}
+.back-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:#fff;border:1px solid #e4e7ec;border-radius:10px}
+.back-btn{background:none;border:none;font-size:20px;cursor:pointer;color:#2563eb;padding:0 4px;font-weight:700}
+.back-btn:hover{color:#1d4ed8}
+.back-bar .path{font-size:12px;color:#6b7280;background:#f3f4f6;padding:2px 8px;border-radius:4px;font-family:monospace}
+.back-bar .title{font-size:14px;font-weight:600;color:#374151;flex:1}
+.preview-frame{background:#fff;border:1px solid #e4e7ec;border-radius:10px;overflow:hidden;min-height:400px}
+.preview-frame .pf-header{background:#f9fafb;padding:10px 14px;border-bottom:1px solid #e4e7ec;display:flex;align-items:center;gap:8px}
+.preview-frame .pf-dots{display:flex;gap:4px}
+.preview-frame .pf-dot{width:8px;height:8px;border-radius:50%}
+.preview-frame .pf-dot.r{background:#ef4444}
+.preview-frame .pf-dot.y{background:#eab308}
+.preview-frame .pf-dot.g{background:#22c55e}
+.preview-frame .pf-url{font-size:11px;color:#9ca3af;background:#fff;border:1px solid #e4e7ec;border-radius:4px;padding:3px 8px;flex:1;font-family:monospace}
+.preview-frame .pf-body{padding:20px}
+.checker-demo{font-size:13px}
+.checker-demo textarea{width:100%;height:80px;border:1px solid #d1d5db;border-radius:8px;padding:10px;font-size:13px;font-family:inherit;resize:none;margin-bottom:10px}
+.checker-demo textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.1)}
+.result-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px;margin-top:10px}
+.result-box.warn{background:#fef2f2;border-color:#fecaca}
+.result-box h4{font-size:13px;margin-bottom:6px}
+.result-box .item{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(0,0,0,.05)}
+.result-box .item:last-child{border:none}
+.result-box .pass{color:#16a34a}
+.result-box .fail{color:#dc2626}
+.liangxuan-demo{font-size:13px}
+.liangxuan-demo .hero-mini{background:linear-gradient(135deg,#f5a623,#f57c00);color:#fff;padding:20px;border-radius:10px 10px 0 0;text-align:center}
+.liangxuan-demo .hero-mini h2{font-size:18px;margin-bottom:4px}
+.liangxuan-demo .hero-mini p{font-size:12px;opacity:.9}
+.liangxuan-demo .nav-btn{font-size:12px;color:#fff;opacity:.7;margin:6px}
+.liangxuan-demo .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.liangxuan-demo .food-item{background:#f9fafb;border:1px solid #e4e7ec;border-radius:8px;padding:12px;text-align:center}
+.liangxuan-demo .food-item .brand{font-size:12px;color:#9ca3af}
+.liangxuan-demo .food-item .name{font-size:14px;font-weight:600;margin:2px 0}
+.liangxuan-demo .food-item .stat{font-size:11px;color:#6b7280}
+.cclean-demo{text-align:center;padding:20px}
+.cclean-demo .big-icon{font-size:48px;margin-bottom:10px}
+.cclean-demo .scan-btn{background:#2563eb;color:#fff;border:none;padding:10px 30px;border-radius:8px;font-size:14px;cursor:pointer;margin:10px 0}
+.cclean-demo .result-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.cclean-demo .cat{background:#f9fafb;border:1px solid #e4e7ec;border-radius:8px;padding:10px}
+.cclean-demo .cat .num{font-size:20px;font-weight:800;color:#2563eb}
+.cclean-demo .cat .lbl{font-size:11px;color:#6b7280}
+.coming-soon{text-align:center;padding:40px 20px;color:#6b7280}
+.coming-soon .big{font-size:48px;margin-bottom:10px}
+.auth-screen{text-align:center;padding:30px 20px}
+.auth-screen .lock-icon{font-size:36px;margin-bottom:10px}
+.auth-screen input{display:block;width:100%;max-width:200px;margin:6px auto;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:13px}
+.auth-screen .login-btn{background:#2563eb;color:#fff;border:none;padding:8px 24px;border-radius:6px;margin-top:8px;cursor:pointer;font-size:13px}
+/* 高考志愿助手预览 */
+.gaokao-demo{font-size:13px}
+.gaokao-demo .hero-mini{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;padding:20px;border-radius:10px 10px 0 0;text-align:center}
+.gaokao-demo .hero-mini h2{font-size:18px;margin-bottom:4px}
+.gaokao-demo .hero-mini p{font-size:12px;opacity:.9}
+.gaokao-demo .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.gaokao-demo .uni-item{background:#f9fafb;border:1px solid #e4e7ec;border-radius:8px;padding:12px;text-align:center}
+.gaokao-demo .uni-item .city{font-size:11px;color:#9ca3af}
+.gaokao-demo .uni-item .name{font-size:14px;font-weight:600;margin:2px 0}
+.gaokao-demo .uni-item .stat{font-size:11px;color:#6b7280}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ============ 首页 ============ -->
+  <div id="page-home" class="page-content">
+    <div class="hero">
+      <div class="avatar">W</div>
+      <div class="domain">4ma.WANG</div>
+      <h1>驷马工具集</h1>
+      <p>自用效率工具汇总 · 随用随取</p>
+      <div class="badge green">全部服务运行中 — 本地预览模式</div>
+    </div>
+
+    <div class="container">
+      <div class="section-title">工具列表（点击卡片预览）</div>
+      <div class="grid">
+
+        <button class="card" onclick="showPage('checker')">
+          <h3>广告宣传审查助手</h3>
+          <p>AI 智能广告文案合规检测。支持文字输入和图片上传，秒级识别违禁词、功效夸大、虚假宣传。</p>
+          <span class="tag tag-blue">广告合规 · AI 检测 · 公开</span>
+        </button>
+
+        <button class="card" onclick="showPage('enterprise')">
+          <h3>广告宣传审查助手 · 企业定制版</h3>
+          <p>企业专属定制版，功能与原版一致，需密码访问。</p>
+          <span class="tag tag-purple">企业定制 · 密码保护</span>
+        </button>
+
+        <button class="card" onclick="showPage('gaokao')">
+          <h3>高考志愿助手</h3>
+          <p>高考志愿填报辅助工具，院校查询、分数线对比、志愿推荐，助力考生科学填报。</p>
+          <span class="tag tag-blue">高考 · 志愿填报</span>
+        </button>
+
+        <button class="card" onclick="showPage('liangxuan')">
+          <h3>驷马粮选</h3>
+          <p>智能猫粮对比推荐工具。39款猫粮数据库，AI解读配料表，营养成分对比，避雷专区。</p>
+          <span class="tag tag-orange">猫粮 · 对比推荐</span>
+        </button>
+
+        <button class="card" onclick="showPage('cclean')">
+          <h3>C盘清理助手</h3>
+          <p>C盘垃圾清理工具，一键扫描清理缓存、临时文件、大文件，释放磁盘空间。</p>
+          <span class="tag tag-green">系统工具 · 磁盘清理</span>
+        </button>
+
+        <button class="card" onclick="showPage('laobao')">
+          <h3>驷马用工宝</h3>
+          <p>劳动法智能问答助手，基于 AI 深度思考，覆盖劳动仲裁、工伤赔偿、辞退补偿、社保公积金等常见法律问题。</p>
+          <span class="tag tag-blue">劳动法 · AI 助手</span>
+        </button>
+
+        <button class="card" onclick="showPage('coming')">
+          <h3>更多工具开发中</h3>
+          <p>更多实用小工具持续开发中，敬请期待。</p>
+          <span class="tag tag-gray">即将上线</span>
+        </button>
+
+      </div>
+
+      <div class="contact-box">
+        <div class="title">联系方式</div>
+        商务合作或工具定制：<a href="mailto:14712502@qq.com">14712502@qq.com</a>
+        &nbsp;·&nbsp; <a href="https://github.com/simawhb/ad-compliance-checker" target="_blank">GitHub</a>
+      </div>
+
+      <div class="notice">
+        <strong>网站声明：</strong>本网站为个人非经营性网站，仅用于个人工具分享与技术交流。
+        不提供在线支付、商品交易或会员付费服务。
+      </div>
+
+      <div class="status">
+        <span class="dot"></span>
+        <span class="s-text">服务运行中 · 欢迎使用</span>
+      </div>
+
+
+      <div class="footer">
+        <div>4ma.WANG · 驷马工具集</div>
+        <div style="margin-top:4px"><a href="https://beian.miit.gov.cn" target="_blank" style="color:#9ca3af;text-decoration:none;font-size:11px">陕ICP备2026017204号-1</a></div>
+        <div style="margin-top:2px"><a href="https://beian.mps.gov.cn" target="_blank" style="color:#9ca3af;text-decoration:none;font-size:11px">陕公网安备61019002004048号</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 子页面 ============ -->
+
+  <!-- 原版审查助手 -->
+  <div id="page-checker" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">checker.4ma.wang</span>
+      <span class="title">广告宣传审查助手</span>
+      <span class="tag tag-blue" style="margin:0">公开访问</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://checker.4ma.wang</div>
+      </div>
+      <div class="pf-body checker-demo">
+        <p style="color:#374151;font-weight:600;margin-bottom:10px">输入广告文案进行合规检测</p>
+        <textarea id="demo-text" placeholder="请输入广告文案，例如：&#10;本产品采用最先进的技术，效果卓越，三天见效，治愈率100%...">本产品采用最先进的技术，效果卓越，三天见效，治愈率100%</textarea>
+        <button class="scan-btn" style="background:#2563eb;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-size:13px" onclick="runCheck()">开始检测</button>
+        <div id="check-result" style="display:none">
+          <div class="result-box warn">
+            <h4>检测结果：发现 3 处违规</h4>
+            <div class="item"><span>「最先进」— 绝对化用语</span><span class="fail">违反《广告法》第九条</span></div>
+            <div class="item"><span>「三天见效」— 功效保证</span><span class="fail">违反《广告法》第二十八条</span></div>
+            <div class="item"><span>「治愈率100%」— 虚假宣传</span><span class="fail">违反《广告法》第十七条</span></div>
+          </div>
+          <div class="result-box" style="margin-top:8px">
+            <h4>修改建议</h4>
+            <div class="item"><span>"最先进" → 建议改为"采用先进工艺"</span><span class="pass">已修正</span></div>
+            <div class="item"><span>"三天见效" → 删除或改为"坚持使用效果更佳"</span><span class="pass">已修正</span></div>
+            <div class="item"><span>"治愈率100%" → 删除，如实描述产品效果</span><span class="pass">已修正</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 企业定制版 -->
+  <div id="page-enterprise" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">4ma.wang/ad-check/</span>
+      <span class="title">广告宣传审查助手 · 企业定制版</span>
+      <span class="tag tag-purple" style="margin:0">密码保护</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://4ma.wang/ad-check/</div>
+      </div>
+      <div class="pf-body">
+        <div id="enterprise-login-screen" class="auth-screen">
+          <p style="font-weight:600;margin-bottom:4px">广告宣传审查助手 · 企业定制版</p>
+          <p style="font-size:12px;color:#6b7280;margin-bottom:12px">请输入访问密码</p>
+          <input type="text" value="libang" readonly style="background:#f3f4f6;color:#374151;text-align:center;font-weight:600">
+          <input type="password" value="libang2026" readonly style="background:#f3f4f6;color:#374151;text-align:center;font-weight:600">
+          <button class="login-btn" onclick="enterpriseLogin(this)">登录</button>
+          <p style="font-size:11px;color:#9ca3af;margin-top:8px">用户名 libang ｜ 密码 libang2026</p>
+        </div>
+        <div id="enterprise-dashboard" style="display:none;padding:20px">
+          <div style="text-align:center;margin-bottom:20px">
+            <h3 style="font-size:16px;color:#1a1d29">广告宣传审查助手</h3>
+            <p style="font-size:12px;color:#6b7280">企业定制版</p>
+          </div>
+          <div style="margin-top:14px">
+            <textarea style="width:100%;height:70px;border:1px solid #d1d5db;border-radius:8px;padding:10px;font-size:13px;font-family:inherit;resize:none" placeholder="请输入广告文案进行审查..."></textarea>
+            <button style="background:#2563eb;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-size:13px;margin-top:6px">开始审查</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 高考志愿助手 -->
+  <div id="page-gaokao" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">gaokao.4ma.wang</span>
+      <span class="title">高考志愿助手</span>
+      <span class="tag tag-blue" style="margin:0">志愿填报</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://gaokao.4ma.wang</div>
+      </div>
+      <div class="pf-body gaokao-demo">
+        <div class="hero-mini">
+          <h2>高考志愿助手</h2>
+          <p>院校查询 · 分数线对比 · 志愿推荐</p>
+        </div>
+        <div style="padding:14px">
+          <input type="text" value="陕西 理科 580分" readonly style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;text-align:center;background:#f9fafb;margin-bottom:12px">
+          <button class="scan-btn" style="background:#2563eb;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-size:13px;width:100%" onclick="document.getElementById('gaokao-result').style.display='block'">智能推荐</button>
+          <div id="gaokao-result" style="display:none;margin-top:12px">
+            <div class="grid-2">
+              <div class="uni-item">
+                <div class="city">西安</div>
+                <div class="name">西安交通大学</div>
+                <div class="stat">580分 · 冲一冲</div>
+              </div>
+              <div class="uni-item">
+                <div class="city">西安</div>
+                <div class="name">西北工业大学</div>
+                <div class="stat">572分 · 较稳妥</div>
+              </div>
+              <div class="uni-item">
+                <div class="city">成都</div>
+                <div class="name">电子科技大学</div>
+                <div class="stat">578分 · 冲一冲</div>
+              </div>
+              <div class="uni-item">
+                <div class="city">西安</div>
+                <div class="name">西安电子科技大学</div>
+                <div class="stat">565分 · 较稳妥</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 驷马粮选 -->
+  <div id="page-liangxuan" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">4ma.wang/liangxuan/</span>
+      <span class="title">驷马粮选</span>
+      <span class="tag tag-orange" style="margin:0">猫粮对比推荐</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://4ma.wang/liangxuan/</div>
+      </div>
+      <div class="pf-body liangxuan-demo">
+        <div class="hero-mini">
+          <h2>驷马粮选</h2>
+          <p>智能猫粮对比与推荐工具</p>
+          <div class="nav-btn">首页</div>
+          <div class="nav-btn">猫粮库</div>
+          <div class="nav-btn">推荐</div>
+          <div class="nav-btn">工具</div>
+          <div class="nav-btn">避雷</div>
+        </div>
+        <div class="grid-2">
+          <div class="food-item">
+            <div class="brand">皇家</div>
+            <div class="name">室内成猫粮</div>
+            <div class="stat">28% 蛋白质 · 67/kg</div>
+          </div>
+          <div class="food-item">
+            <div class="brand">渴望</div>
+            <div class="name">六种鱼</div>
+            <div class="stat">42% 蛋白质 · 129/kg</div>
+          </div>
+          <div class="food-item">
+            <div class="brand">爱肯拿</div>
+            <div class="name">农场盛宴</div>
+            <div class="stat">36% 蛋白质 · 85/kg</div>
+          </div>
+          <div class="food-item">
+            <div class="brand">GO!</div>
+            <div class="name">九种肉</div>
+            <div class="stat">46% 蛋白质 · 78/kg</div>
+          </div>
+        </div>
+        <div style="padding:0 14px 14px;font-size:11px;color:#9ca3af;text-align:center">
+          AI 解读配料表 · 营养成分对比 · 喂食量计算 · 换粮过渡方案
+          <br>数据库：39 款猫粮数据 · 10 条召回记录
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C盘清理 -->
+  <div id="page-cclean" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">4ma.wang/c-clean/</span>
+      <span class="title">C盘清理助手</span>
+      <span class="tag tag-green" style="margin:0">免费下载</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://4ma.wang/c-clean/</div>
+      </div>
+      <div class="pf-body cclean-demo">
+        <h3 style="margin-bottom:4px">C盘清理助手 v5.0</h3>
+        <p style="font-size:12px;color:#6b7280;margin-bottom:14px">一键释放 C 盘空间，让电脑运行更流畅</p>
+        <button class="scan-btn" onclick="this.textContent='扫描中...';setTimeout(()=>{this.textContent='开始扫描';document.getElementById('cclean-result').style.display='block'},1500)">开始扫描</button>
+        <div id="cclean-result" style="display:none">
+          <div class="result-cats">
+            <div class="cat"><div class="num">2.3 GB</div><div class="lbl">系统缓存</div></div>
+            <div class="cat"><div class="num">1.1 GB</div><div class="lbl">临时文件</div></div>
+            <div class="cat"><div class="num">856 MB</div><div class="lbl">回收站</div></div>
+            <div class="cat"><div class="num">1.5 GB</div><div class="lbl">大文件(>100MB)</div></div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px;font-size:13px;color:#16a34a;font-weight:600">
+            可清理空间：约 5.8 GB
+          </div>
+          <p style="font-size:11px;color:#9ca3af;margin-top:8px">
+            <a href="#" style="color:#2563eb">下载 cleaner-v5.0.zip</a> · 适用于 Windows 10/11
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 驷马用工宝 -->
+  <div id="page-laobao" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">4ma.wang/laobao/</span>
+      <span class="title">驷马用工宝</span>
+      <span class="tag tag-blue" style="margin:0">劳动法 AI 助手</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-header">
+        <div class="pf-dots"><span class="pf-dot r"></span><span class="pf-dot y"></span><span class="pf-dot g"></span></div>
+        <div class="pf-url">https://4ma.wang/laobao/</div>
+      </div>
+      <div class="pf-body">
+        <div style="text-align:center;padding:20px">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#1e6fff,#1557d4);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;margin-bottom:12px;box-shadow:0 4px 12px rgba(30,111,255,.3)">法</div>
+          <h3 style="font-size:16px;margin-bottom:4px">驷马用工宝</h3>
+          <p style="font-size:12px;color:#6b7280;margin-bottom:16px">劳动法智能问答助手</p>
+          <div style="background:#f0f2f6;border:1.5px solid #c8ced8;border-radius:8px;padding:12px;text-align:left;font-size:13px;color:#374151;margin-bottom:10px">
+            <span style="color:#9ca3b0">提问：</span>公司无故辞退我，工作了2年8个月，能拿到多少赔偿金？
+          </div>
+          <div style="background:#e8f0fe;border:1px solid #b3d0ff;border-radius:12px 12px 12px 4px;padding:14px;text-align:left;font-size:13px;color:#1a1d29;line-height:1.8">
+            <strong>【赔偿金计算】</strong><br>
+            根据《劳动合同法》第四十七条，经济补偿按劳动者在本单位工作的年限，每满一年支付一个月工资。六个月以上不满一年的，按一年计算；不满六个月的，向劳动者支付半个月工资的经济补偿。<br><br>
+            您工作2年8个月，应按3年计算。月工资是指您在解除合同前12个月的平均工资。赔偿金为：3个月 × 月平均工资。
+          </div>
+          <div style="margin-top:12px;font-size:11px;color:#9ca3af">
+            AI 深度思考 · 基于 DeepSeek-R1 · 仅供参考
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 即将上线 -->
+  <div id="page-coming" class="page-content sub-page">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">&larr;</button>
+      <span class="path">4ma.wang</span>
+      <span class="title">更多工具</span>
+    </div>
+    <div class="preview-frame">
+      <div class="pf-body coming-soon">
+        <h3 style="margin-bottom:8px">更多实用工具开发中</h3>
+        <p style="font-size:13px;color:#6b7280">后续将陆续上线更多实用小工具，敬请期待！</p>
+        <p style="font-size:12px;color:#9ca3af;margin-top:12px">如果你有工具定制需求，请联系 14712502@qq.com</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+  document.getElementById('page-' + page).style.display = 'block';
+  document.getElementById('page-' + page).classList.add('active');
+}
+
+function goHome() {
+  document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+  document.getElementById('page-home').style.display = 'block';
+  document.getElementById('page-home').classList.add('active');
+}
+
+function runCheck() {
+  document.getElementById('check-result').style.display = 'block';
+}
+
+function enterpriseLogin(btn) {
+  document.getElementById('enterprise-login-screen').style.display = 'none';
+  document.getElementById('enterprise-dashboard').style.display = 'block';
+}
+
+// 初始显示首页
+goHome();
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a0a0c">
+<title>批量图片审查 — 驷马合规 · 力邦营养定制版</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:#0a0a0c;color:rgba(191,219,254,.85);min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+::selection{background:rgba(0,122,255,.3);color:#fff}
+
+/* ===== 背景图层 ===== */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(191,219,254,.025) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 18% 15%,rgba(0,122,255,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 500px 500px at 78% 12%,rgba(88,86,214,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 350px 350px at 85% 55%,rgba(255,45,85,.05) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 300px at 12% 65%,rgba(90,200,250,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 450px 250px at 50% 92%,rgba(255,149,0,.04) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:atmo 25s cubic-bezier(.45,.05,.2,1) infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-2.5%,2%) scale(1.02)}
+  50%{transform:translate(2%,-1.5%) scale(1.01)}
+  75%{transform:translate(-1%,2.5%) scale(1.03)}
+  100%{transform:translate(1.5%,-2%) scale(1.02)}
+}
+
+/* ===== 玻璃卡片 ===== */
+.glass-card{
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  transition:all .35s cubic-bezier(.25,.1,.25,1);
+  border-radius:16px;padding:24px;margin-bottom:20px
+}
+.glass-card:hover{border-color:rgba(191,219,254,.12);box-shadow:0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(191,219,254,.06);transform:translateY(-2px)}
+
+.app{max-width:1200px;margin:0 auto;padding:20px 24px;position:relative;z-index:1}
+
+/* ===== Header ===== */
+.header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 24px;margin-bottom:24px;flex-wrap:wrap;gap:12px;
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  border-radius:12px
+}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-left .logo{font-size:18px;font-weight:700;color:rgba(191,219,254,.92);text-decoration:none;display:flex;align-items:center;gap:6px}
+.header-left .badge{
+  font-size:10px;
+  background:linear-gradient(135deg,rgba(0,122,255,.2),rgba(0,122,255,.08));
+  color:#409cff;padding:3px 10px;border-radius:100px;font-weight:600;
+  border:.5px solid rgba(0,122,255,.15)
+}
+.header-right a{
+  color:rgba(191,219,254,.6);text-decoration:none;font-size:13px;
+  padding:6px 14px;border-radius:100px;
+  background:rgba(191,219,254,.04);
+  border:.5px solid rgba(191,219,254,.1);
+  transition:all .2s
+}
+.header-right a:hover{background:rgba(191,219,254,.08);color:rgba(191,219,254,.85)}
+
+/* ===== Card Title ===== */
+.card-title{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:rgba(191,219,254,.9)}
+.card-title .count{font-size:12px;font-weight:400;color:rgba(191,219,254,.35)}
+
+/* ===== Upload Zone ===== */
+.upload-zone{
+  border:1.5px dashed rgba(191,219,254,.15);border-radius:12px;
+  padding:50px 20px;text-align:center;cursor:pointer;
+  transition:all .25s;background:rgba(191,219,254,.02)
+}
+.upload-zone:hover,.upload-zone.dragover{
+  border-color:rgba(0,122,255,.35);background:rgba(0,122,255,.06)
+}
+.upload-zone .icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.upload-zone .text{font-size:15px;color:rgba(191,219,254,.55);margin-bottom:6px}
+.upload-zone .sub{font-size:12px;color:rgba(191,219,254,.3)}
+.upload-zone input{display:none}
+
+/* ===== Thumbnail Grid ===== */
+.thumb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:16px}
+.thumb-item{
+  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(191,219,254,.04) 0%,rgba(191,219,254,.01) 100%);
+  border:.5px solid rgba(191,219,254,.07);border-radius:10px
+}
+.thumb-item img{width:100%;height:90px;object-fit:cover;display:block}
+.thumb-item .name{font-size:11px;color:rgba(191,219,254,.45);padding:4px 6px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.thumb-item .remove{
+  position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
+  background:rgba(255,69,58,.85);color:#fff;border:none;font-size:12px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center
+}
+.thumb-item .status-badge{position:absolute;bottom:26px;right:4px;font-size:10px;padding:1px 6px;border-radius:100px;font-weight:600}
+.thumb-item .status-badge.pending{background:rgba(191,219,254,.15);color:rgba(191,219,254,.55)}
+.thumb-item .status-badge.ok{background:rgba(48,209,88,.2);color:#30d158}
+.thumb-item .status-badge.fail{background:rgba(255,69,58,.2);color:#ff453a}
+.thumb-item .status-badge.busy{background:rgba(0,122,255,.2);color:#409cff}
+
+/* ===== Controls ===== */
+.controls{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+.controls select{
+  padding:8px 14px;font-size:13px;
+  background:rgba(191,219,254,.04);color:rgba(191,219,254,.7);
+  border:.5px solid rgba(191,219,254,.1);border-radius:8px;
+  outline:none;cursor:pointer;font-family:inherit;
+  transition:all .2s;appearance:auto
+}
+.controls select:hover,.controls select:focus{border-color:rgba(0,122,255,.25);color:rgba(191,219,254,.85)}
+.controls select option{background:#1a1a1e;color:rgba(191,219,254,.85)}
+
+/* ===== Buttons ===== */
+.btn{
+  padding:10px 22px;border:none;border-radius:10px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:inherit;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{
+  background:linear-gradient(135deg,rgba(0,122,255,.2),rgba(0,122,255,.08));
+  color:#409cff;
+  border:.5px solid rgba(0,122,255,.25);border-top-color:rgba(0,122,255,.35);
+  box-shadow:0 4px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(191,219,254,.1)
+}
+.btn-primary:hover{background:linear-gradient(135deg,rgba(0,122,255,.28),rgba(0,122,255,.12));transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-outline{
+  background:rgba(191,219,254,.04);color:rgba(191,219,254,.6);
+  border:.5px solid rgba(191,219,254,.1);border-top-color:rgba(191,219,254,.16);
+  box-shadow:0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(191,219,254,.06)
+}
+.btn-outline:hover{background:rgba(191,219,254,.08);color:rgba(191,219,254,.85);transform:translateY(-2px)}
+.btn-success{
+  background:linear-gradient(135deg,rgba(48,209,88,.2),rgba(48,209,88,.08));
+  color:#30d158;
+  border:.5px solid rgba(48,209,88,.25);border-top-color:rgba(48,209,88,.35)
+}
+.btn-success:hover{background:linear-gradient(135deg,rgba(48,209,88,.28),rgba(48,209,88,.12));transform:translateY(-2px)}
+.btn-danger{
+  background:linear-gradient(135deg,rgba(255,69,58,.2),rgba(255,69,58,.08));
+  color:#ff453a;
+  border:.5px solid rgba(255,69,58,.25);border-top-color:rgba(255,69,58,.35)
+}
+.btn-danger:hover{background:linear-gradient(135deg,rgba(255,69,58,.28),rgba(255,69,58,.12));transform:translateY(-2px)}
+
+/* ===== Progress ===== */
+.progress-wrap{display:none;margin-top:16px}
+.progress-bar{height:6px;background:rgba(191,219,254,.08);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#007AFF,#5856D6);border-radius:100px;width:0%;transition:width .3s}
+.progress-text{font-size:13px;color:rgba(191,219,254,.45);margin-top:8px;text-align:center}
+
+/* ===== Results Table ===== */
+.results-table{width:100%;border-collapse:collapse;font-size:13px;display:none;margin-top:12px}
+.results-table th{
+  padding:10px 12px;text-align:left;font-weight:600;
+  color:rgba(191,219,254,.45);font-size:12px;white-space:nowrap;
+  border-bottom:1px solid rgba(191,219,254,.06)
+}
+.results-table td{padding:10px 12px;border-bottom:1px solid rgba(191,219,254,.04);vertical-align:top;color:rgba(191,219,254,.7)}
+.results-table tr:hover td{background:rgba(191,219,254,.02)}
+.score-cell{font-weight:700;font-size:15px}
+.score-cell.g{color:#30d158}
+.score-cell.w{color:#ff9f0a}
+.score-cell.b{color:#ff453a}
+.risk-tag{display:inline-block;padding:1px 8px;border-radius:100px;font-size:11px;font-weight:600;margin:1px 2px}
+.risk-tag.high{background:rgba(255,69,58,.15);color:#ff453a}
+.risk-tag.medium{background:rgba(255,159,10,.15);color:#ff9f0a}
+.status-icon{font-size:16px}
+.status-icon.ok{color:#30d158}
+.status-icon.fail{color:#ff453a}
+.summary-cell{max-width:200px;font-size:12px;color:rgba(191,219,254,.45)}
+.name-cell{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.action-btn{
+  padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;
+  background:rgba(191,219,254,.04);color:rgba(191,219,254,.55);
+  border:.5px solid rgba(191,219,254,.1);transition:all .2s
+}
+.action-btn:hover{background:rgba(0,122,255,.1);color:#409cff}
+
+/* ===== Stats ===== */
+.stats-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.stat-box{
+  flex:1;min-width:100px;text-align:center;padding:16px;border-radius:10px;
+  background:linear-gradient(180deg,rgba(191,219,254,.04) 0%,rgba(191,219,254,.01) 100%);
+  border:.5px solid rgba(191,219,254,.06)
+}
+.stat-box .num{font-size:28px;font-weight:800;color:#409cff}
+.stat-box .num.danger{color:#ff453a}
+.stat-box .num.ok{color:#30d158}
+.stat-box .label{font-size:12px;color:rgba(191,219,254,.45);margin-top:4px}
+
+/* ===== Empty State ===== */
+.empty-state{text-align:center;padding:40px 20px;color:rgba(191,219,254,.3)}
+.empty-state .icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px;color:rgba(191,219,254,.35)}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  background:rgba(30,30,35,.95);backdrop-filter:blur(16px);
+  color:rgba(191,219,254,.85);padding:10px 20px;border-radius:100px;
+  font-size:13px;z-index:999;opacity:0;pointer-events:none;
+  border:.5px solid rgba(191,219,254,.1);
+  transition:all .25s
+}
+.toast.s{opacity:1}
+
+/* ===== Loading ===== */
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#409cff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+
+/* ===== Modal ===== */
+.modal{
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px)
+}
+.modal-content{
+  background:linear-gradient(180deg,rgba(30,30,35,.98) 0%,rgba(20,20,25,.98) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.1);
+  border-top-color:rgba(191,219,254,.15);
+  border-radius:16px;padding:28px;
+  width:92%;max-width:640px;max-height:80vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.5)
+}
+.modal-content h3{font-size:16px;font-weight:700;margin-bottom:16px;color:rgba(191,219,254,.9)}
+.modal-content .close{float:right;background:none;border:none;font-size:22px;cursor:pointer;color:rgba(191,219,254,.4);transition:color .15s}
+.modal-content .close:hover{color:rgba(191,219,254,.8)}
+.modal-content .section{margin-bottom:16px}
+.modal-content .section-label{font-size:11px;font-weight:600;color:rgba(191,219,254,.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.modal-content .section-text{
+  font-size:13px;line-height:1.7;
+  background:rgba(191,219,254,.03);color:rgba(191,219,254,.65);
+  padding:12px;border-radius:8px;white-space:pre-wrap;max-height:200px;overflow-y:auto;
+  border:.5px solid rgba(191,219,254,.04)
+}
+.modal-content .risk-item{padding:10px 12px;border-left:3px solid;margin:6px 0;border-radius:0 8px 8px 0;font-size:13px}
+.modal-content .risk-item.critical{background:rgba(255,69,58,.08);border-color:#ff453a}
+.modal-content .risk-item.high{background:rgba(255,159,10,.08);border-color:#ff9f0a}
+.modal-content .risk-item.medium{background:rgba(255,159,10,.05);border-color:#ff9f0a}
+.modal-content .risk-item.low{background:rgba(48,209,88,.05);border-color:#30d158}
+
+@media(max-width:700px){
+  .app{padding:12px}
+  .header{padding:12px 16px}
+  .results-table{font-size:12px}
+  .results-table th,.results-table td{padding:6px 8px}
+  .stats-row{gap:8px}
+  .stat-box{min-width:70px;padding:12px 8px}
+  .stat-box .num{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- Header -->
+<div class="header">
+<div class="header-left">
+<a href="/" class="logo">
+<svg width="22" height="22" viewBox="0 0 28 28" fill="none" style="vertical-align:middle"><rect width="28" height="28" rx="8" fill="rgba(0,122,255,.3)"/><path d="M8 14l4 4 8-8" stroke="rgba(191,219,254,.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+驷马合规
+</a>
+<span class="badge">批量图片审查</span>
+</div>
+<div class="header-right">
+<a href="/ad-check/pc/">← 返回检测</a>
+</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-row" id="statsRow" style="display:none">
+<div class="stat-box"><div class="num" id="statTotal">0</div><div class="label">总图片</div></div>
+<div class="stat-box"><div class="num ok" id="statOk">0</div><div class="label">通过</div></div>
+<div class="stat-box"><div class="num danger" id="statRisk">0</div><div class="label">有风险</div></div>
+<div class="stat-box"><div class="num" id="statFail">0</div><div class="label">失败</div></div>
+</div>
+
+<!-- Upload -->
+<div class="glass-card">
+<div class="card-title">上传产品详情页截图</div>
+<div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+<div class="icon">&#x1F4F7;</div>
+<div class="text">拖拽截图到这里，或点击选择文件</div>
+<div class="sub">支持 JPG / PNG / WebP，最多 50 张</div>
+<input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)">
+</div>
+<div class="thumb-grid" id="thumbGrid"></div>
+</div>
+
+<!-- Controls -->
+<div class="glass-card" id="controlCard">
+<div class="card-title">检测设置</div>
+<div class="controls">
+<select id="ind">
+<option value="">通用行业</option>
+<option value="food" selected>普通食品</option>
+<option value="fsmp">特殊医学用途配方食品</option>
+</select>
+<select id="plat"><option value="">不限平台</option><option value="taobao">淘宝/天猫</option><option value="douyin">抖音</option><option value="xiaohongshu">小红书</option><option value="pinduoduo">拼多多</option></select>
+<button class="btn btn-primary" id="startBtn" onclick="startReview()">开始审查</button>
+<button class="btn btn-outline" id="clearBtn" onclick="clearAll()" style="display:none">清空</button>
+</div>
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText"></div>
+</div>
+</div>
+
+<!-- Results -->
+<div class="glass-card" id="resultCard" style="display:none">
+<div class="card-title">检测结果 <span class="count" id="resultCount"></span></div>
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+<button class="btn btn-success" onclick="exportExcel()" id="exportBtn">导出 Excel 报告</button>
+<button class="btn btn-outline" onclick="exportPDF()">导出 PDF 摘要</button>
+</div>
+<table class="results-table" id="resultTable">
+<thead><tr>
+<th>#</th><th>图片</th><th>产品/文件名</th><th>得分</th><th>风险</th><th>违规词</th><th>摘要</th><th>操作</th>
+</tr></thead>
+<tbody id="resultBody"></tbody>
+</table>
+<div class="empty-state" id="emptyResult">
+<div class="icon">&#x1F50D;</div>
+<p>上传图片并点击"开始审查"</p>
+</div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Detail Modal -->
+<div class="modal" id="detailModal">
+<div class="modal-content">
+<button class="close" onclick="closeDetail()">&times;</button>
+<h3 id="detailTitle">详情</h3>
+<div class="section">
+<div class="section-label">识别文字</div>
+<div class="section-text" id="detailText"></div>
+</div>
+<div class="section">
+<div class="section-label">合规提醒</div>
+<div id="detailTips"></div>
+</div>
+<div class="section">
+<div class="section-label">违规词清单</div>
+<div id="detailRisks"></div>
+</div>
+</div>
+</div>
+
+<script>
+// ========== State ==========
+var A = location.origin + '/ad-check';
+var images = [];  // [{id, file, name, status, result}]
+var batchId = null;
+
+// ========== Utils ==========
+var $ = function(id) { return document.getElementById(id); };
+var e = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+function toast(m) {
+  var t = $('toast');
+  t.textContent = m;
+  t.classList.add('s');
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove('s'); }, 2500);
+}
+
+// ========== File Upload ==========
+var uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', function(e){
+  e.preventDefault();
+  uploadZone.classList.add('dragover');
+});
+uploadZone.addEventListener('dragleave', function(){
+  uploadZone.classList.remove('dragover');
+});
+uploadZone.addEventListener('drop', function(e){
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if(e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(files) {
+  if(images.length + files.length > 50) {
+    toast('最多上传50张图片');
+    return;
+  }
+  Array.from(files).forEach(function(f) {
+    if(!f.type.startsWith('image/')) return;
+    var id = 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      images.push({ id: id, file: f, name: f.name, dataUrl: ev.target.result, status: 'pending', result: null });
+      renderThumbs();
+      updateUI();
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function removeImage(id) {
+  images = images.filter(function(img) { return img.id !== id; });
+  renderThumbs();
+  updateUI();
+  if(images.length === 0) { $('resultCard').style.display = 'none'; $('statsRow').style.display = 'none'; }
+}
+
+function clearAll() {
+  if(images.some(function(i){ return i.status === 'busy'; })) { toast('审查进行中，请稍后'); return; }
+  images = [];
+  renderThumbs();
+  updateUI();
+  $('resultCard').style.display = 'none';
+  $('statsRow').style.display = 'none';
+  $('progressWrap').style.display = 'none';
+}
+
+function renderThumbs() {
+  var g = $('thumbGrid');
+  g.innerHTML = '';
+  images.forEach(function(img) {
+    var statusLabels = { pending: '待检测', busy: '检测中', ok: '通过', fail: '失败', ocr_failed: 'OCR失败', error: '错误' };
+    var statusClasses = { pending: 'pending', busy: 'busy', ok: 'ok', fail: 'fail', ocr_failed: 'fail', error: 'fail' };
+    var el = document.createElement('div');
+    el.className = 'thumb-item';
+    el.innerHTML =
+      '<img src="' + img.dataUrl + '" alt="' + e(img.name) + '">' +
+      '<span class="status-badge ' + (statusClasses[img.status] || 'pending') + '">' + (statusLabels[img.status] || '待检测') + '</span>' +
+      '<button class="remove" onclick="removeImage(\'' + img.id + '\')">&times;</button>' +
+      '<div class="name" title="' + e(img.name) + '">' + e(img.name) + '</div>';
+    g.appendChild(el);
+  });
+}
+
+// ========== Start Review ==========
+async function startReview() {
+  if(images.length === 0) { toast('请先上传图片'); return; }
+  if(images.some(function(i){ return i.status === 'busy'; })) { toast('正在检测中，请稍后'); return; }
+
+  var btn = $('startBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span>检测中...';
+  $('progressWrap').style.display = 'block';
+  $('progressFill').style.width = '0%';
+  $('progressText').textContent = '准备中...';
+
+  // Reset all status
+  images.forEach(function(img) { if(img.status !== 'busy') img.status = 'pending'; });
+  renderThumbs();
+
+  var industry = $('ind').value;
+  var platform = $('plat').value;
+
+  // Process one by one (sequential to avoid overwhelming server)
+  var total = images.length;
+  var success = 0, failed = 0;
+
+  for(var i = 0; i < total; i++) {
+    var img = images[i];
+    img.status = 'busy';
+    renderThumbs();
+    $('progressText').textContent = '正在检测 (' + (i+1) + '/' + total + '): ' + img.name;
+
+    try {
+      // Step 1: OCR via base64
+      var ocrBody = JSON.stringify({ image: img.dataUrl });
+      var ocrResp = await fetch(A + '/api/ocr-base64', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: ocrBody
+      });
+      var ocrData = await ocrResp.json();
+
+      if(!ocrData.ok || !ocrData.text) {
+        img.status = 'ocr_failed';
+        img.result = { error: ocrData.error || 'OCR未识别到文字', status: 'ocr_failed', name: img.name };
+        failed++;
+        renderThumbs();
+        $('progressFill').style.width = ((i+1)/total*100) + '%';
+        continue;
+      }
+
+      // Step 2: Compliance check
+      var checkBody = JSON.stringify({ text: ocrData.text, industry: industry, platform: platform, openid: 'libang_batch' });
+      var checkResp = await fetch(A + '/api/check', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: checkBody
+      });
+      var checkData = await checkResp.json();
+
+      if(checkData.ok) {
+        img.status = 'ok';
+        img.result = {
+          status: 'ok', name: img.name, score: checkData.score,
+          risk_count: checkData.risk_count, risks: checkData.risks || [],
+          summary: checkData.summary || '', compliance_tips: checkData.compliance_tips || [],
+          text_full: ocrData.text.slice(0, 2000),
+          text_preview: ocrData.text.slice(0, 150) + (ocrData.text.length > 150 ? '...' : ''),
+          risk_words: (checkData.risks || []).filter(function(r){ return r.type === 'forbidden' || r.type === 'industry'; }).slice(0,10).map(function(r){ return r.word; })
+        };
+        success++;
+      } else {
+        img.status = 'error';
+        img.result = { error: checkData.error || '检测失败', status: 'error', name: img.name };
+        failed++;
+      }
+    } catch(ex) {
+      img.status = 'error';
+      img.result = { error: ex.message || '请求失败', status: 'error', name: img.name };
+      failed++;
+    }
+    renderThumbs();
+    $('progressFill').style.width = ((i+1)/total*100) + '%';
+  }
+
+  $('progressFill').style.width = '100%';
+  $('progressText').textContent = '检测完成！通过: ' + success + '/' + total;
+  btn.disabled = false;
+  btn.innerHTML = '重新审查';
+
+  // Show results
+  showResults();
+  $('clearBtn').style.display = 'inline-flex';
+  toast('检测完成，通过 ' + success + '/' + total + ' 张图片');
+}
+
+// ========== Show Results ==========
+function showResults() {
+  $('resultCard').style.display = 'block';
+  $('statsRow').style.display = 'flex';
+
+  var ok = images.filter(function(i){ return i.status === 'ok'; });
+  var risk = images.filter(function(i){ return i.status === 'ok' && i.result && i.result.risk_count > 0; });
+  var fail = images.filter(function(i){ return i.status !== 'ok'; });
+
+  $('statTotal').textContent = images.length;
+  $('statOk').textContent = ok.length;
+  $('statRisk').textContent = risk.length;
+  $('statFail').textContent = fail.length;
+  $('resultCount').textContent = '(' + images.length + ' 张)';
+
+  var tb = $('resultBody');
+  tb.innerHTML = '';
+
+  images.forEach(function(img, idx) {
+    var r = img.result || {};
+    var tr = document.createElement('tr');
+
+    if(img.status === 'ok') {
+      var score = r.score || 0;
+      var scoreClass = score >= 80 ? 'g' : (score >= 60 ? 'w' : 'b');
+      var wordHtml = (r.risk_words || []).map(function(w){
+        return '<span class="risk-tag high">' + e(w) + '</span>';
+      }).join('');
+
+      tr.innerHTML =
+        '<td>' + (idx + 1) + '</td>' +
+        '<td><img src="' + img.dataUrl + '" style="width:50px;height:36px;object-fit:cover;border-radius:4px;border:.5px solid rgba(191,219,254,.1)"></td>' +
+        '<td class="name-cell" title="' + e(img.name) + '">' + e(img.name) + '</td>' +
+        '<td class="score-cell ' + scoreClass + '">' + score + '</td>' +
+        '<td>' + (r.risk_count || 0) + '</td>' +
+        '<td>' + (wordHtml || '<span style="color:rgba(191,219,254,.3);font-size:11px">无</span>') + '</td>' +
+        '<td class="summary-cell">' + e(r.summary || '') + '</td>' +
+        '<td><button class="action-btn" onclick="showDetail(' + idx + ')">详情</button></td>';
+    } else {
+      var errMsg = r.error || '失败';
+      tr.innerHTML =
+        '<td>' + (idx + 1) + '</td>' +
+        '<td><img src="' + img.dataUrl + '" style="width:50px;height:36px;object-fit:cover;border-radius:4px;border:.5px solid rgba(191,219,254,.1);opacity:.5"></td>' +
+        '<td class="name-cell">' + e(img.name) + '</td>' +
+        '<td style="color:#ff453a">-</td>' +
+        '<td style="color:#ff453a">-</td>' +
+        '<td colspan="2" style="color:#ff453a;font-size:12px">' + e(errMsg) + '</td>' +
+        '<td><button class="action-btn" onclick="showDetail(' + idx + ')">详情</button></td>';
+    }
+    tb.appendChild(tr);
+  });
+
+  // Scroll to results
+  $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ========== Detail Modal ==========
+function showDetail(idx) {
+  var img = images[idx];
+  if(!img || !img.result) { toast('无详细信息'); return; }
+  var r = img.result;
+
+  $('detailTitle').textContent = img.name + ' - 详细检测结果';
+  $('detailText').textContent = r.text_full || r.text_preview || r.error || '无文字';
+
+  // Tips
+  var tipsEl = $('detailTips');
+  tipsEl.innerHTML = '';
+  if(r.compliance_tips && r.compliance_tips.length) {
+    r.compliance_tips.forEach(function(tip) {
+      var el = document.createElement('div');
+      el.style.cssText = 'padding:6px 10px;font-size:12px;color:#409cff;background:rgba(0,122,255,.08);border-radius:6px;margin-bottom:4px';
+      el.textContent = '• ' + tip;
+      tipsEl.appendChild(el);
+    });
+  } else {
+    tipsEl.innerHTML = '<div style="color:rgba(191,219,254,.3);font-size:12px">无合规提醒</div>';
+  }
+
+  // Risks
+  var risksEl = $('detailRisks');
+  risksEl.innerHTML = '';
+  if(r.risks && r.risks.length) {
+    r.risks.forEach(function(risk) {
+      var v = risk.risk_level || 'low';
+      var el = document.createElement('div');
+      el.className = 'risk-item ' + v;
+      el.innerHTML = '<div style="font-weight:600;color:rgba(191,219,254,.85)">' + e(risk.word) + '</div>' +
+        '<div style="color:rgba(191,219,254,.45);font-size:12px">' + e(risk.category||'') + (risk.law ? ' · ' + e(risk.law) : '') + '</div>' +
+        (risk.suggest ? '<div style="color:#30d158;font-size:12px;margin-top:2px">建议：' + e(risk.suggest) + '</div>' : '');
+      risksEl.appendChild(el);
+    });
+  } else {
+    risksEl.innerHTML = '<div style="color:#30d158;font-size:13px;padding:8px 0">✓ 暂未发现违规风险</div>';
+  }
+
+  $('detailModal').style.display = 'flex';
+}
+
+function closeDetail() {
+  $('detailModal').style.display = 'none';
+}
+
+// ========== Export ==========
+function exportExcel() {
+  var results = images.map(function(img) { return img.result || { status: 'error', name: img.name }; });
+  var totalOk = images.filter(function(i) { return i.status === 'ok'; }).length;
+
+  // Try batch export
+  fetch(A + '/api/batch-export-excel', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ results: results, total: images.length, success: totalOk })
+  })
+  .then(function(r) {
+    var ct = r.headers.get('content-type') || '';
+    if(ct.includes('json')) { return r.json().then(function(d) { throw new Error(d.error || '导出失败'); }); }
+    return r.blob();
+  })
+  .then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '力邦营养_批量合规报告_' + Date.now() + '.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('Excel 报告已下载');
+  })
+  .catch(function(ex) {
+    toast('导出失败: ' + (ex.message || ex));
+  });
+}
+
+function exportPDF() {
+  // Generate a simple text summary
+  var lines = [];
+  lines.push('========================================');
+  lines.push('驷马合规 · 力邦营养企业定制版');
+  lines.push('批量广告合规检测报告（文本摘要）');
+  lines.push('生成时间: ' + new Date().toLocaleString());
+  lines.push('========================================');
+  lines.push('');
+  lines.push('总图片: ' + images.length);
+  lines.push('通过: ' + images.filter(function(i){return i.status==='ok';}).length);
+  lines.push('有风险: ' + images.filter(function(i){return i.status==='ok' && i.result && i.result.risk_count > 0;}).length);
+  lines.push('失败: ' + images.filter(function(i){return i.status!=='ok';}).length);
+  lines.push('');
+
+  images.forEach(function(img, idx) {
+    lines.push('--- #' + (idx+1) + ' ' + img.name + ' ---');
+    if(img.status === 'ok' && img.result) {
+      lines.push('  得分: ' + img.result.score);
+      lines.push('  风险数: ' + img.result.risk_count);
+      lines.push('  摘要: ' + img.result.summary);
+      if(img.result.risk_words && img.result.risk_words.length) {
+        lines.push('  违规词: ' + img.result.risk_words.join('、'));
+      }
+    } else {
+      lines.push('  状态: ' + (img.result ? img.result.error : '失败'));
+    }
+    lines.push('');
+  });
+
+  var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '力邦营养_批量合规报告_' + Date.now() + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('文本报告已下载');
+}
+
+// ========== UI helpers ==========
+function updateUI() {
+  $('clearBtn').style.display = images.length > 0 ? 'inline-flex' : 'none';
+  $('startBtn').textContent = images.some(function(i){ return i.status === 'ok' || i.status === 'fail'; }) ? '重新审查' : '开始审查';
+}
+
+// Close modal on backdrop click
+document.getElementById('detailModal').addEventListener('click', function(e) {
+  if(e.target === this) closeDetail();
+});
+</script>
+</body>
+</html>

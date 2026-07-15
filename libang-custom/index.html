@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广告审查助手 · 力邦营养企业定制版</title>
+<meta name="description" content="力邦营养企业内用版 — 专注特殊医学用途配方食品与普通食品广告合规检测">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:#0a0a0c;color:rgba(191,219,254,.85);min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px
+}
+::selection{background:rgba(0,122,255,.3);color:#fff}
+
+/* ===== 背景图层 ===== */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(191,219,254,.025) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 18% 15%,rgba(0,122,255,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 500px 500px at 78% 12%,rgba(88,86,214,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 350px 350px at 85% 55%,rgba(255,45,85,.05) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 300px at 12% 65%,rgba(90,200,250,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 450px 250px at 50% 92%,rgba(255,149,0,.04) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:atmo 25s cubic-bezier(.45,.05,.2,1) infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-2.5%,2%) scale(1.02)}
+  50%{transform:translate(2%,-1.5%) scale(1.01)}
+  75%{transform:translate(-1%,2.5%) scale(1.03)}
+  100%{transform:translate(1.5%,-2%) scale(1.02)}
+}
+
+/* ===== 玻璃卡片 ===== */
+.glass-card{
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  transition:all .35s cubic-bezier(.25,.1,.25,1);
+  border-radius:16px;padding:48px 40px;max-width:520px;width:100%;text-align:center;
+  position:relative;z-index:1;overflow:hidden
+}
+.glass-card:hover{border-color:rgba(191,219,254,.12);box-shadow:0 8px 32px rgba(0,0,0,.35),inset 0 1px 0 rgba(191,219,254,.06);transform:translateY(-2px)}
+
+/* ===== Hero 光晕 ===== */
+.glass-card::before{
+  content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+  width:300px;height:120px;
+  background:radial-gradient(ellipse,rgba(0,122,255,.08) 0%,rgba(88,86,214,.03) 40%,transparent 70%);
+  pointer-events:none
+}
+
+/* ===== Logo ===== */
+.logo{
+  width:52px;height:52px;
+  background:linear-gradient(135deg,rgba(0,122,255,.15),rgba(88,86,214,.08));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  color:#409cff;font-weight:800;font-size:22px;margin:0 auto 20px;
+  border:.5px solid rgba(0,122,255,.15);border-top-color:rgba(0,122,255,.25);
+  box-shadow:inset 0 1px 0 rgba(191,219,254,.08),0 2px 8px rgba(0,0,0,.2)
+}
+
+/* ===== Badge ===== */
+.badge{
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(0,122,255,.12),rgba(88,86,214,.06));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:#409cff;font-size:11px;padding:4px 16px;border-radius:100px;font-weight:600;margin-bottom:16px;
+  border:.5px solid rgba(0,122,255,.15);border-top-color:rgba(0,122,255,.25)
+}
+
+/* ===== Typography ===== */
+h1{font-size:24px;font-weight:700;margin-bottom:8px;color:rgba(191,219,254,.92)}
+p{color:rgba(191,219,254,.45);font-size:14px;line-height:1.8;margin-bottom:28px}
+
+/* ===== Buttons ===== */
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border-radius:12px;
+  font-size:14px;font-weight:600;text-decoration:none;
+  transition:all .25s cubic-bezier(.25,.1,.25,1);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.btn-p{
+  background:linear-gradient(135deg,rgba(0,122,255,.2),rgba(0,122,255,.08));
+  color:#409cff;
+  border:.5px solid rgba(0,122,255,.25);border-top-color:rgba(0,122,255,.35);
+  box-shadow:0 4px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(191,219,254,.1)
+}
+.btn-p:hover{background:linear-gradient(135deg,rgba(0,122,255,.28),rgba(0,122,255,.12));transform:translateY(-2px)}
+.btn-s{
+  background:rgba(191,219,254,.04);color:rgba(191,219,254,.6);
+  border:.5px solid rgba(191,219,254,.1);border-top-color:rgba(191,219,254,.16);
+  box-shadow:0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(191,219,254,.06)
+}
+.btn-s:hover{background:rgba(191,219,254,.08);color:rgba(191,219,254,.85);transform:translateY(-2px)}
+
+/* ===== Footer ===== */
+.footer{
+  text-align:center;color:rgba(191,219,254,.25);font-size:12px;margin-top:32px;
+  position:relative;z-index:1
+}
+
+@media(max-width:480px){
+  .glass-card{padding:36px 24px}
+  h1{font-size:20px}
+  .btns{flex-direction:column;align-items:center}
+  .btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="glass-card">
+<div class="logo">L</div>
+<div class="badge">力邦营养 · 企业定制</div>
+<h1>广告审查助手</h1>
+<p>企业内用版 · 无限次检测<br>专注特殊医学用途配方食品与普通食品广告合规</p>
+<div class="btns">
+<a class="btn btn-p" href="/ad-check/pc/">桌面版</a>
+<a class="btn btn-s" href="/ad-check/m/">手机版</a>
+</div>
+</div>
+
+<div class="footer">驷马合规 · 力邦营养企业定制版 — 内部合规自查使用</div>
+
+</body>
+</html>

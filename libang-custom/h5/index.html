@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a0a0c">
+<title>驷马合规 — 广告审查助手 · 力邦营养企业定制版</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:#0a0a0c;color:rgba(191,219,254,.85);min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+::selection{background:rgba(0,122,255,.3);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(191,219,254,.1);border-radius:100px}
+
+/* ===== 背景图层 ===== */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(191,219,254,.025) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 500px 350px at 18% 15%,rgba(0,122,255,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 400px at 78% 12%,rgba(88,86,214,.04) 0%,transparent 70%),
+    radial-gradient(ellipse 300px 300px at 85% 55%,rgba(255,45,85,.03) 0%,transparent 70%),
+    radial-gradient(ellipse 350px 250px at 12% 65%,rgba(90,200,250,.04) 0%,transparent 70%),
+    radial-gradient(ellipse 400px 200px at 50% 92%,rgba(255,149,0,.03) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:atmo 25s cubic-bezier(.45,.05,.2,1) infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-2.5%,2%) scale(1.02)}
+  50%{transform:translate(2%,-1.5%) scale(1.01)}
+  75%{transform:translate(-1%,2.5%) scale(1.03)}
+  100%{transform:translate(1.5%,-2%) scale(1.02)}
+}
+
+.app{max-width:480px;margin:0 auto;padding:0 16px 20px;position:relative;z-index:1}
+
+/* ===== 玻璃通用 ===== */
+.glass-card{
+  background:linear-gradient(180deg,rgba(191,219,254,.065) 0%,rgba(191,219,254,.018) 100%);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border:.5px solid rgba(191,219,254,.07);
+  border-top-color:rgba(191,219,254,.13);
+  border-bottom-color:rgba(191,219,254,.025);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(191,219,254,.05);
+  border-radius:16px;padding:18px;margin-bottom:14px
+}
+
+/* ===== 工具栏头部（简洁工具风格） ===== */
+.header{
+  position:sticky;top:0;z-index:50;
+  padding:12px 0;margin:0 0 14px;
+  background:rgba(10,10,12,.72);
+  backdrop-filter:blur(28px) saturate(1.15);
+  -webkit-backdrop-filter:blur(28px) saturate(1.15);
+  border-bottom:.5px solid rgba(191,219,254,.06);
+  display:flex;align-items:center;justify-content:space-between
+}
+.header::after{
+  content:'';position:absolute;bottom:-.5px;left:0;right:70%;
+  height:.5px;
+  background:linear-gradient(90deg,rgba(0,122,255,.3),transparent)
+}
+.header-l{display:flex;align-items:center;gap:8px}
+.header-icon{
+  width:30px;height:30px;
+  background:linear-gradient(135deg,rgba(0,122,255,.15),rgba(88,86,214,.08));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:13px;
+  border:.5px solid rgba(0,122,255,.15);
+  color:#409cff;flex-shrink:0
+}
+.header-title{font-size:15px;font-weight:600;color:rgba(191,219,254,.85)}
+.header-nav{display:flex;gap:4px;flex-shrink:0}
+.header-nav a{
+  font-size:13px;color:rgba(191,219,254,.4);text-decoration:none;
+  padding:5px 10px;border-radius:6px;transition:all .2s
+}
+.header-nav a:hover{background:rgba(191,219,254,.06);color:rgba(191,219,254,.7)}
+
+/* ===== Quota grid ===== */
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qi{text-align:center;padding:12px;border-radius:12px;background:rgba(0,0,0,.18);border:.5px solid rgba(191,219,254,.04)}
+.qi .n{font-size:24px;font-weight:800;
+  background:linear-gradient(135deg,#409cff,#007AFF);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.qi .l{font-size:15px;color:rgba(191,219,254,.35);margin-top:2px}
+
+/* ===== Section title ===== */
+.st{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:rgba(191,219,254,.9)}
+.st::before{content:"";width:3px;height:16px;background:linear-gradient(#409cff,#007AFF);border-radius:2px;flex-shrink:0}
+
+/* ===== Textarea ===== */
+textarea{
+  width:100%;min-height:120px;padding:14px 16px;
+  background:rgba(0,0,0,.25);color:rgba(191,219,254,.85);
+  border:.5px solid rgba(191,219,254,.08);border-radius:12px;
+  font-size:16px;line-height:1.7;font-family:inherit;resize:none;
+  transition:border-color .3s,box-shadow .3s
+}
+textarea:focus{outline:none;border-color:rgba(0,122,255,.3);box-shadow:0 0 0 4px rgba(0,122,255,.06)}
+textarea::placeholder{color:rgba(191,219,254,.22)}
+.uz{
+  border:1.5px dashed rgba(191,219,254,.1);border-radius:12px;padding:14px;
+  text-align:center;margin-top:12px;cursor:pointer;
+  font-size:15px;color:rgba(191,219,254,.35);transition:all .25s
+}
+.uz:hover{border-color:rgba(0,122,255,.3);color:#409cff;background:rgba(0,122,255,.04)}
+.uz:active{transform:scale(.99)}
+.uz input{display:none}
+
+/* ===== Controls ===== */
+.ctrl{display:flex;gap:8px;margin-top:12px}
+.ctrl select{
+  padding:9px 12px;
+  background:rgba(0,0,0,.25);color:rgba(191,219,254,.7);
+  border:.5px solid rgba(191,219,254,.08);border-radius:10px;
+  font-size:15px;-webkit-appearance:none;appearance:none;
+  transition:border-color .25s,box-shadow .25s;
+  cursor:pointer;font-family:inherit
+}
+.ctrl select:focus{outline:none;border-color:rgba(0,122,255,.3);box-shadow:0 0 0 3px rgba(0,122,255,.06)}
+.ctrl select option{background:#1a1a1e;color:rgba(191,219,254,.85)}
+
+/* ===== Buttons ===== */
+.btn{
+  flex:1;padding:12px;border:none;border-radius:12px;
+  font-size:16px;font-weight:700;cursor:pointer;text-align:center;
+  transition:all .25s cubic-bezier(.25,.1,.25,1);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  user-select:none
+}
+.btn:active{transform:scale(.96)}
+.bp{
+  background:linear-gradient(135deg,rgba(0,122,255,.22),rgba(0,122,255,.08));
+  color:#409cff;
+  border:.5px solid rgba(0,122,255,.25);border-top-color:rgba(0,122,255,.4);
+  box-shadow:0 4px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(191,219,254,.12)
+}
+.bp:hover{background:linear-gradient(135deg,rgba(0,122,255,.3),rgba(0,122,255,.14))}
+.bs{
+  background:rgba(191,219,254,.04);color:rgba(191,219,254,.55);
+  border:.5px solid rgba(191,219,254,.08);border-top-color:rgba(191,219,254,.14);
+  box-shadow:0 2px 12px rgba(0,0,0,.15),inset 0 1px 0 rgba(191,219,254,.05)
+}
+.bs:hover{background:rgba(191,219,254,.08);color:rgba(191,219,254,.85)}
+
+/* ===== Error ===== */
+.eb{display:none;background:rgba(255,69,58,.08);color:#ff453a;border:.5px solid rgba(255,69,58,.15);border-radius:12px;padding:11px 14px;margin-top:12px;font-size:15px}
+
+/* ===== Result ===== */
+.ra{display:none;margin-top:14px;padding-top:14px;border-top:.5px solid rgba(191,219,254,.06);animation:fadeUp .4s cubic-bezier(.25,.1,.25,1)}
+.rr{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.sr{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.sr svg{transform:rotate(-90deg)}
+.sr .n{position:absolute;font-size:20px;font-weight:800}
+.sr .n.g{color:#30d158}
+.sr .n.w{color:#ff9f0a}
+.sr .n.b{color:#ff453a}
+.ri{border-left:3px solid;padding:11px 14px;margin:8px 0;border-radius:0 10px 10px 0;font-size:15px;animation:fadeIn .3s cubic-bezier(.25,.1,.25,1) both}
+.ri.c{background:rgba(255,69,58,.06);border-color:#ff453a}
+.ri.h{background:rgba(255,159,10,.06);border-color:#ff9f0a}
+.ri.m{background:rgba(255,204,0,.06);border-color:#ffcc00}
+.ri.l{background:rgba(48,209,88,.06);border-color:#30d158}
+.ri .w{font-weight:600;color:rgba(191,219,254,.9)}
+.ri .d{color:rgba(191,219,254,.35);margin-top:3px;font-size:15px}
+.ri .sg{color:#30d158;margin-top:4px;font-size:15px;padding-top:4px;border-top:.5px solid rgba(48,209,88,.1)}
+.db{
+  background:rgba(0,0,0,.25);
+  border:.5px solid rgba(191,219,254,.06);border-radius:12px;
+  padding:16px;font-size:15px;display:none;margin-top:12px;
+  white-space:pre-wrap;color:rgba(191,219,254,.7);
+  animation:fadeUp .3s cubic-bezier(.25,.1,.25,1)
+}
+.ar{display:flex;gap:8px;margin-top:14px}
+.ar .btn{padding:11px}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(4px);
+  background:rgba(20,20,24,.92);color:rgba(191,219,254,.9);
+  padding:10px 20px;border-radius:100px;font-size:15px;z-index:300;
+  opacity:0;pointer-events:none;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:.5px solid rgba(191,219,254,.08);
+  transition:opacity .25s,transform .25s
+}
+.toast.s{opacity:1;transform:translateX(-50%) translateY(0)}
+.ft{text-align:center;font-size:15px;color:rgba(191,219,254,.2);margin-top:10px}
+@keyframes sh{0%{opacity:.4}50%{opacity:.8}100%{opacity:.4}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{0%{opacity:0;transform:translateX(-8px)}100%{opacity:1;transform:translateX(0)}}
+.lo{animation:sh 1.5s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header">
+<div class="header-l">
+<div class="header-icon">审</div>
+<span class="header-title">广告审查助手</span>
+</div>
+<div class="header-nav">
+<a href="/ad-check/pc/">桌面版</a>
+</div>
+</div>
+
+<div class="glass-card"><div class="qg"><div class="qi"><div class="n" id="qQ">-</div><div class="l">检测次数</div></div><div class="qi"><div class="n" id="qD">-</div><div class="l">深度分析</div></div><div class="qi"><div class="n" id="qP">企业</div><div class="l">版本</div></div></div></div>
+
+<div class="glass-card">
+<div class="st">输入广告文案</div>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<span onclick="window.sm('single')" style="padding:4px 14px;border-radius:100px;font-size:16px;cursor:pointer;background:rgba(0,122,255,.12);color:#409cff;font-weight:600;border:.5px solid rgba(0,122,255,.15)" class="active" id="bt">单条</span>
+<span onclick="window.sm('batch')" style="padding:4px 14px;border-radius:100px;font-size:16px;cursor:pointer;background:rgba(0,0,0,.15);color:rgba(191,219,254,.45);border:.5px solid rgba(191,219,254,.06)" id="bb">批量</span>
+</div>
+<div id="batchUpload" style="display:none;margin-top:8px">
+<input type="file" id="bf" accept=".txt,.csv" onchange="window.uf(this)" style="font-size:16px">
+<label for="bf" style="font-size:15px;color:rgba(191,219,254,.35);cursor:pointer">上传 TXT / CSV（每行一条文案）</label>
+</div>
+<textarea id="inp" placeholder="请输入广告文案，可包含标题、正文、宣称、承诺性用语..." oninput="c()"></textarea>
+<div class="uz" id="uz" onclick="document.getElementById('ii').click()"><div>点击上传图片 · JPG / PNG / WebP</div><input type="file" id="ii" accept="image/*" onchange="h(this)"></div>
+<div class="ctrl">
+<select id="ind">
+<option value="">通用行业</option>
+<option value="food" selected>普通食品</option>
+<option value="fsmp">特殊医学用途配方食品</option>
+</select>
+<select id="plat"><option value="">不限平台</option><option value="taobao">淘宝/天猫</option><option value="douyin">抖音</option><option value="xiaohongshu">小红书</option><option value="pinduoduo">拼多多</option></select>
+<button class="btn bp" onclick="rq()">快速检测</button>
+<button class="btn bs" onclick="rd()">AI 深度</button>
+</div>
+<div id="eb" class="eb"></div>
+<div class="ra" id="ra">
+<div class="st">检测结果</div>
+<div class="rr"><div class="sr" id="sRing"><svg width="72" height="72"><circle cx="36" cy="36" r="30" fill="none" stroke="rgba(191,219,254,.06)" stroke-width="5"/><circle id="sArc" cx="36" cy="36" r="30" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" transform="rotate(-90,36,36)"/></svg><span class="n" id="sNum">-</span></div><div style="flex:1"><div style="font-size:15px;color:rgba(191,219,254,.45)" id="sText">检测完成</div></div></div>
+<div id="rList"></div><div class="db" id="db"></div>
+<div class="ar"><button class="btn bs" onclick="cp()">复制报告</button><button class="btn bs" onclick="ep()">导出 PDF 报告</button><button class="btn bp" onclick="rs()">重新检测</button></div>
+</div>
+</div>
+
+<div class="glass-card"><div class="st">提示</div><div style="font-size:16px;color:rgba(191,219,254,.45);line-height:1.7">本工具为力邦营养企业内部合规自查使用。支持图片自动识别文字。重要文案仍需专业律师复核。</div></div>
+<div class="ft">驷马合规 · 力邦营养企业定制版</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{const A=location.origin+'/ad-check',K='lib_oid';
+function o(){try{let d=localStorage.getItem(K);if(!d){d='libm_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem(K,d)}return d}catch{return 'libm_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}}
+const $=i=>document.getElementById(i),e=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function c(){$('cnt')&&($('cnt').textContent=$('inp').value.length)}
+function se(m){const e=$('eb');e.textContent=m;e.style.display=m?'block':'none'}
+function st(m){const t=$('toast');t.textContent=m;t.classList.add('s');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('s'),2000)}
+function ss(s){const n=Math.max(0,Math.min(100,Number(s)||0)),nu=$('sNum');nu.textContent=n;nu.className='n '+(n>=80?'g':n>=60?'w':'b');const a=$('sArc'),c2=2*Math.PI*30;a.style.strokeDasharray=c2;a.style.strokeDashoffset=c2*(1-n/100);a.style.stroke=n>=80?'#30d158':n>=60?'#ff9f0a':'#ff453a'}
+async function lu(){try{const r=await fetch(A+'/api/user?openid='+encodeURIComponent(o())),d=await r.json();if(d.ok&&d.data){const u=d.data;$('qQ').textContent=u.quick_used||0;$('qD').textContent=u.deep_used||0;$('qP').textContent='企业'}}catch(e){}}
+async function ca(p,b){se('');const r=await fetch(A+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const d=await r.json();if(!d.ok)throw Error(d.error||'请求失败');return d}
+function rr(d){$('ra').style.display='block';$('brt')&&($('brt').style.display='none');ss(d.score);$('sText').textContent=d.summary||'检测完成';const l=$('rList');l.innerHTML='';(d.risks||[]).forEach(r=>{const v=r.risk_level||'low',el=document.createElement('div');el.className='ri '+v;el.innerHTML='<div class="w">'+e(r.word)+'</div><div class="d">'+e(r.category||'')+(r.law?' · '+e(r.law):'')+'</div>'+(r.suggest?'<div class="sg">建议：'+e(r.suggest)+'</div>':'');l.appendChild(el)});$('db').style.display='none';$('db').textContent=''}
+async function rq(){if(window.m==='batch')return rb();const t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{$('qQ').className='n lo';const d=await ca('/api/check',{text:t,industry:$('ind').value,platform:$('plat').value,openid:o()});rr(d);lu()}catch(e){se(e.message||'检测失败')}finally{$('qQ').className='n'}}
+async function rd(){const t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{$('qD').className='n lo';const d=await ca('/api/deep-check',{text:t,industry:$('ind').value,platform:$('plat').value,openid:o()});$('ra').style.display='block';$('brt')&&($('brt').style.display='none');ss(0);$('sText').textContent='AI 深度分析完成';$('rList').innerHTML='';const b=$('db');b.style.display='block';b.textContent=d.analysis||JSON.stringify(d);lu()}catch(e){se(e.message||'分析失败')}finally{$('qD').className='n'}}
+async function rb(){const t=$('inp').value.trim();if(!t){se('请输入文案');return}try{$('qQ').className='n lo';const d=await ca('/api/batch-check',{text:t,industry:$('ind').value,platform:$('plat').value,openid:o()});$('ra').style.display='block';$('sNum').textContent=d.success+'/'+d.total;$('sNum').className='n g';$('sText').textContent='批量检测完成（成功'+d.success+'条）';const l=$('rList');l.innerHTML='';d.results.forEach(r=>{const el=document.createElement('div');if(r.error){el.innerHTML='<div class="ri c"><div class="w">#'+(r.index+1)+' 错误: '+e(r.error)+'</div></div>'}else{const c=r.score>=80?'l':r.score>=60?'m':'c';el.innerHTML='<div class="ri '+c+'"><div class="w">#'+(r.index+1)+' 得分:'+r.score+' · 风险:'+r.risk_count+'处</div><div class="d">'+e(r.text_preview)+'</div>'+(r.summary?'<div class="sg">'+e(r.summary)+'</div>':'')+'</div>'};l.appendChild(el)});lu()}catch(e){se(e.message||'批量检测失败')}finally{$('qQ').className='n'}}
+function cp(){let t='【驷马合规 · 力邦营养定制版】\n得分：'+($('sNum').textContent||'-')+'\n摘要：'+($('sText').textContent||'')+'\n\n';document.querySelectorAll('#rList .w').forEach(el=>{t+='• '+el.textContent+'\n'});if(navigator.clipboard){navigator.clipboard.writeText(t);st('报告已复制')}}
+function rs(){$('inp').value='';$('ra').style.display='none';c();window.scrollTo({top:0})}
+async function ep(){const t=$('inp').value.trim();if(!t){se('请输入文案');return}try{st('正在生成 PDF...');const r=await fetch(A+'/api/export-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,industry:$('ind').value,platform:$('plat').value,openid:o()})});const ct=r.headers.get('content-type')||'';if(ct.includes('json')){const d=await r.json();se(d.error||'导出失败');return}const ext=ct.includes('pdf')?'pdf':'txt';const blob=await r.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='力邦营养_合规检测报告.'+ext;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);st((ext==='pdf'?'PDF':'报告')+'已下载')}catch(e){se('导出失败: '+(e.message||e))}}
+function h(i){if(i.files&&i.files[0]){const f=i.files[0];const r=new FileReader;r.onload=e=>{fetch(A+'/api/ocr-base64',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:e.target.result})}).then(r=>r.json()).then(d=>{if(d.ok&&d.text){$('inp').value=d.text;c();st('已识别 '+d.text.length+' 字')}else{se('OCR 识别失败')}}) };r.readAsDataURL(f)}}
+const u=$('uz');u.addEventListener('dragover',e=>{e.preventDefault();u.style.borderColor='rgba(0,122,255,.3)'});u.addEventListener('dragleave',()=>{u.style.borderColor=''});u.addEventListener('drop',e=>{e.preventDefault();u.style.borderColor='';const f=e.dataTransfer&&e.dataTransfer.files;if(f&&f[0]&&f[0].type.startsWith('image/'))h(f[0])});
+function sm(mode){window.m=mode;const bt=document.getElementById('bt'),bb=document.getElementById('bb'),inp=document.getElementById('inp'),bu=document.getElementById('batchUpload');if(mode==='single'){bt.style.background='rgba(0,122,255,.12)';bt.style.color='#409cff';bt.style.fontWeight='600';bt.style.border='.5px solid rgba(0,122,255,.15)';bb.style.background='rgba(0,0,0,.15)';bb.style.color='rgba(191,219,254,.45)';bb.style.fontWeight='normal';bb.style.border='.5px solid rgba(191,219,254,.06)';inp.placeholder='请输入广告文案...';inp.style.minHeight='120px';if(bu)bu.style.display='none'}else{bb.style.background='rgba(0,122,255,.12)';bb.style.color='#409cff';bb.style.fontWeight='600';bb.style.border='.5px solid rgba(0,122,255,.15)';bt.style.background='rgba(0,0,0,.15)';bt.style.color='rgba(191,219,254,.45)';bt.style.fontWeight='normal';bt.style.border='.5px solid rgba(191,219,254,.06)';inp.placeholder='每行一条文案，或用---独占一行分隔多组';inp.style.minHeight='200px';if(bu)bu.style.display='block'}}
+function uf(input){var f=input.files[0];if(!f)return;var r=new FileReader;r.onload=function(e){var inp=document.getElementById('inp');inp.value=e.target.result;inp.style.minHeight='260px';st('已加载 '+f.name)};r.readAsText(f)}
+window.sm=sm;window.uf=uf;window.rq=rq;window.rd=rd;window.h=h;window.cp=cp;window.ep=ep;window.rs=rs;window.c=c;lu()})();
+</script>
+</body>
+</html>

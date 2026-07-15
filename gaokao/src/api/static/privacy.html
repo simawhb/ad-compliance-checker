@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隐私政策 · 驷马报考</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:linear-gradient(135deg,#dce5f5 0%,#e8dcf5 50%,#dcecf5 100%);
+  color:#1a1a2e;min-height:100vh;line-height:1.8;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  padding:20px;display:flex;flex-direction:column;align-items:center
+}
+::selection{background:rgba(67,97,238,.12);color:#1a1a2e}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(67,97,238,.1);border-radius:100px}
+
+/* 背景装饰 */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(67,97,238,.10) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 500px 350px at 15% 20%,rgba(67,97,238,.15) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 400px at 80% 15%,rgba(130,77,255,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 300px 250px at 85% 60%,rgba(255,107,107,.10) 0%,transparent 65%),
+    radial-gradient(ellipse 350px 280px at 20% 70%,rgba(72,202,228,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 200px at 50% 95%,rgba(67,97,238,.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+  animation:atmo 20s ease-in-out infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(1.5%,-1%) scale(1.01)}
+  66%{transform:translate(-1%,1.5%) scale(1.02)}
+  100%{transform:translate(0.5%,-0.5%) scale(1)}
+}
+
+.container{
+  max-width:800px;margin:0 auto;
+  background:#fff;
+  border:1px solid #b8c0d0;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-radius:16px;padding:32px;
+  position:relative;z-index:1
+}
+h1{font-size:24px;margin-bottom:8px;color:#1a1a2e}
+h2{
+  font-size:18px;margin:24px 0 12px;padding-bottom:6px;
+  border-bottom:1px solid #b8c0d0;color:#1a1a2e
+}
+p{margin-bottom:12px;color:#6b6b8d;font-size:14px;line-height:1.8}
+.updated{font-size:12px;color:#9a9ab0;margin-bottom:20px}
+.back{
+  display:inline-flex;align-items:center;margin-bottom:20px;
+  padding:8px 16px;
+  background:#fff;color:#6b6b8d;
+  border:1px solid #b8c0d0;border-radius:8px;
+  text-decoration:none;font-size:13px;transition:all .2s
+}
+.back:hover{background:#f5f7fa;color:#1a1a2e;border-color:#4361ee}
+.back::before{content:'← '}
+
+@media(max-width:480px){
+  .container{padding:20px}
+  h1{font-size:20px}
+  h2{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back">返回首页</a>
+  <h1>隐私政策</h1>
+  <div class="updated">最后更新：2026年7月4日</div>
+
+  <h2>一、信息收集</h2>
+  <p>驷马报考（以下简称"本平台"）仅在您主动使用时收集以下信息：</p>
+  <p>1. 您输入的高考分数、选科组合等查询参数（仅用于生成志愿推荐，不会持久化存储）。</p>
+  <p>2. 霍兰德性格测试的答案选择（仅用于当次性格分析，不会存储个人答案）。</p>
+  <p>3. 服务器日志会自动记录匿名化的访问时间、请求路径、状态码。日志中不包含个人身份信息。</p>
+
+  <h2>二、信息使用</h2>
+  <p>收集的信息仅用于以下目的：</p>
+  <p>1. 提供高考志愿填报数据查询服务。</p>
+  <p>2. 优化平台的数据质量和用户体验。</p>
+  <p>3. 生成匿名的使用统计（如热门查询专业、院校对比频率等）。</p>
+  <p>我们不会将您的信息出售、出租或分享给任何第三方。</p>
+
+  <h2>三、数据来源声明</h2>
+  <p>本平台的院校和录取数据来源于：</p>
+  <p>1. 教育部官方公布的全国高等学校名单。</p>
+  <p>2. 各省教育考试院公开发布的高考录取数据和省控线。</p>
+  <p>3. B站、知乎等平台的公开口碑信息（仅展示，不修改原意）。</p>
+  <p>4. 智联招聘等公开平台的薪资统计（仅展示宏观统计数据）。</p>
+  <p>所有数据均来自合法公开渠道，如有侵权请联系我们删除。</p>
+
+  <h2>四、免责声明</h2>
+  <p>本平台提供的所有数据仅供参考，不构成任何形式的志愿填报建议。</p>
+  <p>高考志愿填报应以各省教育考试院官方公布的数据和信息为准。</p>
+  <p>使用本平台即表示您理解并同意：平台不对因使用数据而产生的任何决策后果承担责任。</p>
+
+  <h2>五、第三方服务</h2>
+  <p>本平台的 AI 问答功能调用 DeepSeek API 提供服务。您的问题将被发送至 DeepSeek 处理，但我们不会分享您的个人身份信息。</p>
+  <p>此外，本平台使用 Vue.js（CDN 加载）进行前端渲染，不加载其他第三方追踪脚本。</p>
+
+  <h2>六、联系我们</h2>
+  <p>如您对隐私政策有任何疑问，请联系：</p>
+  <p>邮箱：wanghongbing@huaxianglaw.com</p>
+
+  <h2>七、政策更新</h2>
+  <p>我们保留不定期更新本隐私政策的权利。重大更新时，我们会在首页显著位置提示。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# 驷马报考 - 依赖清单
+# 安装：pip install -r requirements.txt --break-system-packages
+
+# --- Web 框架 ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+httpx>=0.27.0
+python-dotenv>=1.0.0
+
+# --- 数据处理 ---
+xlrd>=2.0.0
+
+# --- 爬虫 ---
+scrapy>=2.11.0
+playwright>=1.44.0
+
+# --- 语音（Hermes 相关） ---
+# pyaudio  # 需系统库支持

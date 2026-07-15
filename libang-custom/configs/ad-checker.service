@@ -1,0 +1,15 @@
+[Unit]
+Description=驷马合规·广告审查助手
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ad-compliance-checker
+EnvironmentFile=/opt/ad-compliance-checker/.env
+ExecStart=/opt/ad-compliance-checker/venv/bin/python /opt/ad-compliance-checker/start_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

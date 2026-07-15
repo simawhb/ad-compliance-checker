@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Environment
+.env
+*.env
+
+# Database (143MB gaokao.db exceeds GitHub 100MB limit)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Auth
+*.htpasswd
+*.pem
+*.key
+
+# Archives
+*.zip
+*.tar.gz
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

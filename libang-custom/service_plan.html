@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广告宣传审查助手 · 服务方案</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#1a1d29;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+.container{max-width:560px;width:100%}
+
+/* 头部 */
+.header{text-align:center;margin-bottom:32px}
+.header .logo{width:56px;height:56px;background:linear-gradient(135deg,#1e4d8c,#2563eb);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:800;margin-bottom:14px}
+.header h1{font-size:22px;font-weight:800;color:#1a1d29;margin-bottom:6px}
+.header p{font-size:13px;color:#6b7280;line-height:1.6}
+
+/* 卡片 */
+.card{background:#fff;border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-inner{padding:22px 24px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.card-name{font-size:17px;font-weight:700}
+.card-price{text-align:right}
+.card-price .num{font-size:26px;font-weight:800}
+.card-price .unit{font-size:12px;color:#6b7280;margin-top:1px}
+
+.features{list-style:none;padding:0;margin:0}
+.features li{font-size:13px;color:#4b5563;padding:5px 0;padding-left:20px;position:relative;line-height:1.6}
+.features li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:6px;border-radius:50%}
+
+.scene{font-size:12px;color:#9ca3af;margin-top:12px;padding-top:12px;border-top:1px solid #f0f1f3;text-align:center}
+
+/* 各方案配色 */
+.card-free .card-name{color:#2563eb}.card-free .card-price .num{color:#2563eb}.card-free .features li::before{background:#2563eb}
+.card-pro .card-name{color:#7c3aed}.card-pro .card-price .num{color:#7c3aed}.card-pro .features li::before{background:#7c3aed}
+.card-enterprise .card-name{color:#059669}.card-enterprise .card-price .num{color:#059669}.card-enterprise .features li::before{background:#059669}
+.card-expert .card-name{color:#ea580c}.card-expert .card-price .num{color:#ea580c}.card-expert .features li::before{background:#ea580c}
+.card-api .card-name{color:#0891b2}.card-api .card-price .num{color:#0891b2}.card-api .features li::before{background:#0891b2}
+
+/* 推荐标签 */
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;margin-left:6px;vertical-align:middle}
+.badge-hot{background:#fef2f2;color:#dc2626}
+
+/* 底部联系 */
+.footer{text-align:center;margin-top:20px;padding:20px 24px;background:#fff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.footer .title{font-size:14px;font-weight:600;color:#374151;margin-bottom:8px}
+.footer .email{font-size:18px;font-weight:700;color:#2563eb;letter-spacing:1px}
+.footer .note{font-size:12px;color:#9ca3af;margin-top:8px;line-height:1.7}
+
+/* 分隔 */
+.divider{text-align:center;margin:24px 0;color:#d1d5db;font-size:12px;display:flex;align-items:center;gap:12px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:#e5e7eb}
+
+/* 底部说明 */
+.disclaimer{font-size:11px;color:#9ca3af;text-align:center;margin-top:20px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="logo">驷</div>
+  <h1>广告宣传审查助手</h1>
+  <p>AI 智能广告文案合规检测 · 服务方案</p>
+</div>
+
+<!-- 免费版 -->
+<div class="card card-free">
+  <div class="card-inner">
+    <div class="card-top">
+      <div class="card-name">免费版</div>
+      <div class="card-price">
+        <div class="num">¥0</div>
+        <div class="unit">永久免费</div>
+      </div>
+    </div>
+    <ul class="features">
+      <li>每日 20 次快速检测</li>
+      <li>合规评分 + 风险识别</li>
+      <li>修改建议 + 法条引用</li>
+      <li>多行业规则支持</li>
+    </ul>
+    <div class="scene">个人运营者 · 偶尔自查</div>
+  </div>
+</div>
+
+<!-- 专业版 -->
+<div class="card card-pro">
+  <div class="card-inner">
+    <div class="card-top">
+      <div class="card-name">专业版</div>
+      <div class="card-price">
+        <div class="num">¥99</div>
+        <div class="unit">/月</div>
+      </div>
+    </div>
+    <ul class="features">
+      <li>每日 100 次快速检测</li>
+      <li>每日 20 次 AI 深度分析</li>
+      <li>检测历史记录</li>
+      <li>优先技术支持</li>
+    </ul>
+    <div class="scene">高频使用者 · 需历史回溯</div>
+  </div>
+</div>
+
+<!-- 企业版 -->
+<div class="card card-enterprise">
+  <div class="card-inner">
+    <div class="card-top">
+      <div class="card-name">企业版 <span class="badge badge-hot">热销</span></div>
+      <div class="card-price">
+        <div class="num">¥299</div>
+        <div class="unit">/月</div>
+      </div>
+    </div>
+    <ul class="features">
+      <li>不限次数检测</li>
+      <li>AI 深度分析不限次</li>
+      <li>API 接口接入</li>
+      <li>专属客服支持</li>
+    </ul>
+    <div class="scene">企业团队 · 高频批量审核</div>
+  </div>
+</div>
+
+<!-- 人工审核 -->
+<div class="card card-expert">
+  <div class="card-inner">
+    <div class="card-top">
+      <div class="card-name">人工审核</div>
+      <div class="card-price">
+        <div class="num">¥50</div>
+        <div class="unit">/次起</div>
+      </div>
+    </div>
+    <ul class="features">
+      <li>检测结果人工复核</li>
+      <li>出具书式审查意见</li>
+      <li>一对一专家咨询</li>
+      <li>24 小时内响应</li>
+    </ul>
+    <div class="scene">需书面意见 · 疑难文案</div>
+  </div>
+</div>
+
+<!-- API 版 -->
+<div class="card card-api">
+  <div class="card-inner">
+    <div class="card-top">
+      <div class="card-name">API 版</div>
+      <div class="card-price">
+        <div class="num">¥999</div>
+        <div class="unit">/月起</div>
+      </div>
+    </div>
+    <ul class="features">
+      <li>RESTful API</li>
+      <li>批量检测接口</li>
+      <li>自定义回调</li>
+      <li>SLA 保障</li>
+    </ul>
+    <div class="scene">系统集成 · 自动化流程</div>
+  </div>
+</div>
+
+<!-- 底部联系 -->
+<div class="footer">
+  <div class="title">咨询与合作</div>
+  <div class="email">14712502@qq.com</div>
+  <div class="note">企业定制需求请说明行业与检测量级<br>我们将为您提供专属方案与报价</div>
+</div>
+
+<div class="divider">END</div>
+
+<div class="disclaimer">
+  本服务由个人提供，以上价格仅供参考<br>
+  具体以实际沟通确认为准
+</div>
+
+</div>
+</body>
+</html>

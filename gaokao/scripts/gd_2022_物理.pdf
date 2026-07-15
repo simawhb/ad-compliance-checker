@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html >
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://tjs.sjs.sinajs.cn/open/api/js/wb.js"></script>
+<script src="https://cdn.zizzs.com/1721614897938gaokzx-cnzz.js"></script>
+<script src="https://static.alicaptcha.com/v4/ct4.js"></script>
+<link rel="icon" type="image/*" href="https://cdn.spthome.com/gaokzx.ico">
+<link rel="stylesheet" href="/_nuxt/entry.627a8cdd.css">
+<link rel="modulepreload" as="script" crossorigin href="/_nuxt/polyfills.BztE3JNL.js">
+<link rel="modulepreload" as="script" crossorigin href="/_nuxt/entry.4e4c3c36.js">
+<link rel="prefetch" as="style" href="/_nuxt/submitForm.b6f3bf91.css">
+<link rel="prefetch" as="style" href="/_nuxt/el-select.58086f36.css">
+<link rel="prefetch" as="style" href="/_nuxt/el-input.c43a23be.css">
+<link rel="prefetch" as="style" href="/_nuxt/el-button.2e70eb9e.css">
+<link rel="prefetch" as="style" href="/_nuxt/el-overlay.155e27a7.css">
+<link rel="prefetch" as="style" href="/_nuxt/request.b44d5f07.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/submitForm.9df166f1.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.35afdc88.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/el-select.f245fdfb.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/el-input.0a83a7fe.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.249b4dd1.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/use-form-item.99e4c65c.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/focus-trap.b5b29f13.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.618106a0.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/debounce.c00e904f.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/_baseClone.ce0531be.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/_initCloneObject.cdc3a1d7.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/el-button.804363cd.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/el-overlay.593985c0.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/vnode.c872ad81.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/request.5c70f16a.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.1e4ff3a4.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.51b38031.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/route.4ed993c7.js">
+<link rel="prefetch" as="style" href="/_nuxt/Header.46701780.css">
+<link rel="prefetch" as="style" href="/_nuxt/index.56cc630a.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/404.f0f8948b.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/Header.49cce2d1.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.vue.77e09873.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.e2a53638.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/throttle.3efb8960.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.cc925fcb.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/seo.fd305546.js">
+<link rel="prefetch" as="style" href="/_nuxt/default.b2e7371f.css">
+<link rel="prefetch" as="style" href="/_nuxt/index.c3d366c3.css">
+<link rel="prefetch" as="style" href="/_nuxt/el-radio-group.a151f83d.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/default.d40d8896.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.vue.fbe34471.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.56746bff.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/el-radio-group.1e0f3cb0.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/close.af43f648.js">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/index.d9aace85.js">
+<link rel="prefetch" as="style" href="/_nuxt/form.19628363.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/form.f6e97f38.js">
+<link rel="prefetch" as="style" href="/_nuxt/login.3ffe0703.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/login.9d23ed70.js">
+<link rel="prefetch" as="style" href="/_nuxt/user.e7bbd0f1.css">
+<link rel="prefetch" as="script" crossorigin href="/_nuxt/user.832a4155.js">
+<script type="module" src="/_nuxt/polyfills.BztE3JNL.js" crossorigin></script>
+<script type="module" src="/_nuxt/entry.4e4c3c36.js" crossorigin></script></head>
+<body ><div id="__nuxt"><section class="w-screen h-screen overflow-y-scroll" data-v-2a4b6e4c><header class="relative z-header" data-v-2a4b6e4c><div class="el-affix" style="height:;width:;" data-v-2a4b6e4c><div class="" style=""><!--[--><!--]--></div></div><section class="flex items-center justify-between py-17 w-main mt-46 mx-auto" data-v-2a4b6e4c><h1 class="p-0!" data-v-2a4b6e4c><a href="/" class="" data-v-2a4b6e4c><img class="w-257 h-70 object-contain cursor-pointer" src="https://cdn.zizzs.com/1714023012340logo2x.png" alt="北京高考在线" data-v-2a4b6e4c></a></h1><div class="flex-center bg-white" data-v-2a4b6e4c><input value="" type="text" class="normal-input w-430 h-40 mr-8 text-16 rounded-4 bg-white border border-primary-color" p="x-16 y-8" placeholder="一模二模/期中试题/强基计划招生简章" data-v-2a4b6e4c><button class="w-90 h-40 flex-center bg-primary-color color-white rounded-4 opacity-900 font-600" data-v-2a4b6e4c> 搜索 </button></div><p text="16 h-24 #1D2129" class="cursor-pointer" data-v-2a4b6e4c><span class="text-primary-color" data-v-2a4b6e4c> 登录 </span><span class="px-6 cursor-default" data-v-2a4b6e4c>|</span><span data-v-2a4b6e4c> 注册 </span></p></section><nav class="bg-primary-color h-52" data-v-2a4b6e4c><ul class="w-main h-full bg-primary-color nav__ul" data-v-2a4b6e4c><!--[--><!--]--></ul></nav></header><section class="404 w-main mx-auto" data-v-2a4b6e4c><div class="w-full flex items-center justify-center" m="y-48" data-v-2a4b6e4c><img class="w-440 h-264" m="r-80" src="https://cdn.spthome.com/1703816696089_empty.png" data-v-2a4b6e4c><div data-v-2a4b6e4c><p text="24 h-34 #1D2129" m="b-8" data-v-2a4b6e4c>哎呀，网站出错了！</p><p text="16 h-24 #606266" m="b-8" data-v-2a4b6e4c>抱歉，您访问的页面找不到了…</p><p text="14 h-22 #FF1B28" m="b-4" data-v-2a4b6e4c>-输入网址不正确</p><p text="14 h-22 #FF1B28" m="b-16" data-v-2a4b6e4c>-页面已被删除</p><p text="16 h-24 #606266" data-v-2a4b6e4c>您可以访问网站导航</p><p text="16 h-24 #606266" data-v-2a4b6e4c><span data-v-2a4b6e4c>或进入“</span><span font="500" class="link color-primary-color!" data-v-2a4b6e4c>北京高考在线</span><span data-v-2a4b6e4c>”获取更多信息</span></p></div></div><div class="mb-54" data-v-2a4b6e4c><p text="20 h-28 #1D2129" m="b-24" font="600" data-v-2a4b6e4c>网站导航</p><div class="w-full flex justify-between" data-v-2a4b6e4c><!--[--><!--]--></div></div></section><footer class="bg-primary-color py-40" data-v-2a4b6e4c data-v-0835d9a3><div class="w-main mx-auto flex-center" data-v-0835d9a3><div class="mr-72 w-full" data-v-0835d9a3><div class="flex" data-v-0835d9a3><div class="flex relative top-5 mr--5" data-v-0835d9a3><img class="w-55 h-55 rounded-full" src="https://cdn.spthome.com/1695288932793%E7%94%B5%E8%AF%9Dicon%402x.png " data-v-0835d9a3><p class="flex flex-col relative top-8 left--5" text="14 h-18 white" data-v-0835d9a3><span class="bg-primary-color p-2" data-v-0835d9a3>咨询电话：</span><span class="ml-[2em] font-DIN" data-v-0835d9a3> 010- </span></p></div><a class="text-60 text-h-60 text-white font-600 font-DIN" href="tel:010-5751 5980" data-v-0835d9a3>5751 5980</a></div><i class="inline-block w-full h-1 bg-white" m="t-37 b-16" data-v-0835d9a3></i><p class="w-full flex items-center row" text="14 h-26 white" data-v-0835d9a3><span data-v-0835d9a3>© 2013-2025</span><a href="/" class="color-white!" data-v-0835d9a3>北京高考在线</a><span data-v-0835d9a3> All Rights Reserved. </span><img class="w-20 h-20 ml-5" src="https://i.spthome.com/_i/gongan.png" data-v-0835d9a3><a class="color-white!" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802039349" target="_blank" data-v-0835d9a3>京公网安备 11010802039353号</a><a class="ml-15 color-white!" href="https://beian.miit.gov.cn/" target="_blank" data-v-0835d9a3>京ICP备16048274号-2</a></p></div><div class="w-188 shrink-0" data-v-0835d9a3><img src="https://cdn.gaokzx.com/zixunzhan/1752717221209image.png" alt="" class="w-full h-188 bg-gray mb-8" data-v-0835d9a3><p class="text-18 text-h-22 text-white text-center" data-v-0835d9a3>扫一扫 关注官方微信</p></div></div></footer></section></div><script type="application/json" id="__NUXT_DATA__" data-ssr="true">[["Reactive",1],{"data":2,"state":21,"_errors":22,"serverRendered":23,"path":24,"error":25,"pinia":29},{"z0wH7TRomb":3},{"msg":4,"code":5,"data":6},"操作成功",200,[7],{"createBy":8,"createTime":9,"updateBy":10,"updateTime":10,"remark":10,"params":11,"dictCode":13,"dictSort":14,"dictLabel":15,"dictValue":16,"dictType":17,"cssClass":10,"listClass":18,"isDefault":19,"status":14,"default":20},"tadmin","2025-07-02 14:19:11",null,{"@type":12},"java.util.HashMap","135","0","https://cdn.gaokzx.com/zixunzhan/1752717221209image.png","1","login_qrcode","default","N",false,{},{"z0wH7TRomb":10},true,"/Fup/document/202207/07-19_093257-10100.pdf",{"url":24,"statusCode":26,"statusMessage":27,"message":27,"stack":28},404,"Page Not Found","",{"common":30},{"isLoginVisible":20,"isFullInfoVisible":20,"urlColumn":31,"secondLink":32},[],[]]</script>
+<script>window.__NUXT__={};window.__NUXT__.config={public:{SOURCE_TYPE:"GAOKZX"},app:{baseURL:"/",buildAssetsDir:"/_nuxt/",cdnURL:""}}</script></body>
+</html>

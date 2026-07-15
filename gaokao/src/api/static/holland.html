@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>性格测试 · 驷马报考</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:linear-gradient(135deg,#dce5f5 0%,#e8dcf5 50%,#dcecf5 100%);
+  color:#1a1a2e;min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+::selection{background:rgba(67,97,238,.12);color:#1a1a2e}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(67,97,238,.1);border-radius:100px}
+
+/* 背景装饰 */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(67,97,238,.10) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 500px 350px at 15% 20%,rgba(67,97,238,.15) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 400px at 80% 15%,rgba(130,77,255,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 300px 250px at 85% 60%,rgba(255,107,107,.10) 0%,transparent 65%),
+    radial-gradient(ellipse 350px 280px at 20% 70%,rgba(72,202,228,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 200px at 50% 95%,rgba(67,97,238,.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+  animation:atmo 20s ease-in-out infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(1.5%,-1%) scale(1.01)}
+  66%{transform:translate(-1%,1.5%) scale(1.02)}
+  100%{transform:translate(0.5%,-0.5%) scale(1)}
+}
+
+/* 卡片通用 */
+.glass-card{
+  background:#fff;
+  border:1px solid #b8c0d0;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  transition:all .3s cubic-bezier(.25,.1,.25,1);
+  border-radius:16px;padding:28px
+}
+.glass-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.10);transform:translateY(-2px)}
+
+.container{max-width:800px;margin:0 auto;padding:16px;position:relative;z-index:1}
+
+/* Header */
+.header{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(24px) saturate(1.3);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  border-bottom:1px solid #b8c0d0;
+  padding:16px;text-align:center;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:center
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:10%;right:10%;
+  height:1px;background:linear-gradient(90deg,transparent,rgba(67,97,238,.25),transparent)
+}
+.header h1{font-size:18px;font-weight:700;color:#1a1a2e}
+.header .back{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:#6b6b8d;background:none;border:none;font-size:15px;cursor:pointer;
+  padding:6px 12px;border-radius:8px;transition:all .2s
+}
+.header .back:hover{color:#1a1a2e;background:rgba(67,97,238,.06)}
+
+/* Tab 切换 */
+.tab-bar{
+  display:flex;gap:4px;
+  background:#fff;
+  border:1px solid #b8c0d0;border-radius:12px;padding:4px;margin-bottom:16px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)
+}
+
+/* 题目 */
+.question{font-size:18px;font-weight:600;margin-bottom:16px;color:#1a1a2e}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{
+  padding:14px 16px;border:1.5px solid #a8b0c0;
+  border-radius:12px;cursor:pointer;font-size:15px;color:#6b6b8d;
+  transition:all .2s;
+  background:#fff
+}
+.option:hover{border-color:#4361ee;background:#f5f7fa}
+.option.selected{
+  border-color:#4361ee;background:#f0f4ff;
+  color:#4361ee;font-weight:600
+}
+.progress{height:4px;background:#d8dce6;border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#4361ee,#825dff);border-radius:2px;transition:width .3s}
+
+/* 结果 */
+.result-type{text-align:center;padding:20px 0}
+.result-type .code{font-size:48px;font-weight:700;color:#4361ee;letter-spacing:4px}
+.result-type .name{font-size:18px;color:#1a1a2e;margin-top:4px}
+.result-type .desc{font-size:14px;color:#6b6b8d;margin-top:8px}
+.type-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;margin:4px;font-weight:500}
+.type-R{background:rgba(230,57,70,.12);color:#e63946}
+.type-I{background:rgba(46,196,180,.12);color:#2ec4b6}
+.type-A{background:rgba(230,57,70,.12);color:#ff6b6b}
+.type-S{background:rgba(67,97,238,.12);color:#4361ee}
+.type-E{background:rgba(232,133,12,.12);color:#e8850c}
+.type-C{background:rgba(130,77,255,.12);color:#825dff}
+.major-item{
+  padding:12px 0;border-bottom:.5px solid rgba(67,97,238,.06);
+  display:flex;align-items:center;gap:8px
+}
+.major-item:last-child{border:none}
+.major-item .tag{font-size:11px;padding:2px 6px;border-radius:4px;white-space:nowrap}
+
+/* 按钮 */
+.btn{
+  display:block;width:100%;padding:14px;border:none;border-radius:12px;
+  font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.btn-primary{
+  color:#fff;background:#4361ee;
+  border:1px solid #4361ee;
+  box-shadow:0 4px 14px rgba(67,97,238,.25)
+}
+.btn-primary:hover{background:#3a56d4;transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-secondary{
+  background:#fff;color:#6b6b8d;
+  border:1px solid #d0d5dd
+}
+.btn-secondary:hover{background:#f5f7fa;color:#1a1a2e;border-color:#4361ee}
+
+/* 实习分析 */
+.section-title{font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:12px}
+.city-row{display:flex;align-items:center;padding:10px 0;border-bottom:.5px solid rgba(67,97,238,.06)}
+.city-row:last-child{border:none}
+.city-name{width:60px;font-weight:600;font-size:15px;color:#1a1a2e}
+.city-bar{flex:1;height:20px;background:#e4e8f0;border-radius:10px;overflow:hidden;margin:0 10px}
+.city-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#4361ee,#825dff);transition:width .5s}
+.city-salary{width:80px;text-align:right;font-size:14px;color:#4361ee;font-weight:600}
+
+/* 输入/选择 */
+select{
+  background:#dfe3ec;color:#1a1a2e;
+  border:1.5px solid #a8b0c0;border-radius:8px;
+  padding:10px;font-size:14px;outline:none;transition:all .2s;
+  appearance:auto
+}
+select:focus{border-color:#4361ee;box-shadow:0 0 0 3px rgba(67,97,238,.15);background:#fff}
+
+/* 统计小框 */
+.stat-mini{
+  text-align:center;padding:12px;
+  background:#fff;
+  border:1px solid #b8c0d0;
+  border-radius:8px
+}
+.stat-mini .num{font-size:24px;font-weight:700}
+.stat-mini .label{font-size:12px;color:#8a8aaa;margin-top:4px}
+.stat-green{background:rgba(46,196,180,.06);border-color:rgba(46,196,180,.12);color:#2ec4b6}
+
+@media(max-width:480px){
+  .glass-card{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="header">
+    <button class="back" @click="goHome">← 返回</button>
+    <h1>{{ pageTitle }}</h1>
+  </div>
+
+  <div class="container">
+    <!-- Tab 切换 -->
+    <div class="tab-bar">
+      <div class="group-tab" style="flex:1;text-align:center;padding:10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s"
+           :style="tab==='holland'?{background:'#4361ee',color:'#fff'}:{color:'#6b6b8d'}"
+           @click="tab='holland'">性格测试</div>
+      <div class="group-tab" style="flex:1;text-align:center;padding:10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s"
+           :style="tab==='intern'?{background:'#4361ee',color:'#fff'}:{color:'#6b6b8d'}"
+           @click="tab='intern'">实习分析</div>
+    </div>
+
+    <!-- 性格测试 -->
+    <div v-if="tab==='holland'">
+      <!-- 答题中 -->
+      <div class="glass-card" v-if="step==='quiz'">
+        <div class="progress"><div class="progress-bar" :style="{width: (currentQ/6*100)+'%'}"></div></div>
+        <div class="question">{{ currentQuestion.question }}</div>
+        <div class="options">
+          <div v-for="(opt, i) in currentQuestion.options" :key="i"
+               class="option" :class="{selected: answers[currentQ]===opt[0]}"
+               @click="selectAnswer(opt[0])">
+            {{ opt[1] }}
+          </div>
+        </div>
+        <div style="margin-top:20px;display:flex;gap:8px">
+          <button class="btn btn-secondary" v-if="currentQ>0" @click="prevQ" style="flex:1">上一步</button>
+          <button class="btn btn-primary" style="flex:2"
+                  :disabled="!answers[currentQ]"
+                  @click="nextQ">{{ currentQ===5 ? '查看结果' : '下一步' }}</button>
+        </div>
+      </div>
+
+      <!-- 结果页 -->
+      <div v-if="step==='result' && result">
+        <div class="glass-card">
+          <div class="result-type">
+            <div class="code">{{ result.code }}</div>
+            <div v-for="t in result.top3" :key="t.code" style="margin-top:8px">
+              <span class="type-badge" :class="'type-'+t.code">{{ t.name }}</span>
+              <span style="font-size:13px;color:#6b6b8d;margin-left:8px">{{ t.desc }}</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" @click="resetQuiz" style="margin-top:12px">重新测试</button>
+        </div>
+
+        <div class="glass-card" style="margin-top:12px">
+          <div class="section-title">推荐专业（{{ result.recommended_majors.length }}个）</div>
+          <div v-for="m in result.recommended_majors" :key="m.major" class="major-item" @click="findMajor(m.major)">
+            <span class="tag type-badge" :class="'type-'+m.type">{{ m.type_name }}</span>
+            <span style="flex:1;font-size:14px;cursor:pointer;color:#6b6b8d" @click="searchMajor(m.major)">{{ m.major }}</span>
+            <span style="font-size:12px;color:#8a8aaa;cursor:pointer" @click="searchMajor(m.major)">查看 →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 实习分析 -->
+    <div v-if="tab==='intern'">
+      <div class="glass-card">
+        <div class="section-title">实习市场分析</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <select v-model="internMajor" style="flex:1;">
+            <option v-for="m in majors" :value="m" :key="m">{{ m }}</option>
+          </select>
+          <select v-model="internCity" style="flex:1;">
+            <option v-for="c in cities" :value="c" :key="c">{{ c }}</option>
+          </select>
+          <button class="btn btn-primary" style="padding:10px 16px;font-size:14px;width:auto" @click="searchIntern">查询</button>
+        </div>
+
+        <div v-if="internLoading" style="text-align:center;padding:20px;color:#8a8aaa">查询中...</div>
+
+        <div v-if="internResult">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="stat-mini">
+              <div class="num" style="color:#1a1a2e">{{ internResult.jobs || '—' }}</div>
+              <div class="label">实习岗位数</div>
+            </div>
+            <div class="stat-mini">
+              <div class="num" style="color:#4361ee">{{ internResult.salary || '—' }}</div>
+              <div class="label">平均实习薪资(K)</div>
+            </div>
+          </div>
+          <div v-if="internResult.formalSalary" style="font-size:13px;color:#6b6b8d;text-align:center;padding:8px;background:rgba(46,196,180,.06);border:.5px solid rgba(46,196,180,.12);border-radius:8px">
+            同岗位正式岗平均薪资：<strong style="color:#2ec4b6">{{ internResult.formalSalary }}K/月</strong>
+          </div>
+        </div>
+
+        <div v-if="internNoData" style="text-align:center;padding:30px;color:#8a8aaa">
+          暂无实习岗位数据，数据每日积累中...
+        </div>
+      </div>
+
+      <!-- 实习薪资城市排名 (Chart.js) -->
+      <div class="glass-card" v-if="internChartLabels.length > 0" style="margin-top:12px">
+        <div class="section-title">各城市薪资排名（{{ internMajor }}）</div>
+        <div style="height:260px;position:relative">
+          <canvas ref="salaryChartCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, reactive, computed, onMounted, watch } = Vue;
+
+createApp({
+  setup() {
+    const tab = ref('holland');
+    const pageTitle = ref('性格测试 · 专业推荐');
+    const apiBase = '/api';
+
+    // 性格测试
+    const step = ref('quiz');
+    const currentQ = ref(0);
+    const answers = ref([]);
+    const questions = ref([]);
+    const result = ref(null);
+
+    onMounted(async () => {
+      try {
+        const r = await fetch(apiBase + '/holland/questions');
+        const d = await r.json();
+        questions.value = d.questions || [];
+      } catch(e) {}
+    });
+
+    const currentQuestion = computed(() => {
+      return questions.value[currentQ.value] || {question: '', options: []};
+    });
+
+    function selectAnswer(val) {
+      const idx = currentQ.value;
+      const newAnswers = [...answers.value];
+      newAnswers[idx] = val;
+      answers.value = newAnswers;
+    }
+
+    function nextQ() {
+      if (currentQ.value === 5) {
+        submitQuiz();
+      } else {
+        currentQ.value++;
+      }
+    }
+
+    function prevQ() {
+      if (currentQ.value > 0) currentQ.value--;
+    }
+
+    async function submitQuiz() {
+      if (answers.value.length < 6) return;
+      try {
+        const r = await fetch(apiBase + '/holland/quiz', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({answers: answers.value})
+        });
+        result.value = await r.json();
+        step.value = 'result';
+      } catch(e) {}
+    }
+
+    function resetQuiz() {
+      step.value = 'quiz';
+      currentQ.value = 0;
+      answers.value = [];
+      result.value = null;
+    }
+
+    function searchMajor(major) {
+      window.location.href = '/static/major.html?major=' + encodeURIComponent(major);
+    }
+
+    function goHome() {
+      window.location.href = '/';
+    }
+
+    // 实习分析
+    const internMajor = ref('计算机科学与技术');
+    const internCity = ref('西安');
+    const internLoading = ref(false);
+    const internResult = ref(null);
+    const internNoData = ref(false);
+    const internCityData = ref([]);
+
+    const majors = ['计算机科学与技术','软件工程','电子信息工程','通信工程','自动化',
+                    '机械设计制造及其自动化','土木工程','会计学','金融学','法学',
+                    '临床医学','护理学','市场营销','汉语言文学','英语',
+                    '视觉传达设计','工商管理','数据科学与大数据技术','人工智能','电子商务'];
+
+    const cities = ['西安','成都','郑州','武汉','长沙','北京','上海','广州','深圳','杭州'];
+
+    const maxInternSalary = computed(() => {
+      if (internCityData.value.length === 0) return 10;
+      return Math.max(...internCityData.value.map(c => c.salary));
+    });
+
+    // Chart.js 薪资图表
+    const salaryChartCanvas = ref(null);
+    let salaryChartInstance = null;
+    const internChartLabels = computed(() => internCityData.value.map(c => c.city));
+    const internChartValues = computed(() => internCityData.value.map(c => c.salary));
+
+    function renderSalaryChart() {
+      const canvas = salaryChartCanvas.value;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (salaryChartInstance) { salaryChartInstance.destroy(); salaryChartInstance = null; }
+
+      const labels = internChartLabels.value;
+      const values = internChartValues.value;
+      if (labels.length === 0) return;
+
+      // 渐变颜色
+      const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+      gradient.addColorStop(0, '#4361ee');
+      gradient.addColorStop(1, '#825dff');
+
+      salaryChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '平均薪资 (K/月)',
+            data: values,
+            backgroundColor: gradient,
+            borderRadius: 6,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(67,97,238,.06)' },
+              ticks: { callback: v => v + 'K', color: '#8a8aaa' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 12 }, color: '#6b6b8d' }
+            }
+          }
+        }
+      });
+    }
+
+    // watch internCityData 变化时重绘图表
+    watch(internCityData, () => {
+      setTimeout(renderSalaryChart, 50);
+    }, { deep: true });
+
+    async function searchIntern() {
+      internLoading.value = true;
+      internResult.value = null;
+      internNoData.value = false;
+      internCityData.value = [];
+
+      try {
+        // 查实习岗位（智联数据中带"实习"关键词的）
+        const r = await fetch(`${apiBase}/job/salary?major=${encodeURIComponent(internMajor.value + ' 实习')}&city=${encodeURIComponent(internCity.value)}`);
+        const d = await r.json();
+
+        // 查正式岗位对比
+        const r2 = await fetch(`${apiBase}/job/salary?major=${encodeURIComponent(internMajor.value)}&city=${encodeURIComponent(internCity.value)}`);
+        const d2 = await r2.json();
+
+        // 查各城市实习薪资
+        const cityPromises = cities.map(async c => {
+          const resp = await fetch(`${apiBase}/job/salary?major=${encodeURIComponent(internMajor.value + ' 实习')}&city=${encodeURIComponent(c)}`);
+          const data = await resp.json();
+          return {city: c, salary: data.avg_salary_max || 0};
+        });
+
+        internCityData.value = (await Promise.all(cityPromises)).filter(c => c.salary > 0);
+
+        if (d.results && d.results.length > 0) {
+          internResult.value = {
+            jobs: d.total || d.results.length,
+            salary: d.avg_salary_max || (d.results[0]?.avg_salary_max || '—'),
+            formalSalary: d2.avg_salary_max || null
+          };
+        } else {
+          // 用智联薪资基准数据
+          const base = await fetch(`${apiBase}/major/detail?major=${encodeURIComponent(internMajor.value)}&province=${encodeURIComponent(internCity.value)}&year=2024`);
+          const baseData = await base.json();
+          if (baseData.salaries && baseData.salaries.length > 0) {
+            const citySal = baseData.salaries.find(s => s.city === internCity.value);
+            if (citySal) {
+              const formalK = (citySal.salary_min + citySal.salary_max) / 2 / 10;
+              internResult.value = {
+                jobs: '—',
+                salary: (formalK * 0.35).toFixed(1),
+                formalSalary: formalK.toFixed(1)
+              };
+            }
+          }
+          if (!internResult.value) internNoData.value = true;
+        }
+      } catch(e) {
+        internNoData.value = true;
+      }
+      internLoading.value = false;
+    }
+
+    return {tab, pageTitle,
+            step, currentQ, answers, questions, currentQuestion, result,
+            selectAnswer, nextQ, prevQ, submitQuiz, resetQuiz, searchMajor, goHome,
+            internMajor, internCity, internLoading, internResult, internNoData, internCityData,
+            majors, cities, maxInternSalary, searchIntern,
+            salaryChartCanvas, internChartLabels, internChartValues};
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

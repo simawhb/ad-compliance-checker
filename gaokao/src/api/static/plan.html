@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的志愿表 · 驷马报考</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Helvetica Neue","PingFang SC","SF Pro Text",sans-serif;
+  background:linear-gradient(135deg,#dce5f5 0%,#e8dcf5 50%,#dcecf5 100%);
+  color:#1a1a2e;min-height:100vh;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+::selection{background:rgba(67,97,238,.12);color:#1a1a2e}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(67,97,238,.1);border-radius:100px}
+
+/* 背景装饰 */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:radial-gradient(rgba(67,97,238,.10) 1px, transparent 1px);
+  background-size:20px 20px;pointer-events:none;z-index:0
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 500px 350px at 15% 20%,rgba(67,97,238,.15) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 400px at 80% 15%,rgba(130,77,255,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 300px 250px at 85% 60%,rgba(255,107,107,.10) 0%,transparent 65%),
+    radial-gradient(ellipse 350px 280px at 20% 70%,rgba(72,202,228,.12) 0%,transparent 65%),
+    radial-gradient(ellipse 400px 200px at 50% 95%,rgba(67,97,238,.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+  animation:atmo 20s ease-in-out infinite alternate
+}
+@keyframes atmo{
+  0%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(1.5%,-1%) scale(1.01)}
+  66%{transform:translate(-1%,1.5%) scale(1.02)}
+  100%{transform:translate(0.5%,-0.5%) scale(1)}
+}
+
+/* 卡片通用 */
+.glass-card{
+  background:#fff;
+  border:1px solid #b8c0d0;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  transition:all .3s cubic-bezier(.25,.1,.25,1);
+  border-radius:16px;padding:28px
+}
+.glass-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.10);transform:translateY(-2px)}
+
+.container{max-width:800px;margin:0 auto;padding:16px;position:relative;z-index:1}
+
+/* Header */
+.header{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(24px) saturate(1.3);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  border-bottom:1px solid #b8c0d0;
+  padding:16px;text-align:center;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:center
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:10%;right:10%;
+  height:1px;background:linear-gradient(90deg,transparent,rgba(67,97,238,.25),transparent)
+}
+.header h1{font-size:18px;font-weight:700;color:#1a1a2e}
+.header .back{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:#6b6b8d;background:none;border:none;font-size:15px;cursor:pointer;
+  padding:6px 12px;border-radius:8px;transition:all .2s
+}
+.header .back:hover{color:#1a1a2e;background:rgba(67,97,238,.06)}
+.header .actions{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+.header .actions button{
+  color:#6b6b8d;background:#fff;
+  border:1px solid #b8c0d0;padding:5px 12px;border-radius:8px;
+  font-size:13px;cursor:pointer;transition:all .2s
+}
+.header .actions button:hover{color:#1a1a2e;background:#f5f7fa;border-color:#4361ee}
+
+.section-title{font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:12px}
+
+/* Tabs */
+.tabs{
+  display:flex;gap:4px;
+  background:#fff;
+  border:1px solid #b8c0d0;border-radius:12px;padding:4px;margin-bottom:16px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)
+}
+.tabs .tab{
+  flex:1;text-align:center;padding:10px;border-radius:8px;cursor:pointer;
+  font-size:14px;font-weight:500;color:#6b6b8d;transition:all .2s
+}
+.tabs .tab.active{background:#4361ee;color:#fff}
+
+/* 志愿卡片 */
+.plan-item{
+  display:flex;align-items:center;padding:14px;
+  border-bottom:.5px solid rgba(67,97,238,.06);gap:10px;cursor:pointer;transition:background .2s
+}
+.plan-item:hover{background:rgba(67,97,238,.02)}
+.plan-item:last-child{border:none}
+.plan-num{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0
+}
+.plan-num.col-冲{background:rgba(230,57,70,.12);color:#e63946}
+.plan-num.col-稳{background:rgba(232,133,12,.12);color:#e8850c}
+.plan-num.col-保{background:rgba(46,196,180,.12);color:#2ec4b6}
+.plan-info{flex:1}
+.plan-school{font-size:15px;font-weight:600;color:#1a1a2e}
+.plan-major{font-size:13px;color:#6b6b8d;margin-top:2px}
+.plan-meta{font-size:12px;color:#9a9ab0;margin-top:2px}
+.plan-prob{width:50px;text-align:center}
+.plan-prob .pct{font-size:16px;font-weight:700}
+.plan-prob .label{font-size:11px;color:#9a9ab0}
+.plan-remove{width:24px;text-align:center;color:#9a9ab0;font-size:18px;cursor:pointer;transition:color .2s}
+.plan-remove:hover{color:#e63946}
+.empty-state{text-align:center;padding:40px;color:#8a8aaa;font-size:14px}
+.empty-state .icon{font-size:48px;margin-bottom:12px;opacity:.6}
+.empty-state .hint{font-size:13px;color:#9a9ab0}
+
+/* 搜索弹窗 */
+.modal-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:200;display:flex;align-items:center;justify-content:center;padding:20px
+}
+.modal{
+  background:#fff;
+  border:1px solid #b8c0d0;
+  border-radius:20px;padding:24px;
+  max-width:500px;width:100%;max-height:80vh;overflow-y:auto;
+  box-shadow:0 4px 24px rgba(0,0,0,.08), 0 12px 48px rgba(0,0,0,.04)
+}
+.modal h3{font-size:16px;margin-bottom:12px;color:#1a1a2e}
+.modal input{
+  width:100%;padding:10px 14px;
+  background:#dfe3ec;color:#1a1a2e;
+  border:1.5px solid #a8b0c0;border-radius:8px;
+  font-size:15px;outline:none;margin-bottom:10px;transition:all .2s
+}
+.modal input:focus{border-color:#4361ee;box-shadow:0 0 0 3px rgba(67,97,238,.15);background:#fff}
+.modal select{
+  background:#dfe3ec;color:#1a1a2e;
+  border:1.5px solid #a8b0c0;border-radius:8px;
+  padding:10px;font-size:14px;outline:none;appearance:auto
+}
+.modal select:focus{border-color:#4361ee;box-shadow:0 0 0 3px rgba(67,97,238,.15);background:#fff}
+.modal-item{
+  padding:10px;cursor:pointer;
+  border-bottom:.5px solid rgba(67,97,238,.06);transition:background .2s;
+  color:#6b6b8d
+}
+.modal-item:hover{background:rgba(67,97,238,.04);color:#1a1a2e}
+.modal-item:last-child{border:none}
+
+/* 统计 */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-box{text-align:center;padding:12px;border-radius:10px;border:.5px solid transparent}
+.stat-box.col-冲{background:rgba(230,57,70,.08);border-color:rgba(230,57,70,.12);color:#e63946}
+.stat-box.col-稳{background:rgba(232,133,12,.08);border-color:rgba(232,133,12,.12);color:#e8850c}
+.stat-box.col-保{background:rgba(46,196,180,.08);border-color:rgba(46,196,180,.12);color:#2ec4b6}
+.stat-box .count{font-size:24px;font-weight:700}
+.stat-box .label{font-size:12px;color:#8a8aaa;margin-top:4px}
+
+/* 导出 */
+.export-area{
+  width:100%;height:200px;
+  background:#dfe3ec;color:#1a1a2e;
+  border:1.5px solid #a8b0c0;border-radius:8px;
+  padding:12px;font-size:13px;font-family:monospace;resize:vertical;margin-bottom:12px
+}
+
+/* 其他 */
+.no-result{text-align:center;padding:20px;color:#9a9ab0;font-size:13px}
+.prob-bar{width:50px;height:4px;border-radius:2px;margin-top:3px}
+
+/* 按钮 */
+.btn{
+  display:block;width:100%;padding:10px;border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;transition:all .2s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.btn-secondary{
+  background:#fff;color:#6b6b8d;
+  border:1px solid #d0d5dd
+}
+.btn-secondary:hover{background:#f5f7fa;color:#1a1a2e;border-color:#4361ee}
+
+/* 徽标 */
+.badge{border-radius:4px;font-size:11px;padding:2px 6px}
+
+@media(max-width:480px){
+  .glass-card{padding:20px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <button class="back" @click="goBack">← 返回</button>
+    <h1>我的志愿表</h1>
+    <div class="actions">
+      <button @click="showExport = !showExport">{{ showExport ? '收起' : '导出' }}</button>
+      <button @click="confirmClear" style="margin-left:6px">清空</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- 统计 -->
+    <div class="stats-row" v-if="items.length > 0">
+      <div class="stat-box col-冲">
+        <div class="count">{{ tierCount('冲') }}</div>
+        <div class="label">冲刺</div>
+      </div>
+      <div class="stat-box col-稳">
+        <div class="count">{{ tierCount('稳') }}</div>
+        <div class="label">稳妥</div>
+      </div>
+      <div class="stat-box col-保">
+        <div class="count">{{ tierCount('保') }}</div>
+        <div class="label">保底</div>
+      </div>
+    </div>
+
+    <!-- 导出区 -->
+    <div class="glass-card" v-if="showExport" style="margin-bottom:12px">
+      <div class="section-title">导出志愿表</div>
+      <textarea class="export-area" readonly>{{ exportText }}</textarea>
+      <button class="btn btn-secondary" @click="copyExport" style="margin-top:4px">复制到剪贴板</button>
+    </div>
+
+    <!-- 志愿列表 -->
+    <div class="glass-card">
+      <div class="section-title">
+        已选志愿（{{ items.length }}）
+        <span style="float:right;font-size:13px;color:#9a9ab0;font-weight:400">最多30个</span>
+      </div>
+
+      <!-- 启用搜索弹窗 -->
+      <div class="tabs" v-if="items.length < 30">
+        <div class="tab" :class="{active: searchMode==='school'}" @click="searchMode='school'; showSearch=true">添加院校</div>
+        <div class="tab" :class="{active: searchMode==='rank'}" @click="searchMode='rank'; showSearch=true">从排名导入</div>
+      </div>
+
+      <!-- 列表 -->
+      <div v-if="items.length === 0" class="empty-state">
+        <div class="icon"></div>
+        <div>还没有添加志愿</div>
+        <div class="hint">点击上方按钮，从院校搜索或分数排名中添加</div>
+      </div>
+
+      <div v-for="(item, idx) in sortedItems" :key="item.id" class="plan-item">
+        <div class="plan-num" :class="'col-'+item.tier">{{ idx + 1 }}</div>
+        <div class="plan-info" @click="editItem(item)">
+          <div class="plan-school">{{ item.school }}</div>
+          <div class="plan-major">{{ item.major || '（不限专业）' }}</div>
+          <div class="plan-meta">{{ item.tier === '冲' ? '略高于往年分数' : item.tier === '稳' ? '与往年分数相当' : '低于往年分数有保障' }} · {{ item.prob }}% 概率</div>
+        </div>
+        <div class="plan-prob">
+          <div class="pct" :style="{color: item.tier==='冲'?'#e63946':item.tier==='稳'?'#e8850c':'#2ec4b6'}">{{ item.prob }}%</div>
+          <div class="label">概率</div>
+        </div>
+        <div class="plan-remove" @click="removeItem(item.id)">×</div>
+      </div>
+    </div>
+
+    <!-- 选校弹窗 -->
+    <div class="modal-overlay" v-if="showSearch" @click.self="showSearch=false">
+      <div class="modal">
+        <h3 v-if="searchMode === 'school'">搜索院校</h3>
+        <h3 v-else>输入分数导入排名</h3>
+
+        <template v-if="searchMode === 'school'">
+          <input v-model="searchQ" @input="doSearch" placeholder="输入院校名称...">
+          <div v-if="searchLoading" style="text-align:center;padding:10px;color:#8a8aaa">搜索中...</div>
+          <div v-if="searchResults.length === 0 && searchQ && !searchLoading" class="no-result">未找到匹配院校</div>
+          <div v-for="s in searchResults" :key="s.code_edu || s.school_name" class="modal-item" @click="addFromSchool(s)">
+            <strong>{{ s.name || s.school_name }}</strong>
+            <span style="font-size:12px;color:#9a9ab0;margin-left:8px">{{ s.level || '' }}</span>
+            <div style="font-size:12px;color:#9a9ab0;margin-top:2px">点击添加 → 选择专业</div>
+          </div>
+        </template>
+
+        <template v-else>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input v-model.number="rankScoreInput" type="number" placeholder="输入分数" style="flex:1;margin:0">
+            <select v-model="rankProvince">
+              <option value="浙江">浙江</option>
+              <option value="山东">山东</option>
+              <option value="广东">广东</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary" @click="fetchRank" style="margin-bottom:12px">
+            查询可报院校
+          </button>
+          <div v-if="rankLoading" style="text-align:center;padding:10px;color:#8a8aaa">查询中...</div>
+          <div v-for="r in rankResults" :key="r.school_name+r.major_name" class="modal-item" @click="addFromRank(r)">
+            <strong>{{ r.school_name }}</strong>
+            <span style="font-size:12px;color:#9a9ab0;margin-left:8px">{{ r.major_name }} · {{ r.admit_score_min }}分</span>
+            <span class="badge" :style="{background:'rgba(230,57,70,.12)',color:'#e63946',float:'right',fontSize:'11px',padding:'2px 6px',borderRadius:'4px'}" v-if="r.tier==='冲'">{{ r.tier }}</span>
+            <span class="badge" :style="{background:'rgba(232,133,12,.12)',color:'#e8850c',float:'right',fontSize:'11px',padding:'2px 6px',borderRadius:'4px'}" v-else-if="r.tier==='稳'">{{ r.tier }}</span>
+            <span class="badge" :style="{background:'rgba(46,196,180,.12)',color:'#2ec4b6',float:'right',fontSize:'11px',padding:'2px 6px',borderRadius:'4px'}" v-else>{{ r.tier }}</span>
+            <div style="font-size:12px;color:#9a9ab0;margin-top:2px">点击添加</div>
+          </div>
+          <div v-if="rankResults.length === 0 && !rankLoading" class="no-result">暂无匹配数据</div>
+        </template>
+      </div>
+    </div>
+
+    <!-- 选择专业弹窗 -->
+    <div class="modal-overlay" v-if="showMajorPicker" @click.self="showMajorPicker=false">
+      <div class="modal">
+        <h3>选择专业</h3>
+        <input v-model="majorSearchQ" placeholder="搜索专业名称...">
+        <div v-for="m in filteredMajors" :key="m" class="modal-item" @click="pickMajor(m)">{{ m }}</div>
+        <div v-if="filteredMajors.length === 0" class="no-result">无匹配专业，点击添加不限专业</div>
+        <div class="modal-item" style="color:#9a9ab0;font-size:13px" @click="pickMajor('')">不限制专业（仅填院校）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, reactive, computed, onMounted, watch } = Vue;
+const API = '/api';
+
+createApp({
+  setup() {
+    const items = ref(loadItems());
+    const showExport = ref(false);
+    const showSearch = ref(false);
+    const showMajorPicker = ref(false);
+    const searchMode = ref('school');
+    const searchQ = ref('');
+    const searchResults = ref([]);
+    const searchLoading = ref(false);
+    const pendingSchool = ref(null);
+
+    // 排名导入
+    const rankScoreInput = ref(620);
+    const rankProvince = ref('浙江');
+    const rankResults = ref([]);
+    const rankLoading = ref(false);
+
+    // 专业选择
+    const majorSearchQ = ref('');
+
+    // 预置热门专业（供选择）
+    const commonMajors = [
+      '计算机科学与技术','软件工程','人工智能','数据科学与大数据技术',
+      '电子信息工程','通信工程','自动化','电气工程及其自动化',
+      '机械设计制造及其自动化','土木工程','建筑学',
+      '临床医学','药学','护理学',
+      '金融学','会计学','工商管理','市场营销','电子商务',
+      '法学','汉语言文学','英语','新闻学',
+      '数学与应用数学','物理学','化学',
+      '视觉传达设计','环境设计',
+      '教育学','心理学','行政管理'
+    ];
+    const filteredMajors = computed(() => {
+      const q = majorSearchQ.value;
+      if (!q) return commonMajors;
+      return commonMajors.filter(m => m.includes(q));
+    });
+
+    // 排序：冲→稳→保
+    const sortedItems = computed(() => {
+      const order = {冲: 0, 稳: 1, 保: 2};
+      return [...items.value].sort((a, b) => order[a.tier] - order[b.tier]);
+    });
+
+    function tierCount(t) {
+      return items.value.filter(i => i.tier === t).length;
+    }
+
+    // 概率计算
+    function calcProb(score, schoolScore, tier) {
+      if (!schoolScore) {
+        if (tier === '冲') return 30;
+        if (tier === '稳') return 60;
+        return 90;
+      }
+      const diff = score - schoolScore;
+      if (diff >= 10) return 90;
+      if (diff >= 5) return 75;
+      if (diff >= 0) return 55;
+      if (diff >= -5) return 35;
+      if (diff >= -10) return 20;
+      return 10;
+    }
+
+    // 搜索院校
+    let searchTimer = null;
+    function doSearch() {
+      if (!searchQ.value) { searchResults.value = []; return; }
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(async () => {
+        searchLoading.value = true;
+        try {
+          const r = await fetch(`${API}/schools/search?q=${encodeURIComponent(searchQ.value)}`);
+          const d = await r.json();
+          searchResults.value = d.results || [];
+        } catch(e) { searchResults.value = []; }
+        searchLoading.value = false;
+      }, 300);
+    }
+
+    // 从院校搜索添加
+    function addFromSchool(s) {
+      pendingSchool.value = {
+        name: s.name || s.school_name,
+        score: s.admit_score_min || null
+      };
+      majorSearchQ.value = '';
+      showMajorPicker.value = true;
+    }
+
+    // 从排名导入添加
+    function addFromRank(r) {
+      addItem({
+        school: r.school_name,
+        major: r.major_name,
+        score: r.admit_score_min,
+        tier: r.tier,
+      });
+    }
+
+    // 选专业
+    function pickMajor(major) {
+      const s = pendingSchool.value;
+      if (!s) return;
+      const prob = calcProb(rankScoreInput.value, s.score, '稳');
+      addItem({
+        school: s.name,
+        major: major || '',
+        score: s.score || null,
+        tier: '稳',
+        prob: prob,
+      });
+      showMajorPicker.value = false;
+      showSearch.value = false;
+    }
+
+    // 从排名页面添加
+    function fetchRank() {
+      rankLoading.value = true;
+      rankResults.value = [];
+      fetch(`${API}/admission/rank?score=${rankScoreInput.value}&province=${encodeURIComponent(rankProvince.value)}&year=2024`)
+        .then(r => r.json())
+        .then(d => {
+          rankResults.value = (d.results || []).slice(0, 30);
+        })
+        .catch(() => {})
+        .finally(() => rankLoading.value = false);
+    }
+
+    // 添加志愿
+    function addItem({school, major, score, tier, prob}) {
+      if (items.value.length >= 30) return;
+      if (!tier) tier = '稳';
+      if (!prob) prob = calcProb(rankScoreInput.value, score, tier);
+      const id = Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      items.value.push({
+        id, school, major: major || '',
+        score: score || null,
+        tier, prob,
+        addedAt: new Date().toISOString()
+      });
+      saveItems();
+    }
+
+    // 编辑志愿（弹窗选冲稳保）
+    function editItem(item) {
+      const tiers = ['冲', '稳', '保'];
+      const cur = tiers.indexOf(item.tier);
+      const next = tiers[(cur + 1) % 3];
+      item.tier = next;
+      item.prob = calcProb(rankScoreInput.value, item.score, next);
+      saveItems();
+    }
+
+    // 删除志愿
+    function removeItem(id) {
+      items.value = items.value.filter(i => i.id !== id);
+      saveItems();
+    }
+
+    function confirmClear() {
+      if (items.value.length === 0) return;
+      if (confirm('确定清空所有志愿？')) {
+        items.value = [];
+        saveItems();
+      }
+    }
+
+    // 持久化到 localStorage
+    function saveItems() {
+      try {
+        localStorage.setItem('simazhiyuan_plan', JSON.stringify(items.value));
+      } catch(e) {}
+    }
+    function loadItems() {
+      try {
+        const raw = localStorage.getItem('simazhiyuan_plan');
+        return raw ? JSON.parse(raw) : [];
+      } catch(e) { return []; }
+    }
+
+    // 导出文本
+    const exportText = computed(() => {
+      const lines = [];
+      sortedItems.value.forEach((item, idx) => {
+        lines.push(`${idx+1}. [${item.tier}] ${item.school}${item.major ? ' · ' + item.major : ''} — 录取概率${item.prob}%`);
+      });
+      lines.unshift('=== 驷马报考 · 志愿表 ===\n');
+      lines.push(`\n共 ${items.value.length} 个志愿`);
+      lines.push(`冲 ${tierCount('冲')} / 稳 ${tierCount('稳')} / 保 ${tierCount('保')}`);
+      lines.push(`生成时间: ${new Date().toLocaleString()}`);
+      return lines.join('\n');
+    });
+
+    function copyExport() {
+      navigator.clipboard.writeText(exportText.value).then(() => {
+        alert('已复制到剪贴板');
+      }).catch(() => {});
+    }
+
+    function goBack() { window.location.href = '/'; }
+
+    return {
+      items, showExport, showSearch, showMajorPicker, searchMode,
+      searchQ, searchResults, searchLoading, doSearch, addFromSchool,
+      rankScoreInput, rankProvince, rankResults, rankLoading, fetchRank, addFromRank,
+      majorSearchQ, filteredMajors, pendingSchool, pickMajor,
+      sortedItems, tierCount, addItem, editItem, removeItem, confirmClear,
+      exportText, copyExport, goBack,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

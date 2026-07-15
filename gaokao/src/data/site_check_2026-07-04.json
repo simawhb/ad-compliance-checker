@@ -1,0 +1,23 @@
+[
+  {
+    "task_name": "moe_schools",
+    "url": "http://www.moe.gov.cn/jyb_xxgk/s5743/s5744/",
+    "ok": true,
+    "status_text": "HTTP 200",
+    "elapsed_ms": 156
+  },
+  {
+    "task_name": "moe_majors",
+    "url": "https://gaokao.chsi.com.cn/zyk/",
+    "ok": true,
+    "status_text": "HTTP 200",
+    "elapsed_ms": 1155
+  },
+  {
+    "task_name": "test_task",
+    "url": "https://example.com",
+    "ok": true,
+    "status_text": "HTTP 200",
+    "elapsed_ms": 531
+  }
+]
