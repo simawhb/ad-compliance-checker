@@ -36,7 +36,7 @@
 
 如需升级为企业定制版，请联系：
 
-- **邮箱：** [14712502@qq.com](mailto:14712502@qq.com)
+- **邮箱：** [wanghgbg@outlook.com](mailto:wanghgbg@outlook.com)
 - **获取内容：** 定制版访问密码、部署说明、使用指南
 
 ---

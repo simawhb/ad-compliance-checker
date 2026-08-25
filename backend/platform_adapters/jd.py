@@ -16,6 +16,7 @@ from schemas import PlatformEnum, ProductData
 from platform_adapters.base import BaseAdapter
 
 logger = logging.getLogger(__name__)
+_MAX_REMOTE_IMAGE_BYTES = 10 * 1024 * 1024
 
 
 class JDAdapter(BaseAdapter):
@@ -113,6 +114,7 @@ class JDAdapter(BaseAdapter):
     async def download_images(self, page, output_dir: str) -> list[str]:
         """下载京东商品主图与详情图"""
         import httpx
+        from url_safety import get_public_redirect_safe
 
         os.makedirs(output_dir, exist_ok=True)
         image_paths: list[str] = []
@@ -198,8 +200,13 @@ class JDAdapter(BaseAdapter):
         dest = os.path.join(output_dir, filename)
         try:
             async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
-                resp = await client.get(url)
-                if resp.status_code == 200:
+                resp = await get_public_redirect_safe(client, url)
+                content_type = resp.headers.get("content-type", "")
+                if (
+                    resp.status_code == 200
+                    and content_type.startswith("image/")
+                    and len(resp.content) <= _MAX_REMOTE_IMAGE_BYTES
+                ):
                     with open(dest, "wb") as f:
                         f.write(resp.content)
                     logger.info("京东图片下载: %s", filename)

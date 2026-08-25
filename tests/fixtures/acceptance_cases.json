@@ -1,0 +1,68 @@
+[
+  {
+    "id": "MED-001",
+    "industry": "medical",
+    "medium": "图文",
+    "product_name": "示例健康管理服务",
+    "product_type": "医疗服务",
+    "verified_facts": "机构已取得医疗机构执业许可，可提供预约和健康咨询服务。",
+    "desired_message": "介绍预约方式和服务时间，不宣传治疗效果。",
+    "proof_materials": "脱敏后的执业许可信息与服务项目清单。",
+    "details": {
+      "regulatory_category": "medical_service",
+      "approval_or_registration": "示例批准信息",
+      "approved_ad_text": "示例获准文字，仅用于本机验收。"
+    },
+    "must_not_contain": ["保证治愈", "疗效第一", "百分之百有效"]
+  },
+  {
+    "id": "MED-002",
+    "industry": "medical",
+    "medium": "短视频",
+    "product_name": "示例营养补充食品",
+    "product_type": "普通食品",
+    "verified_facts": "配料和营养成分以产品标签为准。",
+    "desired_message": "介绍配料特点，不涉及疾病预防和治疗。",
+    "proof_materials": "脱敏产品标签。",
+    "details": {
+      "regulatory_category": "general_health_product"
+    },
+    "must_not_contain": ["预防疾病", "辅助治疗", "替代药物"]
+  },
+  {
+    "id": "ECOM-001",
+    "industry": "ecommerce",
+    "medium": "详情页",
+    "product_name": "示例日用品",
+    "product_type": "普通商品",
+    "verified_facts": "指定商品活动价99元，每人限购2件。",
+    "desired_message": "说明活动价格、期限和适用范围。",
+    "proof_materials": "脱敏活动方案。",
+    "details": {
+      "sale_price": "99元，依据活动方案",
+      "promotion_period": "2026年8月1日至8月3日",
+      "applicable_scope": "指定商品，中国大陆地区",
+      "promotion_conditions": "每人限购2件，库存售完即止",
+      "reference_price_basis": ""
+    },
+    "must_not_contain": ["全网最低", "史上最低", "原价"]
+  },
+  {
+    "id": "ECOM-002",
+    "industry": "ecommerce",
+    "medium": "直播口播",
+    "product_name": "示例家居用品",
+    "product_type": "普通商品",
+    "verified_facts": "满199元减20元，仅限直播间指定商品。",
+    "desired_message": "说明满减条件，不制造虚假紧迫感。",
+    "proof_materials": "脱敏促销规则。",
+    "details": {
+      "sale_price": "满199元减20元",
+      "promotion_period": "2026年8月5日20时至22时",
+      "applicable_scope": "直播间指定商品",
+      "promotion_conditions": "单笔订单满199元，优惠不可叠加",
+      "reference_price_basis": ""
+    },
+    "must_not_contain": ["最后一单", "保证最低", "错过不再"]
+  }
+]

@@ -66,7 +66,8 @@ body::after{
   content:'';position:absolute;bottom:0;left:10%;right:10%;
   height:1px;background:linear-gradient(90deg,transparent,rgba(67,97,238,.25),transparent)
 }
-.header-l{display:flex;align-items:center;gap:10px}
+.header-l{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.brand-logo{width:24px;height:24px;border-radius:6px;object-fit:cover;box-shadow:0 2px 7px rgba(0,0,0,.18);flex-shrink:0}
 .header-icon{
   width:32px;height:32px;
   background:rgba(67,97,238,.12);
@@ -407,10 +408,11 @@ tr:hover td{background:rgba(67,97,238,.02)}
 <div class="header">
   <div style="display:flex;align-items:center;gap:8px">
     <button v-if="view !== 'home'" class="back-btn" @click="goHome" aria-label="返回首页">←</button>
-    <div class="header-l">
+      <a class="header-l" href="https://4ma.wang/" aria-label="返回驷马工具集首页">
+      <img class="brand-logo" src="/static/sima-horse-logo.jpg" alt="">
       <div class="header-icon">考</div>
       <span class="header-title">驷马报考</span>
-    </div>
+    </a>
   </div>
   <div class="header-sub">高考志愿填报</div>
 </div>

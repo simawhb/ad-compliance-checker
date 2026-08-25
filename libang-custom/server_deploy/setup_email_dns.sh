@@ -6,7 +6,7 @@ set -e
 
 echo "========================================="
 echo "  配置 4ma.wang 域名邮箱 DNS 记录"
-echo "  sima@4ma.wang → 14712502@qq.com"
+echo "  sima@4ma.wang → wanghgbg@outlook.com"
 echo "========================================="
 
 # 1. 安装 aliyun CLI
@@ -87,5 +87,5 @@ echo ""
 echo "  接下来请完成以下步骤："
 echo "  1. 访问 https://domain.mail.qq.com 登录 QQ域名邮箱"
 echo "  2. 添加域名 4ma.wang（系统会验证 MX 记录）"
-echo "  3. 创建邮箱别名 sima，绑定到 14712502@qq.com"
+echo "  3. 创建邮箱别名 sima，绑定到 wanghgbg@outlook.com"
 echo "========================================="

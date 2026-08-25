@@ -10,6 +10,7 @@ OCR 识别引擎 — PaddleOCR 主力 + easyocr 备用
 from __future__ import annotations
 
 import logging
+import platform as system_platform
 import time
 from pathlib import Path
 from typing import Optional
@@ -20,12 +21,14 @@ logger = logging.getLogger(__name__)
 class OCREngine:
     """OCR 识别引擎封装"""
 
-    def __init__(self, use_gpu: bool = True, fallback_to_easyocr: bool = True):
+    def __init__(self, use_gpu: bool = False, fallback_to_easyocr: bool = True):
         self.use_gpu = use_gpu
         self.fallback_to_easyocr = fallback_to_easyocr
         self._paddle_ocr = None
         self._easy_ocr = None
         self._current_engine = None  # 'paddle' or 'easyocr'
+        # Paddle 2.6 在 Apple Silicon 的首次推理会长期占满 CPU；本机优先稳定的 EasyOCR。
+        self._prefer_easyocr = system_platform.system() == "Darwin"
 
     # ──────────────────────────────────────────────
     # 初始化
@@ -87,6 +90,11 @@ class OCREngine:
         """
         start = time.time()
 
+        if self._prefer_easyocr:
+            text = self._recognize_with_easyocr(image_path, start)
+            if text is not None:
+                return text
+
         # 尝试 PaddleOCR
         if self._init_paddle():
             try:
@@ -103,22 +111,28 @@ class OCREngine:
             except Exception as exc:
                 logger.warning("PaddleOCR 识别失败: %s", exc)
 
-        # 回退到 easyocr
-        if self.fallback_to_easyocr and self._init_easyocr():
-            try:
-                result = self._easy_ocr.readtext(str(image_path))
-                text = self._format_easyocr_result(result)
-                elapsed = time.time() - start
-                logger.info(
-                    "easyocr 识别完成: %s (%d chars, %.1fs)",
-                    image_path, len(text), elapsed,
-                )
-                return text
-            except Exception as exc:
-                logger.warning("easyocr 识别失败: %s", exc)
+        text = self._recognize_with_easyocr(image_path, start)
+        if text is not None:
+            return text
 
         logger.error("所有 OCR 引擎均识别失败: %s", image_path)
         return ""
+
+    def _recognize_with_easyocr(self, image_path: str | Path, start: float) -> str | None:
+        if not self.fallback_to_easyocr or not self._init_easyocr():
+            return None
+        try:
+            result = self._easy_ocr.readtext(str(image_path))
+            text = self._format_easyocr_result(result)
+            elapsed = time.time() - start
+            logger.info(
+                "easyocr 识别完成: %s (%d chars, %.1fs)",
+                image_path, len(text), elapsed,
+            )
+            return text
+        except Exception as exc:
+            logger.warning("easyocr 识别失败: %s", exc)
+            return None
 
     def recognize_batch(self, image_paths: list[str | Path]) -> list[str]:
         """

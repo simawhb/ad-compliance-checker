@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "weiquan-consumer-response-v0.1",
+  "title": "ConsumerResponseV0_1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["disputeType", "summary", "factsKnown", "factsMissing", "legalBasis", "recommendedPath", "evidenceNeeded", "specialNotes", "letter", "disclaimer"],
+  "properties": {
+    "disputeType": {"type": "string", "minLength": 1, "maxLength": 120},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 1200},
+    "factsKnown": {"$ref": "#/$defs/list"},
+    "factsMissing": {"$ref": "#/$defs/list"},
+    "legalBasis": {"$ref": "#/$defs/legalList"},
+    "recommendedPath": {"$ref": "#/$defs/list"},
+    "evidenceNeeded": {"$ref": "#/$defs/list"},
+    "specialNotes": {"$ref": "#/$defs/list"},
+    "letter": {"type": "string", "minLength": 1, "maxLength": 3000},
+    "disclaimer": {"const": "以上内容仅供参考，不构成法律意见，具体以有权机关认定为准。"}
+  },
+  "$defs": {
+    "list": {"type": "array", "maxItems": 12, "items": {"type": "string", "minLength": 1, "maxLength": 500}},
+    "legalList": {"type": "array", "maxItems": 6, "items": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^\\[L-[0-9]{3}\\]"}}
+  }
+}

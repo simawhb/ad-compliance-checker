@@ -16,6 +16,7 @@ from schemas import PlatformEnum, ProductData
 from platform_adapters.base import BaseAdapter
 
 logger = logging.getLogger(__name__)
+_MAX_REMOTE_IMAGE_BYTES = 10 * 1024 * 1024
 
 
 class StandaloneAdapter(BaseAdapter):
@@ -126,6 +127,7 @@ class StandaloneAdapter(BaseAdapter):
         from utils.image_utils import ensure_temp_dir
         import aiofiles  # noqa: F401
         import httpx
+        from url_safety import get_public_redirect_safe
 
         os.makedirs(output_dir, exist_ok=True)
         image_paths: list[str] = []
@@ -175,8 +177,13 @@ class StandaloneAdapter(BaseAdapter):
                     dest = os.path.join(download_dir, filename)
 
                     async with httpx.AsyncClient(timeout=15) as client:
-                        resp = await client.get(src, follow_redirects=True)
-                        if resp.status_code == 200:
+                        resp = await get_public_redirect_safe(client, src)
+                        content_type = resp.headers.get("content-type", "")
+                        if (
+                            resp.status_code == 200
+                            and content_type.startswith("image/")
+                            and len(resp.content) <= _MAX_REMOTE_IMAGE_BYTES
+                        ):
                             with open(dest, "wb") as f:
                                 f.write(resp.content)
                             image_paths.append(dest)

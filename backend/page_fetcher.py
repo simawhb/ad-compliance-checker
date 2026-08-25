@@ -24,6 +24,7 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from ocr_engine import OCREngine, get_ocr_engine
+from url_safety import validate_public_http_url
 from platform_adapters import BaseAdapter, StandaloneAdapter, ManualAdapter
 from schemas import PageData, PlatformEnum, ProductData
 from utils.image_utils import ensure_temp_dir, standardize_image
@@ -291,6 +292,7 @@ class PageFetcher:
                     # 加载页面
                     await random_delay(2.0, 4.0)
                     await adapter.load(page, url)
+                    validate_public_http_url(page.url)
 
                     # 检查是否触发验证码
                     page_content = await page.content()

@@ -84,7 +84,7 @@ python start_server.py
 主力机如需要 HTTPS，参考服务器配置安装 Let's Encrypt：
 
 ```bash
-certbot --nginx --agree-tos --email 14712502@qq.com -d 你的域名
+certbot --nginx --agree-tos --email wanghgbg@outlook.com -d 你的域名
 ```
 
 ---

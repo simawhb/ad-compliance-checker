@@ -1,0 +1,21 @@
+{
+  "valid": {
+    "disputeType": "网络商品质量与售后争议",
+    "summary": "从目前描述看，需要结合商品状态、使用情况和售后记录进一步核实。",
+    "factsKnown": ["用户称已在线购买商品。", "用户称已联系售后。"],
+    "factsMissing": ["收货时间。", "商品异常的具体表现。"],
+    "legalBasis": ["[L-001] 消费者权益保护相关规定可能涉及商品质量与售后。"],
+    "recommendedPath": ["先向商家提交事实和诉求。", "如为平台交易且协商无果，可考虑平台争议处理。"],
+    "evidenceNeeded": ["订单和支付记录。", "完整售后沟通记录。"],
+    "specialNotes": ["请如实保存现有材料，不要夸大损失。"],
+    "letter": "致商家：\n\n我就订单售后事宜说明目前掌握的事实，并希望贵方核实后在合理期限内书面回复处理方案。\n\n此致",
+    "disclaimer": "以上内容仅供参考，不构成法律意见，具体以有权机关认定为准。"
+  },
+  "invalid": {
+    "missingRequired": {"disputeType": "x"},
+    "wrongType": {"disputeType": "x", "summary": "x", "factsKnown": "not-array", "factsMissing": [], "legalBasis": [], "recommendedPath": [], "evidenceNeeded": [], "specialNotes": [], "letter": "x", "disclaimer": "以上内容仅供参考，不构成法律意见，具体以有权机关认定为准。"},
+    "emptyString": {"disputeType": "", "summary": "x", "factsKnown": [], "factsMissing": [], "legalBasis": [], "recommendedPath": [], "evidenceNeeded": [], "specialNotes": [], "letter": "x", "disclaimer": "以上内容仅供参考，不构成法律意见，具体以有权机关认定为准。"},
+    "extraMarkdown": "```json\n{\"disputeType\":\"x\"}\n```",
+    "overlongField": {"field": "letter", "length": 3001}
+  }
+}

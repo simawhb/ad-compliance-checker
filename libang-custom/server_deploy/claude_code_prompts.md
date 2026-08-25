@@ -207,7 +207,7 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
 
 ## 5. 申请 SSL 证书
-certbot --nginx -d 4ma.wang -d www.4ma.wang --agree-tos -m 14712502@qq.com
+certbot --nginx -d 4ma.wang -d www.4ma.wang --agree-tos -m wanghgbg@outlook.com
 
 ## 6. 注册系统服务
 [复制 ad-checker-libang.service 到 /etc/systemd/system/]

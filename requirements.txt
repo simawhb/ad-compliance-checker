@@ -2,13 +2,15 @@
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
+python-dotenv>=1.0.0
 
 # 页面抓取
 playwright>=1.40.0
 
-# OCR 引擎
-paddlepaddle-gpu==2.6.0
-paddleocr>=2.7.0
+# OCR 引擎（Mac 本机研发使用 CPU 版；Linux x86_64 可使用原 GPU 版）
+paddlepaddle==2.6.2; sys_platform == "darwin"
+paddlepaddle-gpu==2.6.0; sys_platform == "linux" and platform_machine == "x86_64"
+paddleocr>=2.7.0,<3.0
 easyocr>=1.7.0              # fallback OCR
 
 # 图片处理

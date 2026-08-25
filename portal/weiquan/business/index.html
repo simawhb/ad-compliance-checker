@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="经营者消费争议事实核实、证据与合规应对的 UI 原型。" />
+    <title>经营者端｜消费维权助手</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/weiquan.css" />
+  </head>
+  <body data-mode="business">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">驷马工具集</a>
+        <nav class="site-nav" aria-label="站点导航">
+          <a href="/weiquan/">消费维权助手</a>
+          <a href="https://checker.4ma.wang/">广告合规审查</a>
+          <a href="/">返回工具集</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell tool-page">
+      <a class="back-link" href="/weiquan/">← 返回角色选择</a>
+      <section class="page-intro" aria-labelledby="page-title">
+        <p class="eyebrow">经营者端 · 事实核验与合规应对</p>
+        <h1 id="page-title">先核实事实，再做合规回应</h1>
+        <p>粘贴投诉内容或描述争议后，工具会基于当前提交的文字生成双维度判断、反证清单、合规自查与回复函参考。请自行核验事实和法律依据。</p>
+      </section>
+
+      <aside class="privacy-notice" aria-label="隐私提示">
+        <h2>请先保护个人信息</h2>
+        <p>不要粘贴不必要的消费者身份证号、银行卡号、完整手机号码、家庭地址或其他敏感信息。MVP 不支持证据文件上传。</p>
+      </aside>
+
+      <section class="input-panel" aria-labelledby="input-heading">
+        <h2 id="input-heading">描述投诉或争议事实</h2>
+        <label for="case-text">投诉内容或争议描述</label>
+        <textarea id="case-text" rows="9" aria-describedby="input-help" placeholder="例如：消费者投诉内容、商品或服务、实际交易情况、已处理情况、消费者诉求，以及目前已有的证据。请勿粘贴不必要的个人敏感信息。"></textarea>
+        <p class="field-help" id="input-help">建议说明消费者主张、交易及履行情况、已沟通处理情况和现有材料。请先核实自身商品质量、宣传、售后和价格标示等事项。</p>
+        <div class="action-row">
+          <button class="button button-primary" id="analyze" type="button">开始梳理</button>
+          <button class="button button-secondary" id="reset" type="button">清空并重新开始</button>
+        </div>
+        <p class="state-message" id="state-message" role="status" aria-live="polite">请描述争议经过；请勿输入与争议无关的敏感信息。</p>
+      </section>
+
+      <section id="result" class="result-area" aria-live="polite" hidden></section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>本工具为个人非经营性信息辅助工具，输出仅供参考，不构成法律意见或服务承诺。不替代行政投诉、调解、仲裁或诉讼程序。请自行核实相关法律法规，并依法行事。虚假投诉或恶意抗辩可能承担相应法律责任。本站不建立案件档案或长期保存用户输入；处理内容会发送至 AI 服务提供方，第三方数据处理以其适用政策为准。</p>
+      </div>
+    </footer>
+    <script src="../assets/weiquan.js"></script>
+  </body>
+</html>

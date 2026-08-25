@@ -7,6 +7,8 @@ __pycache__/
 # Environment
 .env
 *.env
+.venv/
+.hermes/
 
 # Database (143MB gaokao.db exceeds GitHub 100MB limit)
 *.db

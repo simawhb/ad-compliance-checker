@@ -1,0 +1,7 @@
+# 广告宣传合规起草助手：仅用于 backend/draft_service.py 的独立服务依赖。
+# 不可直接运行会导入 OCR、图片处理和网页抓取组件的 backend/main.py。
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+httpx>=0.25.0

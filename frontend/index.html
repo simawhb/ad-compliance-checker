@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>驷马合规 — 广告宣传审查助手</title>
+<title>驷马合规 — 广告宣传合规助手</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -223,17 +223,40 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
 }
 .ba{display:none;margin-bottom:10px}
 .ba input{font-size:16px}
+.draft-form{display:none}
+.draft-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.draft-form input,.draft-form select{
+  width:100%;padding:11px 13px;background:rgba(0,0,0,.25);color:rgba(191,219,254,.8);
+  border:.5px solid rgba(191,219,254,.08);border-radius:9px;font-size:15px;font-family:inherit
+}
+.draft-form textarea{min-height:90px;margin-bottom:10px}
+.draft-form .hint{font-size:14px;color:rgba(191,219,254,.35);line-height:1.6;margin-bottom:12px}
+.industry-details{margin-bottom:10px;padding:12px;background:rgba(0,0,0,.16);border:.5px solid rgba(191,219,254,.06);border-radius:10px}
+.industry-details .label{font-size:14px;color:#8fc5ff;margin-bottom:8px}
+.industry-details .draft-grid{margin-bottom:0}
+.draft-output{display:none;background:rgba(48,209,88,.04);border:.5px solid rgba(48,209,88,.16);border-radius:12px;padding:16px;margin-bottom:14px}
+.draft-output b{display:block;color:#65df8d;margin-bottom:8px}
+.draft-output .status{font-size:14px;color:#ffb84d;margin-bottom:10px}
+.draft-output .copy{white-space:pre-wrap;line-height:1.8;color:rgba(191,219,254,.88)}
+.draft-output .meta{margin-top:12px;padding-top:10px;border-top:.5px solid rgba(191,219,254,.08);font-size:14px;line-height:1.7;color:rgba(191,219,254,.52)}
+.draft-output .ai-notice{margin-top:10px;padding:9px 11px;border-radius:9px;background:rgba(0,122,255,.08);border:.5px solid rgba(90,200,250,.18);font-size:13px;line-height:1.6;color:rgba(191,219,254,.68)}
+.draft-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.consent{display:flex;align-items:flex-start;gap:8px;margin-top:14px;font-size:13px;line-height:1.6;color:rgba(191,219,254,.55)}
+.consent input{margin-top:4px;accent-color:#007aff}
+.consent a,.ft a{color:#5ac8fa;text-decoration:none}
+.consent a:hover,.ft a:hover{text-decoration:underline}
+.btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
 
 /* ===== Result ===== */
 .rr{display:none;margin-top:24px}
 .rs{padding:24px;animation:fadeUp .45s cubic-bezier(.25,.1,.25,1)}
 .rs-hd{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:.5px solid rgba(191,219,254,.06)}
-.rs-score{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
-.rs-score svg{position:absolute}
-.rs-score .n{position:relative;font-size:22px;font-weight:800;z-index:1}
-.rs-score .n.g{color:#30d158}
-.rs-score .n.w{color:#ff9f0a}
-.rs-score .n.b{color:#ff453a}
+.rs-score{min-width:86px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(191,219,254,.1)}
+.rs-score .n{font-size:16px;font-weight:800;padding:0 14px}
+.rs-score.g{background:rgba(48,209,88,.08);border-color:rgba(48,209,88,.2)}
+.rs-score.w{background:rgba(255,159,10,.08);border-color:rgba(255,159,10,.2)}
+.rs-score.b{background:rgba(255,69,58,.08);border-color:rgba(255,69,58,.2)}
+.rs-score .n.g{color:#30d158}.rs-score .n.w{color:#ff9f0a}.rs-score .n.b{color:#ff453a}
 .rs-info{flex:1}
 .rs-info .t{font-size:15px;font-weight:600;color:rgba(191,219,254,.9)}
 .rs-info .s{font-size:16px;color:rgba(191,219,254,.35);margin-top:2px}
@@ -242,10 +265,9 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   padding:12px 16px;border-radius:12px;font-size:15px;border-left:3px solid;
   animation:fadeIn .3s cubic-bezier(.25,.1,.25,1) both
 }
-.ri.c{background:rgba(255,69,58,.06);border-color:#ff453a}
-.ri.h{background:rgba(255,159,10,.06);border-color:#ff9f0a}
-.ri.m{background:rgba(255,204,0,.06);border-color:#ffcc00}
-.ri.l{background:rgba(48,209,88,.06);border-color:#30d158}
+.ri.high{background:rgba(255,69,58,.06);border-color:#ff453a}
+.ri.medium{background:rgba(255,159,10,.06);border-color:#ff9f0a}
+.ri.low{background:rgba(48,209,88,.06);border-color:#30d158}
 .ri .w{font-weight:600;color:rgba(191,219,254,.9)}
 .ri .d{color:rgba(191,219,254,.35);margin-top:3px;font-size:15px}
 .ri .sg{color:#30d158;margin-top:4px;font-size:15px;padding-top:4px;border-top:.5px solid rgba(48,209,88,.1)}
@@ -256,6 +278,10 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   font-size:15px;white-space:pre-wrap;line-height:1.7;color:rgba(191,219,254,.7);
   animation:fadeUp .3s cubic-bezier(.25,.1,.25,1)
 }
+.scope-notice{background:rgba(255,159,10,.05);border:.5px solid rgba(255,159,10,.18);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:14px;line-height:1.6;color:rgba(255,214,153,.78)}
+.conclusion-notice{background:rgba(255,255,255,.025);border:.5px solid rgba(191,219,254,.1);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:14px;line-height:1.6;color:rgba(191,219,254,.58)}
+.materials{display:none;background:rgba(10,132,255,.05);border:.5px solid rgba(10,132,255,.18);border-radius:10px;padding:12px;margin:12px 0;color:rgba(191,219,254,.78)}
+.materials b{display:block;margin-bottom:6px;color:#8fc5ff}.materials ul{margin:0;padding-left:20px}.materials li{margin:4px 0;line-height:1.55}
 .ac{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 
 /* ===== Error ===== */
@@ -289,6 +315,7 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   .quota-grid{gap:8px}
   .quota-item .num{font-size:22px}
   .ctrl select{flex:1;min-width:0}
+  .draft-grid{grid-template-columns:1fr}
   .upgrade-card{flex-direction:column;text-align:center}
 }
 </style>
@@ -299,20 +326,12 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
 <div class="header">
   <div class="header-l">
     <div class="header-icon">审</div>
-    <span class="header-title">广告宣传审查助手</span>
+    <span class="header-title">广告宣传合规助手</span>
   </div>
   <div class="header-nav">
     <a href="/h5/">手机版</a>
-    <a href="mailto:14712502@qq.com">咨询套餐</a>
-  </div>
-</div>
-
-<!-- 配额 -->
-<div class="glass-card" style="padding:20px;margin-bottom:16px">
-  <div class="quota-grid">
-    <div class="quota-item"><div class="num" id="qQ">-</div><div class="label">快速检测</div></div>
-    <div class="quota-item"><div class="num" id="qD">-</div><div class="label">深度分析</div></div>
-    <div class="quota-item"><div class="num" id="qP">-</div><div class="label">套餐</div></div>
+    <a href="/privacy">隐私规则</a>
+    <a href="mailto:wanghgbg@outlook.com">联系邮箱</a>
   </div>
 </div>
 
@@ -325,12 +344,13 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   <div class="recent-list" id="rl"></div>
 </div>
 
-<!-- 套餐升级 -->
+<!-- 产品边界提示 -->
 <div class="upgrade-card">
   <div class="text">
-    <b>升级解锁：</b>每日 100 次快速检测、20 次 AI 深度分析、检测历史记录
+    <b>产品边界：</b>仅对用户提交的广告文字进行合规风险提示；不审查图片、画面、版式、人物形象、示意图或视频视觉内容。
+    <br><b>隐私提示：</b>文案将发送至配置的模型服务完成分析；页面默认不保存原文，服务器默认不留存审查结果。提交前请删除个人信息和商业秘密。
   </div>
-  <a class="upgrade-btn" href="mailto:14712502@qq.com">咨询套餐</a>
+  <a class="upgrade-btn" href="mailto:wanghgbg@outlook.com">邮件联系</a>
 </div>
 
 <!-- 检测工具 -->
@@ -338,17 +358,14 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   <div class="md">
     <span class="a" onclick="sw('single')" id="stb">单条</span>
     <span onclick="sw('batch')" id="btb">批量</span>
+    <span onclick="sw('draft')" id="dtb">合规起草</span>
   </div>
   <div class="ba" id="bu">
     <input type="file" id="bf" accept=".txt,.csv" onchange="ul(this)" style="font-size:16px">
     <label for="bf" style="font-size:15px;color:rgba(191,219,254,.35);cursor:pointer;margin-left:4px">上传 TXT / CSV</label>
   </div>
   <textarea id="inp" placeholder="请输入广告文案…"></textarea>
-  <div class="uz" onclick="document.getElementById('ii').click()">
-    <div>点击上传图片 · JPG / PNG / WebP</div>
-    <input type="file" id="ii" accept="image/*" onchange="oi(this)">
-  </div>
-  <div class="ctrl">
+  <div class="ctrl" id="review-controls">
     <select id="ind">
       <option value="">通用行业</option>
       <option value="cosmetic">化妆品</option>
@@ -365,25 +382,80 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
       <option value="xiaohongshu">小红书</option>
       <option value="pinduoduo">拼多多</option>
     </select>
-    <button class="btn btn-p" onclick="qc()">快速检测</button>
-    <button class="btn btn-s" onclick="dp()">AI 深度</button>
+    <button class="btn btn-p" id="qb" onclick="qc()">快速检测</button>
+    <button class="btn btn-s" disabled>AI 深度（规划中）</button>
   </div>
+  <div class="draft-form" id="draft-form">
+    <div class="hint">仅根据已确认事实生成待审文案；系统会自动调用同一审查核心，发现风险后修订并再次审查。</div>
+    <div class="draft-grid">
+      <select id="dind" onchange="du()"><option value="medical">医疗健康</option><option value="ecommerce">电商促销</option></select>
+      <select id="dmedium"><option>图文</option><option>详情页</option><option>海报</option><option>短视频</option><option>直播口播</option><option>落地页</option></select>
+      <input id="dname" placeholder="产品或服务名称（必填）">
+      <input id="dtype" placeholder="产品或服务类别（必填）">
+    </div>
+    <div class="industry-details" id="medical-details">
+      <div class="label">医疗健康前置信息</div>
+      <div class="draft-grid">
+        <select id="dcategory">
+          <option value="">请选择监管类别</option>
+          <option value="medical_service">医疗服务</option>
+          <option value="drug">药品</option>
+          <option value="medical_device">医疗器械</option>
+          <option value="health_food">保健食品</option>
+          <option value="general_health_product">普通健康相关商品</option>
+        </select>
+        <input id="dapproval" placeholder="广告批准、注册或备案信息">
+      </div>
+      <textarea id="dapproved" placeholder="审查批准样件或获准发布的广告文字"></textarea>
+    </div>
+    <div class="industry-details" id="ecommerce-details" style="display:none">
+      <div class="label">电商促销前置信息</div>
+      <div class="draft-grid">
+        <input id="dprice" placeholder="实际宣传价格及依据">
+        <input id="dperiod" placeholder="活动起止时间">
+        <input id="dscope" placeholder="适用商品、地区和人群">
+        <input id="dconditions" placeholder="优惠门槛、限购、库存等条件">
+      </div>
+      <input id="dbasis" placeholder="原价、比较价格或折扣计算依据（涉及相关主张时填写）">
+    </div>
+    <textarea id="dfacts" placeholder="已确认、可以证明的产品事实（必填）"></textarea>
+    <textarea id="dgoal" placeholder="希望重点表达什么（必填）"></textarea>
+    <textarea id="dproof" placeholder="已有资质、审查样件、活动方案、检测报告或数据依据（选填）"></textarea>
+    <button class="btn btn-p" onclick="dc()">生成并内部审查</button>
+  </div>
+  <label class="consent">
+    <input type="checkbox" id="consent">
+    <span>我已阅读并同意<a href="/terms" target="_blank" rel="noopener">《使用规则》</a>和<a href="/privacy" target="_blank" rel="noopener">《隐私规则》</a>，并确认提交内容已删除非必要的个人信息和商业秘密。</span>
+  </label>
   <div id="eb" class="eb"></div>
 </div>
 
 <!-- 结果 -->
 <div class="rr" id="rr">
   <div class="rs glass-card">
+    <div class="draft-output" id="draft-output">
+      <b>待审广告文案</b>
+      <div class="status" id="draft-status"></div>
+      <div class="copy" id="draft-copy"></div>
+      <div class="ai-notice" id="draft-ai">AI辅助生成内容 · 采用前仍须核对事实、资质、证明材料和发布场景。</div>
+      <div class="meta" id="draft-meta"></div>
+      <div class="draft-actions">
+        <button class="btn btn-s" id="copy-draft" onclick="cdt()">复制待审文案</button>
+        <button class="btn btn-s" onclick="cdp()">复制完整起草包</button>
+      </div>
+    </div>
     <div class="rs-hd">
       <div class="rs-score" id="sr">
-        <svg width="72" height="72"><circle cx="36" cy="36" r="30" fill="none" stroke="rgba(191,219,254,.06)" stroke-width="5"/><circle id="sa" cx="36" cy="36" r="30" fill="none" stroke="var(--accent2)" stroke-width="5" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" transform="rotate(-90,36,36)"/></svg>
-        <span class="n" id="sn">-</span>
+        <span class="n" id="sn">待审查</span>
       </div>
       <div class="rs-info">
         <div class="t" id="st">检测完成</div>
         <div class="s" id="ss"></div>
       </div>
     </div>
+    <div class="scope-notice" id="scope">本次仅审查用户提交的广告文字；未审查图片、画面、版式、人物形象、示意图、视频视觉内容及相关授权事项。</div>
+    <div class="conclusion-notice" id="conclusion">本结果仅为合规风险提示，不代表广告已经获得合规确认；未发现明确风险的内容仍需结合主体资质、发布媒介和证明材料复核。</div>
+    <div class="materials" id="materials"><b>完成核验仍需补充</b><ul id="material-list"></ul></div>
     <div class="rl" id="risks"></div>
     <div class="ia" id="ia"></div>
     <div class="ac">
@@ -394,50 +466,60 @@ textarea::placeholder{color:rgba(191,219,254,.22)}
   </div>
 </div>
 
-<div class="ft">驷马合规 — 广告宣传审查助手</div>
+<div class="ft">驷马合规 — 广告宣传合规助手 · <a href="/terms">使用规则</a> · <a href="/privacy">隐私规则</a> · <a href="mailto:wanghgbg@outlook.com">联系邮箱</a></div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
 var A=location.origin;
-var oid=function(){try{var k='sima_oid',d=localStorage.getItem(k);if(!d){d='sim_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem(k,d)}return d}catch{return 'sim_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}}();
+var cm='single';
+var lastDraft=null;
+var SCOPE='本次仅审查用户提交的广告文字；未审查图片、画面、版式、人物形象、示意图、视频视觉内容及相关授权事项。';
+var CONCLUSION='本结果仅为合规风险提示，不代表广告已经获得合规确认；未发现明确风险的内容仍需结合主体资质、发布媒介和证明材料复核。';
 
 var $=function(i){return document.getElementById(i)};
 var es=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
 
 function se(m){var e=$('eb');e.textContent=m;e.style.display=m?'block':'none'}
 function st(m){var t=$('toast');t.textContent=m;t.classList.add('s');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('s')},2500)}
+function ec(){if($('consent').checked)return true;se('请先阅读并同意使用规则和隐私规则');return false}
 
-function ss(s){var n=Math.max(0,Math.min(100,Number(s)||0)),nu=$('sn');nu.textContent=n;nu.className='n '+(n>=80?'g':n>=60?'w':'b');var a=$('sa'),c2=2*Math.PI*30;a.style.strokeDasharray=c2;a.style.strokeDashoffset=c2*(1-n/100);a.style.stroke=n>=80?'#30d158':n>=60?'#ff9f0a':'#ff453a'}
+function ss(level){var v=level||'待审查',nu=$('sn'),c=v==='低风险'?'g':v==='中风险'?'w':v==='高风险'?'b':'';nu.textContent=v;nu.className='n '+c;$('sr').className='rs-score '+c}
 
-async function ca(p,b){se('');var r=await fetch(A+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});var d=await r.json();if(!d.ok)throw Error(d.error||'请求失败');return d}
+async function ca(p,b){se('');var r;try{r=await fetch(A+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})}catch(e){throw Error('服务暂时不可用，请稍后重试')}var d;try{d=await r.json()}catch(e){throw Error('服务暂时不可用，请稍后重试')}if(!d.ok)throw Error(d.error||'请求失败');return d}
 
-function sr(d){if(!d){se('返回数据异常，请重试');return}$('rr').style.display='block';ss(d.score);$('st').textContent=d.summary||'检测完成';$('ss').textContent='共 '+(d.risk_count||0)+' 项风险';var l=$('risks');l.innerHTML='';(d.risks||[]).forEach(function(r){var v=r.risk_level||'low',el=document.createElement('div');el.className='ri '+v;el.innerHTML='<div class="w">'+es(r.word)+'</div><div class="d">'+es(r.category||'')+(r.law?' · '+es(r.law):'')+'</div>'+(r.suggest?'<div class="sg">建议：'+es(r.suggest)+'</div>':'');l.appendChild(el)});$('ia').style.display='none';$('ia').textContent='';$('cb').style.display='none';ar()}
+function sr(d){if(!d){se('返回数据异常，请重试');return}$('rr').style.display='block';ss(d.risk_level);$('st').textContent=d.summary||'检测完成';$('ss').textContent='共 '+(d.risk_count||0)+' 项风险';$('scope').textContent=d.scope_notice||SCOPE;$('conclusion').textContent=d.conclusion_notice||CONCLUSION;var ml=$('material-list'),mb=$('materials');ml.innerHTML='';(d.missing_materials||[]).forEach(function(m){var li=document.createElement('li');li.textContent=m;ml.appendChild(li)});mb.style.display=ml.children.length?'block':'none';var l=$('risks');l.innerHTML='';(d.risks||[]).forEach(function(r){var v=r.risk_level||'low',el=document.createElement('div');el.className='ri '+v;var ids=(r.rule_ids||[]).join('、');el.innerHTML='<div class="w">'+es(r.word)+'</div><div class="d">'+es(r.category||'')+(r.law?' · '+es(r.law):'')+(ids?' · 规则：'+es(ids):'')+'</div>'+(r.suggest?'<div class="sg">建议：'+es(r.suggest)+'</div>':'');l.appendChild(el)});$('ia').style.display='none';$('ia').textContent='';$('cb').style.display='none';ar()}
 
-function ar(){try{var h=JSON.parse(localStorage.getItem('sima_h')||'[]');var l=$('rl');if(!l)return;if(h.length===0){l.innerHTML='<div class="recent-empty">暂无检测记录</div>';return}l.innerHTML='';h.slice(0,10).forEach(function(i){var el=document.createElement('div');el.className='recent-item';el.onclick=function(){$('inp').value=i.text;$('inp').scrollIntoView({behavior:'smooth',block:'center'})};var c=i.score>=80?'g':i.score>=60?'w':'b';el.innerHTML='<span>'+es(i.text.slice(0,30))+(i.text.length>30?'...':'')+'</span><span class="score '+c+'">'+i.score+'</span>';l.appendChild(el)})}catch(e){}}
+function ar(){try{localStorage.removeItem('sima_h');var h=JSON.parse(localStorage.getItem('sima_h_v2')||'[]');var l=$('rl');if(!l)return;if(h.length===0){l.innerHTML='<div class="recent-empty">暂无检测记录（不保存文案原文）</div>';return}l.innerHTML='';h.slice(0,10).forEach(function(i){var el=document.createElement('div'),risk=i.risk_level||(i.score>=80?'低风险':i.score>=60?'中风险':'高风险'),c=risk==='低风险'?'g':risk==='中风险'?'w':'b';el.className='recent-item';el.innerHTML='<span>'+es(i.label||'文字审查')+'</span><span class="score '+c+'">'+es(risk)+'</span>';l.appendChild(el)})}catch(e){}}
 
-async function qc(){var t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{var d=await ca('/api/check',{text:t,industry:$('ind').value,platform:$('plat').value,openid:oid()});sr(d);try{var h=JSON.parse(localStorage.getItem('sima_h')||'[]');h.unshift({text:t.slice(0,100),score:d.score,time:Date.now()});if(h.length>50)h=h.slice(0,50);localStorage.setItem('sima_h',JSON.stringify(h))}catch{};ar()}catch(ex){se(ex.message||'检测失败')}}
+async function qc(){if(!ec())return;$('draft-output').style.display='none';var t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{var d,shown,label='单条文字审查';if(cm==='batch'){var ts=t.indexOf('---')>=0?t.split(/\n-{3,}\n/):t.split(/\n+/);ts=ts.map(function(x){return x.trim()}).filter(Boolean);d=await ca('/api/check-batch',{texts:ts,industry:$('ind').value,platform:$('plat').value,terms_accepted:true});var done=(d.items||[]).filter(function(x){return x.ok});if(!done.length)throw Error((d.items&&d.items[0]&&d.items[0].error)||'批量审查未完成');var risks=[],materials=[],levels=done.map(function(x){return x.risk_level});done.forEach(function(x,i){(x.risks||[]).forEach(function(r){r.category='第'+(i+1)+'条 · '+(r.category||'');risks.push(r)});(x.missing_materials||[]).forEach(function(m){var labeled='第'+(i+1)+'条：'+m;if(materials.indexOf(labeled)<0)materials.push(labeled)})});var highest=levels.indexOf('高风险')>=0?'高风险':levels.indexOf('中风险')>=0?'中风险':'低风险';shown={risk_level:highest,summary:'批量审查完成 '+done.length+'/'+d.count+' 条（按最高风险定级）',risk_count:risks.length,risks:risks,missing_materials:materials};label='批量文字审查（'+done.length+'条）';sr(shown)}else{d=await ca('/api/check',{text:t,industry:$('ind').value,platform:$('plat').value,terms_accepted:true});shown=d;sr(d)}rh(label,shown.risk_level)}catch(ex){se(ex.message||'检测失败')}}
 
-async function dp(){var t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{var d=await ca('/api/deep-check',{text:t,industry:$('ind').value,platform:$('plat').value,openid:oid()});$('rr').style.display='block';ss(0);$('st').textContent='AI 深度分析';$('ss').textContent='';$('risks').innerHTML='';var ia=$('ia');ia.style.display='block';ia.textContent=d.analysis||JSON.stringify(d);$('cb').style.display='inline-flex'}catch(ex){se(ex.message||'分析失败')}}
+async function dc(){if(!ec())return;var industry=$('dind').value,details=industry==='ecommerce'?{sale_price:$('dprice').value,promotion_period:$('dperiod').value,applicable_scope:$('dscope').value,promotion_conditions:$('dconditions').value,reference_price_basis:$('dbasis').value}:{regulatory_category:$('dcategory').value,approval_or_registration:$('dapproval').value,approved_ad_text:$('dapproved').value};var body={industry:industry,medium:$('dmedium').value,product_name:$('dname').value.trim(),product_type:$('dtype').value.trim(),verified_facts:$('dfacts').value.trim(),desired_message:$('dgoal').value.trim(),proof_materials:$('dproof').value.trim(),details:details,terms_accepted:true};if(!body.product_name||!body.product_type||!body.verified_facts||!body.desired_message){se('请完整填写产品名称、类别、已确认事实和表达重点');return}try{var d=await ca('/api/draft',body);lastDraft=d;sr(d.internal_review);$('draft-output').style.display='block';$('draft-status').textContent=d.publication_status+(d.auto_repaired?' · 已自动修订并再次审查':'');$('draft-copy').textContent=d.draft_text;$('draft-ai').textContent='AI辅助生成内容 · '+(d.ai_generation_notice||'采用前仍须核对事实、资质、证明材料和发布场景。');var meta=['版本校验码：'+d.draft_version];if((d.missing_materials||[]).length)meta.push('待补材料：'+d.missing_materials.join('；'));if((d.excluded_claims||[]).length)meta.push('未采用主张：'+d.excluded_claims.join('；'));if((d.rule_ids||[]).length)meta.push('起草规则：'+d.rule_ids.join('、'));$('draft-meta').textContent=meta.join('\n');$('copy-draft').disabled=d.status==='needs_revision';rh('合规起草',d.internal_review.risk_level);$('rr').scrollIntoView({behavior:'smooth',block:'start'})}catch(ex){se(ex.message||'起草未完成')}}
 
-function cp(){var t='【驷马合规 · 广告审查报告】\n得分：'+($('sn').textContent||'-')+'\n摘要：'+($('st').textContent||'-')+'\n\n';document.querySelectorAll('#risks .w').forEach(function(el){t+='- '+el.textContent+'\n'});if(navigator.clipboard){navigator.clipboard.writeText(t);st('报告已复制')}}
+function cdt(){if(!lastDraft)return;var t='【AI辅助生成·待审版本·不得直接发布】\n版本校验码：'+lastDraft.draft_version+'\n状态：'+lastDraft.publication_status+'\n生成说明：'+(lastDraft.ai_generation_notice||'采用前仍须核对事实、资质、证明材料和发布场景。')+'\n\n'+lastDraft.draft_text;if(navigator.clipboard){navigator.clipboard.writeText(t);st('待审文案已复制')}}
+
+function cdp(){if(!lastDraft)return;var d=lastDraft,r=d.internal_review||{},i=d.input_snapshot||{},t='【驷马合规·广告宣传合规起草包】\n生成标识：AI辅助生成内容\n生成说明：'+(d.ai_generation_notice||'采用前仍须核对事实、资质、证明材料和发布场景。')+'\n版本校验码：'+d.draft_version+'\n版本状态：'+d.publication_status+'\n内部审查：'+(r.risk_level||'待审查')+'\n审查摘要：'+(r.summary||'-')+'\n\n【客户确认事实】\n行业：'+(i.industry||'-')+'\n媒介：'+(i.medium||'-')+'\n产品或服务：'+(i.product_name||'-')+'（'+(i.product_type||'-')+'）\n已确认事实：'+(i.verified_facts||'-')+'\n表达重点：'+(i.desired_message||'-')+'\n结构化事实：'+(i.structured_facts||'-')+'\n证明材料：'+(i.proof_materials||'-')+'\n\n【待审广告文案】\n'+d.draft_text+'\n\n';if((d.missing_materials||[]).length)t+='【待补材料】\n- '+d.missing_materials.join('\n- ')+'\n\n';if((d.excluded_claims||[]).length)t+='【未采用主张】\n- '+d.excluded_claims.join('\n- ')+'\n\n';if((d.rule_ids||[]).length)t+='【起草规则】\n'+d.rule_ids.join('、')+'\n\n';if((r.risks||[]).length){t+='【内部审查风险】\n';r.risks.forEach(function(x){t+='- '+(x.word||'')+'：'+(x.suggest||'')+'\n'})}t+='\n【结论说明】\n'+(r.conclusion_notice||CONCLUSION);if(navigator.clipboard){navigator.clipboard.writeText(t);st('完整起草包已复制')}}
+
+function rh(label,risk){try{var h=JSON.parse(localStorage.getItem('sima_h_v2')||'[]');h.unshift({label:label,risk_level:risk||'待审查',time:Date.now()});if(h.length>50)h=h.slice(0,50);localStorage.setItem('sima_h_v2',JSON.stringify(h))}catch{}ar()}
+
+function du(){var medical=$('dind').value==='medical';$('medical-details').style.display=medical?'block':'none';$('ecommerce-details').style.display=medical?'none':'block'}
+
+async function dp(){if(!ec())return;var t=$('inp').value.trim();if(!t){se('请输入广告文案');return}try{var d=await ca('/api/deep-check',{text:t,industry:$('ind').value,platform:$('plat').value,terms_accepted:true});$('rr').style.display='block';ss('待审查');$('st').textContent='AI 深度分析';$('ss').textContent='';$('risks').innerHTML='';var ia=$('ia');ia.style.display='block';ia.textContent=d.analysis||JSON.stringify(d);$('cb').style.display='inline-flex'}catch(ex){se(ex.message||'分析失败')}}
+
+function cp(){var t='【驷马合规 · 广告宣传文字审查报告】\n风险等级：'+($('sn').textContent||'待审查')+'\n摘要：'+($('st').textContent||'-')+'\n审查范围：'+($('scope').textContent||SCOPE)+'\n结论说明：'+($('conclusion').textContent||CONCLUSION)+'\n\n';var ms=document.querySelectorAll('#material-list li');if(ms.length){t+='【完成核验仍需补充】\n';ms.forEach(function(li){t+='- '+li.textContent+'\n'});t+='\n'}document.querySelectorAll('#risks .ri').forEach(function(el){var w=el.querySelector('.w'),d=el.querySelector('.d'),s=el.querySelector('.sg');t+='- 风险原文：'+(w?w.textContent:'')+'\n';if(d&&d.textContent)t+='  依据：'+d.textContent+'\n';if(s&&s.textContent)t+='  '+s.textContent+'\n';t+='\n'});if(navigator.clipboard){navigator.clipboard.writeText(t);st('完整报告已复制')}}
 
 function caf(){if($('ia').textContent&&navigator.clipboard){navigator.clipboard.writeText($('ia').textContent);st('AI 分析已复制')}}
 
-async function ep(){var t=$('inp').value.trim();if(!t){se('请输入文案');return}try{st('正在生成 PDF…');var r=await fetch(A+'/api/export-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,industry:$('ind').value,platform:$('plat').value,openid:oid()})});var ct=r.headers.get('content-type')||'';if(ct.includes('json')){var d=await r.json();se(d.error||'导出失败');return}var blob=await r.blob();var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='驷马合规_检测报告.'+(ct.includes('pdf')?'pdf':'txt');document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);st('报告已下载')}catch(ex){se('导出失败')}}
+async function ep(){if(!ec())return;var t=$('inp').value.trim();if(!t){se('请输入文案');return}try{st('正在生成 PDF…');var r=await fetch(A+'/api/export-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,industry:$('ind').value,platform:$('plat').value,terms_accepted:true})});var ct=r.headers.get('content-type')||'';if(ct.includes('json')){var d=await r.json();se(d.error||'导出失败');return}var blob=await r.blob();var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='驷马合规_检测报告.'+(ct.includes('pdf')?'pdf':'txt');document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);st('报告已下载')}catch(ex){se('导出失败')}}
 
-function oi(i){if(i.files&&i.files[0]){var f=i.files[0];var r=new FileReader;r.onload=function(e){fetch(A+'/api/ocr-base64',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:e.target.result})}).then(function(r){return r.json()}).then(function(d){if(d.ok&&d.text){$('inp').value=d.text;st('已识别 '+d.text.length+' 字')}else{se('OCR 识别失败')}})};r.readAsDataURL(f)}}
-
-var uz=$('uz');if(uz){uz.addEventListener('dragover',function(e){e.preventDefault();uz.classList.add('dragover')});uz.addEventListener('dragleave',function(){uz.classList.remove('dragover')});uz.addEventListener('drop',function(e){e.preventDefault();uz.classList.remove('dragover');var f=e.dataTransfer&&e.dataTransfer.files;if(f&&f[0]&&f[0].type.startsWith('image/'))oi(f[0])})}
-
-function sw(m){var sb=$('stb'),bb=$('btb'),inp=$('inp'),bu=$('bu');if(m==='single'){sb.className='a';bb.className='';inp.placeholder='请输入广告文案…';inp.style.minHeight='130px';if(bu)bu.style.display='none'}else{bb.className='a';sb.className='';inp.placeholder='每行一条文案，或用 --- 分隔多组';inp.style.minHeight='240px';if(bu)bu.style.display='block'}}
+function sw(m){cm=m;var sb=$('stb'),bb=$('btb'),db=$('dtb'),inp=$('inp'),bu=$('bu'),df=$('draft-form'),rc=$('review-controls');sb.className=m==='single'?'a':'';bb.className=m==='batch'?'a':'';db.className=m==='draft'?'a':'';df.style.display=m==='draft'?'block':'none';inp.style.display=m==='draft'?'none':'block';rc.style.display=m==='draft'?'none':'flex';bu.style.display=m==='batch'?'block':'none';if(m==='single'){inp.placeholder='请输入广告文案…';inp.style.minHeight='130px'}else if(m==='batch'){inp.placeholder='每行一条文案，或用 --- 分隔多组（每批最多20条）';inp.style.minHeight='240px'}}
 
 function ul(input){var f=input.files[0];if(!f)return;var r=new FileReader;r.onload=function(e){$('inp').value=e.target.result;$('inp').style.minHeight='300px';st('已加载 '+f.name)};r.readAsText(f)}
 
-function cr(){localStorage.removeItem('sima_h');ar();st('记录已清除')}
+function cr(){localStorage.removeItem('sima_h');localStorage.removeItem('sima_h_v2');ar();st('记录已清除')}
 
-window.sw=sw;window.ul=ul;window.qc=qc;window.dp=dp;window.oi=oi;window.cp=cp;window.ep=ep;window.ca=ca;window.caf=caf;window.cr=cr;
+window.sw=sw;window.ul=ul;window.qc=qc;window.dc=dc;window.du=du;window.cdt=cdt;window.cdp=cdp;window.dp=dp;window.cp=cp;window.ep=ep;window.ca=ca;window.caf=caf;window.cr=cr;
 
 // 初始化
 ar();

@@ -12,9 +12,11 @@ import json
 import logging
 import os
 import time
+from pathlib import Path
 from typing import Optional
 
 import httpx
+from dotenv import load_dotenv
 
 from schemas import (
     PlatformEnum,
@@ -26,13 +28,20 @@ from schemas import (
 
 logger = logging.getLogger(__name__)
 
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+
+
+class ReviewIncompleteError(RuntimeError):
+    """模型审查未完成；调用方不得将其显示为低风险。"""
+
+
 # DeepSeek V4 Pro 配置
 DEEPSEEK_API_URL = os.getenv(
     "DEEPSEEK_API_URL",
     "https://api.deepseek.com/v1/chat/completions",  # 请替换为实际端点
 )
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
-DEEPSEEK_MODEL = "deepseek-v4-pro"
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-v4-pro")
 
 # 超时配置
 LLM_TIMEOUT = 60  # 秒
@@ -57,6 +66,11 @@ ECOMMERCE_REVIEW_PROMPT = """你是一名专业的广告合规审查官（Lex）
 【描述文字】{description}
 【详情图OCR识别文字】{ocr_texts}
 
+## 已核验规则摘要
+{rule_context}
+仅以以上规则摘要和已列法规作为审查依据；材料不足时明确说明待补材料，不得虚构规则或事实。
+仅审查用户提交的文字，不得推断未提供的图片、画面、版式、人物形象、示意图、视频视觉内容或授权事实。
+
 ## 审查要求
 请从以下 7 个维度逐项审查，每个维度标注违规点（如无违规则写"无违规"）：
 
@@ -72,6 +86,7 @@ ECOMMERCE_REVIEW_PROMPT = """你是一名专业的广告合规审查官（Lex）
 {{
     "summary": "审查结论概述（1-2句话）",
     "risk_level": "高风险|中风险|低风险",
+    "missing_materials": ["仍需补充核验的证明、资质或数据来源；没有则为空数组"],
     "violations": [
         {{
             "dimension": "审查维度",
@@ -79,6 +94,7 @@ ECOMMERCE_REVIEW_PROMPT = """你是一名专业的广告合规审查官（Lex）
             "severity": "严重|中等|轻微",
             "law_basis": "违反的法条",
             "suggestion": "修改建议",
+            "rule_ids": ["关联的已核验规则编号；无匹配则为空数组"],
             "penalty_reference": "典型处罚案例参考"
         }}
     ]
@@ -107,6 +123,7 @@ class LLMClient:
         messages: list[dict],
         temperature: float = 0.1,
         max_tokens: int = 4096,
+        response_format: Optional[dict] = None,
     ) -> str:
         """
         调用 LLM API
@@ -120,8 +137,7 @@ class LLMClient:
             LLM 返回的文本内容
         """
         if not self.api_key:
-            logger.warning("未配置 API KEY，使用模拟审查")
-            return self._mock_review(messages)
+            raise ReviewIncompleteError("未配置审查模型，无法完成合规分析")
 
         payload = {
             "model": self.model,
@@ -129,6 +145,8 @@ class LLMClient:
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
+        if response_format is not None:
+            payload["response_format"] = response_format
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -147,7 +165,8 @@ class LLMClient:
             logger.error("LLM 请求超时 (%ds)", LLM_TIMEOUT)
             raise
         except Exception as exc:
-            logger.error("LLM 调用失败: %s", exc)
+            # Provider error text can include remote response fragments. Do not log it.
+            logger.error("LLM 调用失败: %s", type(exc).__name__)
             raise
 
     # ══════════════════════════════════════════════
@@ -232,6 +251,8 @@ async def review_ecommerce_page(
     ocr_texts: list[str] | None = None,
     platform: PlatformEnum = PlatformEnum.UNKNOWN,
     url: str = "",
+    rule_context: str = "（未提供规则摘要）",
+    allowed_rule_ids: set[str] | None = None,
 ) -> ReviewResult:
     """
     执行电商页面合规审查（Lex 审核）
@@ -265,6 +286,7 @@ async def review_ecommerce_page(
         params=params_str or "（未获取到参数）",
         description=description or "（未获取到描述）",
         ocr_texts=ocr_str,
+        rule_context=rule_context,
     )
 
     messages = [
@@ -300,7 +322,11 @@ async def review_ecommerce_page(
                     content=v.get("content", ""),
                     severity=severity,
                     law_basis=v.get("law_basis", ""),
-                    suggestion=v.get("suggestion", ""),
+                    suggestion=_safe_suggestion(
+                        v.get("content", ""),
+                        v.get("suggestion", ""),
+                    ),
+                    rule_ids=_verified_rule_ids(v.get("rule_ids"), allowed_rule_ids),
                     penalty_reference=v.get("penalty_reference", ""),
                 )
             )
@@ -321,26 +347,25 @@ async def review_ecommerce_page(
             url=url,
             page_summary=f"标题: {title[:50] if title else 'N/A'} | 平台: {platform.value}",
             violation_items=violations,
+            missing_materials=_normalized_missing_materials(
+                result_data.get("missing_materials")
+            ),
             risk_level=risk,
             summary=result_data.get("summary", "审查完成"),
         )
 
+    except ReviewIncompleteError:
+        raise
     except Exception as exc:
-        logger.error("电商审查失败: %s", exc)
-        import uuid
-        return ReviewResult(
-            id=f"EC-ERR-{uuid.uuid4().hex[:8]}",
-            channel="url" if url else "upload",
-            platform=platform,
-            url=url,
-            page_summary="审查处理失败",
-            violation_items=[],
-            risk_level=RiskLevel.LOW,
-            summary=f"审查异常: {exc}",
-        )
+        logger.error("电商审查失败: %s", type(exc).__name__)
+        raise ReviewIncompleteError("审查未完成，请稍后重试。") from exc
 
 
-async def review_ad_copy(text: str) -> ReviewResult:
+async def review_ad_copy(
+    text: str,
+    rule_context: str = "（未提供规则摘要）",
+    allowed_rule_ids: set[str] | None = None,
+) -> ReviewResult:
     """
     原有广告文案审查（保持兼容）
 
@@ -354,7 +379,57 @@ async def review_ad_copy(text: str) -> ReviewResult:
     return await review_ecommerce_page(
         description=text,
         platform=PlatformEnum.MANUAL,
+        rule_context=rule_context,
+        allowed_rule_ids=allowed_rule_ids,
     )
+
+
+def _verified_rule_ids(raw_rule_ids: object, allowed_rule_ids: set[str] | None) -> list[str]:
+    if not isinstance(raw_rule_ids, list):
+        return []
+    rule_ids = [str(rule_id) for rule_id in raw_rule_ids]
+    if allowed_rule_ids is None:
+        return rule_ids
+    return [rule_id for rule_id in rule_ids if rule_id in allowed_rule_ids]
+
+
+def _normalized_missing_materials(raw_materials: object) -> list[str]:
+    """只接受简短字符串列表，避免模型异常结构污染报告。"""
+    if not isinstance(raw_materials, list):
+        return []
+    materials: list[str] = []
+    for item in raw_materials[:10]:
+        if not isinstance(item, str):
+            continue
+        normalized = " ".join(item.split()).strip()
+        if normalized and normalized not in materials:
+            materials.append(normalized[:200])
+    return materials
+
+
+def _safe_suggestion(content: object, suggestion: object) -> str:
+    """阻止模型用另一项未经证明的宣传主张替换已识别风险。"""
+    risk_text = f"{content} {suggestion}"
+    medical_claims = (
+        "治疗", "治愈", "疗效", "抗炎", "药用", "改善", "缓解",
+        "预防", "康复", "有效率",
+    )
+    comparative_claims = (
+        "国家级", "最高级", "最佳", "最好", "第一", "唯一",
+        "全网最低", "最低价", "原价", "销量第一",
+    )
+    if any(term in risk_text for term in medical_claims):
+        return (
+            "删除相关疾病治疗或功效表述；仅在法定允许且已有相应资质、"
+            "批准内容和证明材料时，依据获准内容另行起草。"
+        )
+    if any(term in risk_text for term in comparative_claims):
+        return (
+            "删除该绝对化、排名或价格比较表述；如确需表达，"
+            "先补充比较范围、数据来源、有效期或价格依据，再依据已确认事实起草。"
+        )
+    normalized = " ".join(str(suggestion or "").split()).strip()
+    return normalized[:500] or "删除或改写该表述，并在补齐可核验依据后再次审查。"
 
 
 # ═══════════════════════════════════════════════════
@@ -386,5 +461,5 @@ def _parse_llm_response(content: str) -> dict:
         except json.JSONDecodeError:
             pass
 
-    logger.error("无法解析 LLM 返回: %s...", content[:200])
-    return {"summary": "解析失败", "risk_level": "低风险", "violations": []}
+    logger.error("无法解析 LLM 返回")
+    raise ReviewIncompleteError("模型返回无法解析，审查未完成")

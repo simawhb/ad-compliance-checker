@@ -97,6 +97,7 @@ class ViolationItem(BaseModel):
     severity: ViolationSeverity
     law_basis: str = Field(..., description="违反的具体法条")
     suggestion: str = Field(..., description="修改建议")
+    rule_ids: list[str] = Field(default_factory=list, description="关联的已核验规则编号")
     penalty_reference: str = "",  # 典型处罚案例参考
 
 
@@ -108,6 +109,10 @@ class ReviewResult(BaseModel):
     url: str = ""
     page_summary: str = ""         # 页面摘要信息
     violation_items: list[ViolationItem] = Field(default_factory=list)
+    missing_materials: list[str] = Field(
+        default_factory=list,
+        description="完成事实核验仍需用户补充的证明、资质或数据来源",
+    )
     risk_level: RiskLevel
     summary: str = ""              # 审查结论概述
     created_at: datetime = Field(default_factory=datetime.now)
